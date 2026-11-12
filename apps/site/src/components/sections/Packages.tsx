@@ -17,24 +17,25 @@ export function Packages() {
           lead="ทุกแพ็กเกจมีใบเสนอราคาที่ระบุชัดว่ารวมและไม่รวมอะไร มัดจำ 50% ก่อนเริ่ม อีก 50% ตอนส่งมอบ"
         />
 
-        <div className="mt-16 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {packages.map((p) => (
+        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {packages.map((p, i) => (
             <article
               key={p.id}
-              data-reveal
-              className={`relative flex flex-col rounded-[1.25rem] p-7 transition duration-300 hover:-translate-y-1 ${
-                p.featured ? "bg-ink text-paper shadow-[0_30px_60px_-30px_rgba(21,19,17,.6)]" : "border border-ink/10 bg-paper"
+              data-pop
+              style={{ rotate: `${[-1, 0.8, -0.6, 1][i % 4]}deg` }}
+              className={`sticker wobbly relative flex flex-col p-7 transition duration-300 hover:-translate-y-2 hover:rotate-0 ${
+                p.featured ? "sticker-rose bg-ink text-paper" : "bg-paper"
               }`}
             >
               {p.featured ? (
-                <span className="absolute -top-3 left-7 rounded-full bg-rose px-3 py-1 text-xs font-medium text-white">
-                  ยอดนิยม
+                <span className="stamp absolute -right-3 -top-4 rotate-6 bg-paper font-thai text-sm text-rose-deep">
+                  ยอดนิยม ★
                 </span>
               ) : null}
               <p className={`eyebrow ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.name}</p>
               <h3 className="mt-3 font-thai text-2xl font-semibold leading-snug">{p.th}</h3>
               <div className="mt-8 flex items-baseline gap-2">
-                {p.priceNote ? <span className={p.featured ? "text-paper/60" : "text-muted"}>{p.priceNote}</span> : null}
+                {p.priceNote ? <span className={`whitespace-nowrap ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.priceNote}</span> : null}
                 <span className="text-5xl font-semibold tracking-tight">฿{p.price}</span>
               </div>
               <p className={`mt-2 text-sm ${p.featured ? "text-paper/60" : "text-muted"}`}>ส่งงาน {p.delivery}</p>
@@ -49,8 +50,9 @@ export function Packages() {
               <a
                 href="#contact"
                 data-package={p.id}
-                className={`group mt-8 inline-flex h-12 items-center justify-between rounded-full pl-5 pr-1.5 text-sm transition ${
-                  p.featured ? "bg-rose text-white hover:bg-paper hover:text-ink" : "border border-ink/15 hover:border-ink hover:bg-ink hover:text-paper"
+                data-cursor="เลือก!"
+                className={`press group mt-8 inline-flex h-12 items-center justify-between rounded-full border-2 pl-5 pr-1.5 text-sm font-semibold ${
+                  p.featured ? "border-paper bg-rose text-white" : "border-ink bg-paper hover:bg-ink hover:text-paper"
                 }`}
               >
                 {p.cta}
@@ -62,8 +64,8 @@ export function Packages() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-12">
-          <div className="rounded-[1.25rem] border border-ink/10 bg-paper p-7 lg:col-span-7" data-reveal>
+        <div className="mt-10 grid gap-6 lg:grid-cols-12">
+          <div className="sticker wobbly bg-paper p-7 lg:col-span-7" data-pop>
             <p className="eyebrow text-muted">Add-ons · งานเสริม</p>
             <ul className="mt-4 divide-y divide-ink/10">
               {addons.map((a) => (
@@ -74,9 +76,12 @@ export function Packages() {
               ))}
             </ul>
           </div>
-          <div className="relative overflow-hidden rounded-[1.25rem] bg-rose p-7 text-white lg:col-span-5" data-reveal>
-            <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/25" aria-hidden="true" />
-            <div className="absolute -right-6 -top-6 h-36 w-36 rounded-full border border-white/25" aria-hidden="true" />
+          <div className="sticker wobbly relative bg-rose p-7 text-white lg:col-span-5" data-pop style={{ rotate: "1deg" }}>
+            <span className="tape absolute -top-3 right-12 z-10 h-6 w-20 rotate-3" aria-hidden="true" />
+            <div className="wobbly pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+              <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/25" />
+              <div className="absolute -right-6 -top-6 h-36 w-36 rounded-full border border-white/25" />
+            </div>
             <p className="eyebrow text-white/75">{carePlan.name}</p>
             <h3 className="mt-3 font-thai text-2xl font-semibold">{carePlan.th}</h3>
             <p className="mt-6 text-5xl font-semibold tracking-tight">

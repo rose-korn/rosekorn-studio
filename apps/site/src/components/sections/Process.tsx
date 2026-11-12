@@ -18,9 +18,14 @@ export function Process() {
           lead="ทุกข้อตกลงเป็นลายลักษณ์อักษร คุณรู้ตลอดว่างานอยู่ตรงไหน และจ่ายเท่าไร"
         />
 
-        <ol className="mt-16 grid gap-px overflow-hidden rounded-[1.25rem] bg-paper/10 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {process.map((s, i) => (
-            <li key={s.en} className="flex flex-col bg-ink p-7 md:p-8" data-reveal>
+            <li
+              key={s.en}
+              data-pop
+              style={{ rotate: `${[-1.2, 0.8, -0.6, 1.1][i]}deg` }}
+              className="wobbly flex flex-col border-[2.5px] border-paper bg-ink-2 p-7 shadow-[6px_6px_0_var(--color-rose)] md:p-8"
+            >
               <span className="font-thai text-5xl text-rose">{thaiIndex(i + 1)}</span>
               <p className="eyebrow mt-10 text-paper/50">{s.en}</p>
               <h3 className="mt-2 font-thai text-2xl font-semibold">{s.title}</h3>

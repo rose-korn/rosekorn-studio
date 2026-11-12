@@ -1,0 +1,153 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+
+const PETAL_COLORS = ["#e0475e", "#f7a8c4", "#5bcefa", "#ffffff", "#f7a8c4", "#e0475e", "#5bcefa"];
+
+/**
+ * Rose cursor (from Korn's kit, swapped from a flower to the studio rose).
+ * Fine pointers only, appears after the first real mouse move.
+ * Hovering a link/button shows a small label (data-cursor="..." to customise).
+ * Click: petal burst. Type "rose" or "pride" anywhere: petals rain.
+ */
+export function RoseCursor() {
+  const dot = useRef<HTMLDivElement>(null);
+  const label = useRef<HTMLSpanElement>(null);
+  const glyph = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = dot.current!;
+    const root = document.documentElement;
+    let typed = "";
+
+    const onKey = (e: KeyboardEvent) => {
+      typed = (typed + e.key.toLowerCase()).slice(-6);
+      if (typed.endsWith("rose") || typed.endsWith("pride")) rainPetals();
+    };
+    window.addEventListener("keydown", onKey);
+    if (!fine || calm) return () => window.removeEventListener("keydown", onKey);
+
+    const xTo = gsap.quickTo(el, "x", { duration: 0.08, ease: "power3" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.08, ease: "power3" });
+    let shown = false;
+    let hovering: Element | null = null;
+
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      if (!shown) {
+        shown = true;
+        root.classList.add("rose-cursor");
+        gsap.set(el, { x: e.clientX, y: e.clientY });
+        gsap.to(el, { autoAlpha: 1, duration: 0.2 });
+      }
+      xTo(e.clientX);
+      yTo(e.clientY);
+      const target = (e.target as Element | null)?.closest("a, button, summary, [data-cursor]") ?? null;
+      if (target !== hovering) {
+        hovering = target;
+        const text = target?.getAttribute("data-cursor") ?? (target ? (target.matches("a[target=_blank]") ? "เปิดดู" : "คลิก") : "");
+        if (label.current) label.current.textContent = text;
+        gsap.to(glyph.current, { scale: target ? 1.5 : 1, rotate: target ? 90 : 0, duration: 0.4, ease: "back.out(2.2)" });
+        gsap.to(label.current, { autoAlpha: target ? 1 : 0, scale: target ? 1 : 0.6, duration: 0.3, ease: "back.out(2.2)" });
+      }
+    };
+    const onLeave = () => gsap.to(el, { autoAlpha: 0, duration: 0.2 });
+    const onEnter = () => shown && gsap.to(el, { autoAlpha: 1, duration: 0.2 });
+    const onDown = (e: PointerEvent) => e.pointerType === "mouse" && burst(e.clientX, e.clientY);
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown);
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
+    return () => {
+      root.classList.remove("rose-cursor");
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={dot}
+      className="pointer-events-none fixed left-0 top-0 z-[100] opacity-0"
+      style={{ visibility: "hidden" }}
+      aria-hidden="true"
+    >
+      <svg ref={glyph} viewBox="-20 -20 40 40" className="-ml-[14px] -mt-[14px] h-7 w-7" style={{ filter: "drop-shadow(1.5px 1.5px 0 #151311)" }}>
+        {[0, 72, 144, 216, 288].map((r) => (
+          <ellipse key={r} cx="0" cy="-9" rx="7" ry="10" transform={`rotate(${r})`} fill="#e0475e" stroke="#151311" strokeWidth="2.5" />
+        ))}
+        <circle r="5.5" fill="#f7a8c4" stroke="#151311" strokeWidth="2.5" />
+      </svg>
+      <span
+        ref={label}
+        className="absolute left-5 top-4 whitespace-nowrap rounded-full border-2 border-ink bg-paper px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink opacity-0"
+      />
+    </div>
+  );
+}
+
+function petal(color: string) {
+  const p = document.createElement("span");
+  p.setAttribute("aria-hidden", "true");
+  Object.assign(p.style, {
+    position: "fixed",
+    left: "0",
+    top: "0",
+    width: "12px",
+    height: "16px",
+    borderRadius: "60% 60% 60% 60% / 80% 80% 40% 40%",
+    background: color,
+    border: "2px solid #151311",
+    pointerEvents: "none",
+    zIndex: "99",
+  });
+  document.body.append(p);
+  return p;
+}
+
+function burst(x: number, y: number) {
+  const ring = document.createElement("span");
+  Object.assign(ring.style, {
+    position: "fixed", left: `${x - 14}px`, top: `${y - 14}px`, width: "28px", height: "28px",
+    border: "2.5px solid #151311", borderRadius: "999px", pointerEvents: "none", zIndex: "99",
+  });
+  document.body.append(ring);
+  gsap.fromTo(ring, { scale: 0.3, opacity: 1 }, { scale: 1.8, opacity: 0, duration: 0.5, ease: "expo.out", onComplete: () => ring.remove() });
+  PETAL_COLORS.forEach((c, i) => {
+    const p = petal(c);
+    const a = (i / PETAL_COLORS.length) * Math.PI * 2 + Math.random() * 0.4;
+    const d = 40 + Math.random() * 30;
+    gsap.fromTo(
+      p,
+      { x: x - 6, y: y - 8, rotate: 0, scale: 0.4, opacity: 1 },
+      { x: x - 6 + Math.cos(a) * d, y: y - 8 + Math.sin(a) * d, rotate: (Math.random() - 0.5) * 360, scale: 1, opacity: 0, duration: 0.8, ease: "expo.out", onComplete: () => p.remove() },
+    );
+  });
+}
+
+function rainPetals() {
+  for (let i = 0; i < 40; i++) {
+    const p = petal(PETAL_COLORS[i % PETAL_COLORS.length]);
+    const x = Math.random() * window.innerWidth;
+    gsap.fromTo(
+      p,
+      { x, y: -30, rotate: Math.random() * 360 },
+      {
+        y: window.innerHeight + 40,
+        x: x + (Math.random() - 0.5) * 200,
+        rotate: `+=${(Math.random() - 0.5) * 720}`,
+        duration: 2.5 + Math.random() * 2,
+        delay: Math.random() * 1.2,
+        ease: "power1.in",
+        onComplete: () => p.remove(),
+      },
+    );
+  }
+}

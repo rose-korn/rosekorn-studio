@@ -21,12 +21,12 @@ export function Header() {
   }, [open]);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled || open ? "border-b border-line/70 bg-paper/85 backdrop-blur-md" : "border-b border-transparent"
-      }`}
-    >
-      <div className="container-x flex h-16 items-center justify-between md:h-20">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6 md:pt-4">
+      <div
+        className={`mx-auto flex h-14 max-w-[1320px] items-center justify-between rounded-full px-4 transition-all duration-300 md:h-16 md:px-6 ${
+          scrolled || open ? "sticker-sm bg-paper" : "border-2 border-transparent"
+        }`}
+      >
         <a href="#top" aria-label={`${site.name} หน้าแรก`} onClick={() => setOpen(false)}>
           <Logo />
         </a>
@@ -44,13 +44,15 @@ export function Header() {
             href={site.lineUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-10 items-center gap-2 rounded-full border border-ink/15 px-4 text-sm transition hover:border-line-green hover:text-line-green"
+            data-cursor="LINE"
+            className="press sticker-sm inline-flex h-10 items-center gap-2 rounded-full bg-paper px-4 text-sm font-medium hover:bg-line-green hover:text-white"
           >
             <LineIcon className="h-4 w-4" /> LINE
           </a>
           <a
             href="#contact"
-            className="inline-flex h-10 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition hover:bg-rose"
+            data-cursor="คุยกัน!"
+            className="press sticker-sm inline-flex h-10 items-center rounded-full bg-rose px-5 text-sm font-semibold text-white"
           >
             จองคิวคุยงาน
           </a>
@@ -71,7 +73,7 @@ export function Header() {
 
       <div
         id="mobile-menu"
-        className={`md:hidden ${open ? "block" : "hidden"} h-[calc(100dvh-4rem)] overflow-y-auto bg-paper`}
+        className={`md:hidden ${open ? "block" : "hidden"} sticker mx-auto mt-2 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl bg-paper pb-6`}
       >
         <nav className="container-x flex flex-col pt-6" aria-label="เมนูมือถือ">
           {nav.map((item) => (
@@ -89,7 +91,7 @@ export function Header() {
             <a
               href="#contact"
               onClick={() => setOpen(false)}
-              className="flex h-14 items-center justify-center rounded-full bg-ink text-paper"
+              className="sticker-sm flex h-14 items-center justify-center rounded-full bg-rose font-semibold text-white"
             >
               จองคิวคุยงาน
             </a>
@@ -97,7 +99,7 @@ export function Header() {
               href={site.lineUrl}
               target="_blank"
               rel="noreferrer"
-              className="flex h-14 items-center justify-center gap-2 rounded-full bg-line-green text-white"
+              className="sticker-sm flex h-14 items-center justify-center gap-2 rounded-full bg-line-green font-semibold text-white"
             >
               <LineIcon /> แอด LINE {site.lineOaId}
             </a>

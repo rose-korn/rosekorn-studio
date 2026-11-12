@@ -10,11 +10,13 @@ export function Contact() {
       <div className="container-x relative grid gap-14 lg:grid-cols-12">
         <div className="lg:col-span-6" data-reveal>
           <p className="eyebrow flex items-center gap-3 text-paper/60">
-            <span className="font-thai text-base tracking-normal text-rose">{thaiIndex(5)}</span>
+            <span className="flex h-9 w-9 -rotate-6 items-center justify-center rounded-full border-2 border-current bg-rose font-thai text-base tracking-normal text-white">
+              {thaiIndex(5)}
+            </span>
             <span className="h-px w-8 bg-current opacity-40" />
             Let&apos;s talk
           </p>
-          <h2 className="mt-8 font-thai text-[clamp(2.6rem,6.5vw,5.5rem)] font-semibold leading-[1.05] tracking-tight">
+          <h2 data-split className="mt-8 font-thai text-[clamp(2.6rem,6.5vw,5.5rem)] font-semibold leading-[1.05] tracking-tight">
             มาคุยกัน
             <br />
             <span className="font-serif font-normal italic text-rose">ก่อนตัดสินใจ</span>
@@ -28,7 +30,8 @@ export function Contact() {
               href={site.lineUrl}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-16 items-center justify-between rounded-2xl bg-line-green px-6 text-white transition hover:brightness-110"
+              data-cursor="แอดเลย"
+              className="press group flex h-16 items-center justify-between rounded-2xl border-[2.5px] border-paper bg-line-green px-6 text-white shadow-[5px_5px_0_var(--color-paper)]"
             >
               <span className="flex items-center gap-3 font-medium">
                 <LineIcon className="h-6 w-6" /> แอด LINE {site.lineOaId}
@@ -40,7 +43,8 @@ export function Contact() {
               href={site.bookingUrl}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-16 items-center justify-between rounded-2xl border border-paper/20 px-6 transition hover:border-paper"
+              data-cursor="จองคิว"
+              className="press group flex h-16 items-center justify-between rounded-2xl border-[2.5px] border-paper px-6 shadow-[5px_5px_0_var(--color-rose)]"
             >
               <span className="font-medium">จองเวลาคุยผ่านวิดีโอคอล</span>
               <Arrow className="h-4 w-4 transition group-hover:rotate-45" />
@@ -51,7 +55,8 @@ export function Contact() {
           </div>
         </div>
 
-        <div className="lg:col-span-6" data-reveal>
+        <div className="relative lg:col-span-6" data-reveal>
+          <span className="tape absolute -top-3 left-12 z-10 h-6 w-24 -rotate-2" aria-hidden="true" />
           <ContactForm />
         </div>
       </div>

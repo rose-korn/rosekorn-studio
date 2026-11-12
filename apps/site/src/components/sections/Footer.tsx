@@ -8,11 +8,15 @@ export function Footer() {
     <footer className="bg-ink text-paper">
       <div className="container-x pt-20 pb-10">
         <p
-          className="select-none font-semibold leading-none tracking-[-0.05em] text-paper/95"
+          className="group select-none font-semibold leading-none tracking-[-0.05em] text-paper"
           style={{ fontSize: "clamp(4rem, 17vw, 16rem)" }}
           aria-hidden="true"
         >
-          Rosekorn<span className="text-rose">.</span>
+          <span className="outline-text transition-colors duration-500 group-hover:text-paper" style={{ ["--stroke" as string]: "var(--color-paper)" }}>Rosekorn</span>
+          <span className="text-rose">.</span>
+        </p>
+        <p className="mt-4 hidden font-serif text-2xl italic text-pink md:block">
+          psst… พิมพ์คำว่า <span className="font-mono not-italic text-sky">rose</span> ดูสิ
         </p>
         <div className="mt-12 grid gap-10 border-t border-paper/15 pt-10 md:grid-cols-4">
           <div className="md:col-span-2">

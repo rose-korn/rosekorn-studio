@@ -32,15 +32,19 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
       href={p.url}
       target="_blank"
       rel="noreferrer"
-      className={`group block ${offset ? "md:mt-24" : ""}`}
-      data-reveal
+      data-cursor="ลองเล่น ↗"
+      data-pop
+      style={{ rotate: offset ? "1.2deg" : "-1.2deg" }}
+      className={`group relative block ${offset ? "md:mt-24" : ""}`}
     >
+      <span className="tape absolute -top-3 left-10 z-10 h-6 w-24 -rotate-3" aria-hidden="true" />
+      <span className="stamp absolute -right-2 -top-4 z-10 rotate-6 bg-paper font-mono text-xs text-rose-deep">Demo</span>
       <div
-        className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem]"
+        className="sticker relative aspect-[4/3] overflow-hidden rounded-[1.25rem] transition duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:shadow-[10px_10px_0_var(--color-ink)]"
         style={{ background: p.palette.bg, color: p.palette.fg }}
       >
         <MockSite p={p} />
-        <span className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full bg-paper text-ink opacity-0 transition duration-300 group-hover:opacity-100 group-hover:rotate-45">
+        <span className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink opacity-0 transition duration-300 group-hover:opacity-100 group-hover:rotate-45">
           <Arrow className="h-5 w-5" />
         </span>
       </div>
@@ -54,7 +58,7 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
       </div>
       <ul className="mt-4 flex flex-wrap gap-2">
         {p.tags.map((t) => (
-          <li key={t} className="rounded-full border border-ink/15 px-3 py-1 text-xs">
+          <li key={t} className="rounded-full border-2 border-ink bg-paper px-3 py-0.5 font-mono text-[11px] font-bold">
             {t}
           </li>
         ))}

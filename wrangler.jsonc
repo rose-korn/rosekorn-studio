@@ -8,5 +8,7 @@
     "directory": "./apps/site/out",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
-  }
+  },
+  // PR preview builds run `wrangler preview`, which fails without this block
+  "previews": {}
 }
