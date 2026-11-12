@@ -1,0 +1,218 @@
+/**
+ * All copy and pricing for work.rosekorn.com lives here.
+ * When the backend arrives, these can be swapped for API/CMS data with the same shapes.
+ * Prices follow the studio plan: hours × 350 THB + 25% buffer, rounded.
+ */
+
+export const site = {
+  name: "Rosekorn Studio",
+  shortName: "Rosekorn",
+  url: "https://work.rosekorn.com",
+  description:
+    "สตูดิโอรับทำเว็บไซต์ด้วย Next.js สำหรับร้านค้า คาเฟ่ และธุรกิจไทย ออกแบบเอง เร็ว ติด SEO รองรับ PromptPay และ LINE OA พร้อมส่งมอบโค้ดให้ดูแลต่อได้",
+  // TODO: replace with the real LINE OA id once it is registered
+  lineOaId: "@rosekorn",
+  lineUrl: "https://line.me/R/ti/p/@rosekorn",
+  // TODO: replace with the real Cal.com link (embedded booking comes in phase 4)
+  bookingUrl: "https://cal.com/rosekorn/intro",
+  email: "hello@rosekorn.com",
+  cvUrl: "https://cv.rosekorn.com",
+  openingNote: "เปิดรับงาน ม.ค. 2027",
+  location: "Bangkok, TH",
+} as const;
+
+export const nav = [
+  { href: "#work", label: "ผลงาน", en: "Work" },
+  { href: "#packages", label: "แพ็กเกจ", en: "Packages" },
+  { href: "#process", label: "ขั้นตอน", en: "Process" },
+  { href: "#faq", label: "คำถาม", en: "FAQ" },
+] as const;
+
+export const marquee = [
+  "Next.js",
+  "ออกแบบเอง",
+  "Responsive",
+  "SEO พื้นฐาน",
+  "PromptPay",
+  "LINE OA",
+  "Rust API",
+  "PageSpeed 90+",
+  "Shopify",
+  "ส่งมอบโค้ดครบ",
+] as const;
+
+export type Project = {
+  slug: string;
+  title: string;
+  kind: string;
+  summary: string;
+  url: string;
+  tags: string[];
+  year: string;
+  palette: { bg: string; fg: string; accent: string };
+};
+
+export const projects: Project[] = [
+  {
+    slug: "demo-cafe",
+    title: "Baan Kafae",
+    kind: "Landing page · คาเฟ่",
+    summary:
+      "หน้าเดียวจบ: เมนู แผนที่ เวลาเปิด และปุ่มสั่งผ่าน LINE โหลดไวบนมือถือ ลูกค้าเจอร้านจาก Google ได้ง่าย",
+    url: "https://cafe.rosekorn.com",
+    tags: ["Next.js", "SEO", "LINE OA"],
+    year: "2026",
+    palette: { bg: "#2f3a2c", fg: "#f1e7d3", accent: "#d9a35b" },
+  },
+  {
+    slug: "demo-shop",
+    title: "Pha Thai Goods",
+    kind: "Online shop · ร้านผ้าทอ",
+    summary:
+      "ร้านออนไลน์ครบระบบ: ตะกร้า ค่าส่งคำนวณอัตโนมัติ ตัดสต็อก และจ่ายผ่าน PromptPay หลังบ้านเป็น Rust API",
+    url: "https://shop.rosekorn.com",
+    tags: ["Next.js", "Rust API", "PromptPay"],
+    year: "2026",
+    palette: { bg: "#7a2534", fg: "#f6e9e3", accent: "#e8b86b" },
+  },
+];
+
+export type Package = {
+  id: string;
+  name: string;
+  th: string;
+  price: string;
+  priceNote?: string;
+  delivery: string;
+  features: string[];
+  featured?: boolean;
+  cta: string;
+};
+
+export const packages: Package[] = [
+  {
+    id: "landing-basic",
+    name: "Landing Basic",
+    th: "เริ่มต้นออนไลน์ให้ไว",
+    price: "4,500",
+    delivery: "~2 สัปดาห์",
+    features: ["เทมเพลตปรับสีและเนื้อหาให้เข้าแบรนด์", "1 หน้า พร้อมฟอร์มติดต่อ", "Responsive ทุกหน้าจอ"],
+    cta: "เริ่มแพ็กเกจนี้",
+  },
+  {
+    id: "landing-custom",
+    name: "Landing Custom",
+    th: "ออกแบบใหม่ทั้งหน้า",
+    price: "8,900",
+    delivery: "~3 สัปดาห์",
+    features: [
+      "ออกแบบเองทั้งหมด ไม่ใช้เทมเพลต",
+      "สร้างด้วย Next.js โหลดไว",
+      "SEO พื้นฐาน + Open Graph",
+      "แก้ได้ 2 รอบ",
+    ],
+    featured: true,
+    cta: "เลือกแพ็กเกจยอดนิยม",
+  },
+  {
+    id: "shop-starter",
+    name: "Shop Starter",
+    th: "เปิดร้านบนแพลตฟอร์ม",
+    price: "22,000",
+    delivery: "~7 สัปดาห์",
+    features: [
+      "ตั้งค่า Shopify หรือ WooCommerce",
+      "ปรับธีมให้เข้ากับแบรนด์",
+      "ลงสินค้าให้ 20 ชิ้น",
+    ],
+    cta: "เริ่มแพ็กเกจนี้",
+  },
+  {
+    id: "shop-custom",
+    name: "Shop Custom",
+    th: "ร้านค้าเขียนเองทั้งระบบ",
+    price: "65,000",
+    priceNote: "เริ่มต้น",
+    delivery: "คุยก่อนตั้งราคา",
+    features: [
+      "Next.js + Rust API",
+      "ตะกร้า ชำระเงิน PromptPay",
+      "หลังบ้านจัดการสินค้าและออเดอร์",
+    ],
+    cta: "นัดคุยขอบเขตงาน",
+  },
+];
+
+export const addons = [
+  { name: "เชื่อม Payment / PromptPay", price: "3,500–4,500" },
+  { name: "ติด Facebook Pixel, GA4, LINE OA", price: "1,000–1,500 / รายการ" },
+  { name: "แก้งานนอกขอบเขต", price: "350 / ชม." },
+] as const;
+
+export const carePlan = {
+  name: "Care Plan",
+  th: "ดูแลรายเดือน",
+  price: "1,500",
+  features: ["Hosting และโดเมนต่ออายุให้", "แก้บั๊กเมื่อเจอปัญหา", "อัปเดตเนื้อหาได้สูงสุด 3 ชม. / เดือน"],
+} as const;
+
+export const process = [
+  {
+    title: "คุยโจทย์",
+    en: "Discover",
+    body: "จองคิวคุย 30 นาทีฟรี เล่าธุรกิจ ลูกค้า และสิ่งที่อยากให้เว็บทำ",
+  },
+  {
+    title: "ใบเสนอราคา",
+    en: "Proposal",
+    body: "สรุปเป็นลายลักษณ์อักษร ระบุชัดทั้งสิ่งที่ “รวม” และ “ไม่รวม” ไม่มีค่าใช้จ่ายแอบแฝง",
+  },
+  {
+    title: "มัดจำ 50% แล้วเริ่มงาน",
+    en: "Design & Build",
+    body: "ออกแบบและพัฒนา ส่งลิงก์ให้ดูความคืบหน้า แก้ได้ 2 รอบ",
+  },
+  {
+    title: "ส่งมอบ",
+    en: "Launch & Handover",
+    body: "ชำระส่วนที่เหลือ 50% รับโดเมน โค้ด README และ docker-compose ใครมาดูแลต่อก็รันได้ในคำสั่งเดียว",
+  },
+] as const;
+
+export const principles = [
+  {
+    title: "เร็วบนมือถือ",
+    body: "ลูกค้าไทยเกือบทั้งหมดเข้าเว็บจากมือถือ เราตั้งเป้า PageSpeed 90+ ทุกงาน",
+  },
+  {
+    title: "คุยภาษาเดียวกับลูกค้า",
+    body: "LINE OA, PromptPay, ค่าส่งแบบไทย ใส่มาให้ตั้งแต่แรก ไม่ต้องดัดแปลงทีหลัง",
+  },
+  {
+    title: "เป็นเจ้าของโค้ดเอง",
+    body: "ส่งมอบซอร์สโค้ดครบพร้อมเอกสาร จะเปลี่ยนคนดูแลเมื่อไรก็ได้ ไม่ถูกล็อก",
+  },
+] as const;
+
+export const faqs = [
+  {
+    q: "ราคานี้รวมโดเมนและโฮสติ้งไหม",
+    a: "ไม่รวมค่าโดเมน รูปสินค้า และการเขียนคำบรรยาย ทุกอย่างจะระบุไว้ในใบเสนอราคาชัดเจน ถ้าสมัคร Care Plan เราดูแล hosting และต่ออายุให้",
+  },
+  {
+    q: "ชำระเงินอย่างไร",
+    a: "มัดจำ 50% ก่อนเริ่มงาน และอีก 50% ก่อนส่งมอบโดเมนและโค้ด โอนผ่าน PromptPay หรือบัญชีธนาคารได้",
+  },
+  {
+    q: "แก้งานได้กี่ครั้ง",
+    a: "แก้ได้ 2 รอบในขอบเขตงานที่ตกลงกัน ถ้าต้องการเพิ่มนอกขอบเขต เราจะออกใบเสนอราคาใหม่เป็นลายลักษณ์อักษร คิด 350 บาท/ชม.",
+  },
+  {
+    q: "ถ้าวันหนึ่งอยากเปลี่ยนคนดูแลเว็บ",
+    a: "ทำได้เลย ทุกงานส่งมอบพร้อม README และ docker-compose ส่วน API ก็แยกเป็น service ถอดเปลี่ยนได้โดยไม่ต้องรื้อหน้าเว็บ",
+  },
+  {
+    q: "รับงานประเภทไหนบ้าง",
+    a: "เน้นร้านค้า คาเฟ่ ร้านอาหาร แบรนด์สินค้า และธุรกิจบริการ ที่อยากมีเว็บของตัวเองแทนการพึ่งแพลตฟอร์มอย่างเดียว",
+  },
+] as const;
