@@ -17,21 +17,20 @@ pnpm dev        # http://localhost:3000
 pnpm build
 ```
 
-## Deploy บน Cloudflare Pages
+## Deploy บน Cloudflare (Workers static assets)
 
-`apps/site` ถูกตั้งเป็น static export (`output: "export"`) ได้ไฟล์ใน `apps/site/out`
+`apps/site` เป็น static export (`output: "export"`) ได้ไฟล์ใน `apps/site/out`
+และ `wrangler.jsonc` ที่ root ชี้ assets ไปที่โฟลเดอร์นั้น
 
-Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → เลือก `rosekorn-studio` แล้วตั้งค่า:
+Cloudflare dashboard → Workers & Pages → Create → Import a repository → `rosekorn-studio`
 
 | ช่อง | ค่า |
 |---|---|
-| Framework preset | None |
-| Build command | `pnpm build` |
-| Build output directory | `apps/site/out` |
-| Root directory | (เว้นว่าง) |
-| Environment variable | `NODE_VERSION` = `22` |
+| Build command | `pnpm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Preview command | `npx wrangler preview` (หรือ `npx wrangler versions upload`) |
 
-จากนั้น Custom domains → เพิ่ม `work.rosekorn.com`
+จากนั้น Settings → Domains & Routes → เพิ่ม `work.rosekorn.com`
 cache และ security header อยู่ใน `apps/site/public/_headers`
 
 ## โครงของ apps/site

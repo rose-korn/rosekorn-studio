@@ -1,0 +1,12 @@
+{
+  // Cloudflare Workers static assets: serves the Next.js static export.
+  // Build: `pnpm run build` -> apps/site/out. Deploy: `npx wrangler deploy`.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rosekorn-studio",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./apps/site/out",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}
