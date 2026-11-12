@@ -66,7 +66,7 @@ export const projects: Project[] = [
     kind: "Web app · แฟนเมด ไทย/อังกฤษ",
     summary:
       "สมุดจด Valorant ภาษาไทย: เอเจนต์ สกิล แผนที่ callout ปืน สกิน แรงค์ พร้อมตัวดูโมเดล 3D และมินิเกมฝึกเอม ทั้งเว็บเป็น static ดึงข้อมูลจาก API ตอน build",
-    url: "https://valo.rosekorn.com",
+    url: "https://valo-thai.rosekorn.com/th",
     tags: ["Next.js 16", "Three.js", "TH / EN"],
     year: "2026",
     palette: { bg: "#f1e9dc", fg: "#1f1d22", accent: "#ff4655" },
@@ -81,7 +81,7 @@ export const projects: Project[] = [
     kind: "3D web · ห้องทำงานออนไลน์",
     summary:
       "ห้องนั่งทำงานกับเพื่อนแบบ 3D หน้าตาเป็นตึกแถวรีโนเวทเป็นคาเฟ่ เดินด้วย WASD ขึ้นชั้น 2 ห้องเงียบ และแต่งตัวละครได้ 12 แบบ",
-    url: "https://workspace3d-roko.pisitkorn-bootchada.workers.dev",
+    url: "https://webspace3d.rosekorn.com",
     tags: ["Three.js", "React", "Cloudflare"],
     year: "2026",
     palette: { bg: "#e6d8c6", fg: "#2a2622", accent: "#d4566c" },
