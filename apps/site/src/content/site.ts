@@ -81,7 +81,7 @@ export const projects: Project[] = [
     kind: "3D web · ห้องทำงานออนไลน์",
     summary:
       "ห้องนั่งทำงานกับเพื่อนแบบ 3D หน้าตาเป็นตึกแถวรีโนเวทเป็นคาเฟ่ เดินด้วย WASD ขึ้นชั้น 2 ห้องเงียบ และแต่งตัวละครได้ 12 แบบ",
-    url: "https://workspace3d-roko.pisitkorn-bootchada.workers.dev",
+    url: "https://webspace3d.rosekorn.com",
     tags: ["Three.js", "React", "Cloudflare"],
     year: "2026",
     palette: { bg: "#e6d8c6", fg: "#2a2622", accent: "#d4566c" },
