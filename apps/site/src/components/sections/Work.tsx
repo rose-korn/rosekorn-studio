@@ -14,9 +14,9 @@ export function Work() {
               ผลงานตัวอย่าง <span className="font-serif font-normal italic">ที่ลองกดเล่นได้จริง</span>
             </>
           }
-          lead="สองเว็บนี้สร้างขึ้นเพื่อโชว์สิ่งที่ลูกค้าจะได้ ทั้งหน้าร้านแบบหน้าเดียว และร้านค้าออนไลน์ที่มีระบบตะกร้าและชำระเงิน"
+          lead="งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ ส่วนเดโมหน้าร้านคาเฟ่และร้านค้าออนไลน์กำลังตามมา"
         />
-        <div className="mt-16 grid gap-10 md:grid-cols-2 md:gap-8">
+        <div className="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2">
           {projects.map((p, i) => (
             <ProjectCard key={p.slug} p={p} offset={i % 2 === 1} />
           ))}
@@ -27,26 +27,37 @@ export function Work() {
 }
 
 function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
-  return (
-    <a
-      href={p.url}
-      target="_blank"
-      rel="noreferrer"
-      data-cursor="ลองเล่น ↗"
-      data-pop
-      style={{ rotate: offset ? "1.2deg" : "-1.2deg" }}
-      className={`group relative block ${offset ? "md:mt-24" : ""}`}
-    >
+  const live = p.status === "live";
+  const body = (
+    <>
       <span className="tape absolute -top-3 left-10 z-10 h-6 w-24 -rotate-3" aria-hidden="true" />
-      <span className="stamp absolute -right-2 -top-4 z-10 rotate-6 bg-paper font-mono text-xs text-rose-deep">Demo</span>
+      <span
+        className={`stamp absolute -right-2 -top-4 z-10 rotate-6 bg-paper font-mono text-xs ${live ? "text-rose-deep" : "text-muted"}`}
+      >
+        {p.stamp}
+      </span>
       <div
-        className="sticker relative aspect-[4/3] overflow-hidden rounded-[1.25rem] transition duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:shadow-[10px_10px_0_var(--color-ink)]"
+        className={`sticker relative aspect-[16/10] overflow-hidden rounded-[1.25rem] transition duration-300 ${
+          live ? "group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:shadow-[10px_10px_0_var(--color-ink)]" : ""
+        }`}
         style={{ background: p.palette.bg, color: p.palette.fg }}
       >
-        <MockSite p={p} />
-        <span className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink opacity-0 transition duration-300 group-hover:opacity-100 group-hover:rotate-45">
-          <Arrow className="h-5 w-5" />
-        </span>
+        {p.image ? (
+          // eslint-disable-next-line @next/next/no-img-element -- static export, images are pre-sized webp
+          <img
+            src={p.image}
+            alt={`ภาพหน้าจอ ${p.title}`}
+            loading="lazy"
+            className={`absolute inset-0 h-full w-full transition duration-700 group-hover:scale-[1.04] ${p.fit === "contain" ? "object-contain" : "object-cover"}`}
+          />
+        ) : (
+          <MockSite p={p} />
+        )}
+        {live ? (
+          <span className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink opacity-0 transition duration-300 group-hover:rotate-45 group-hover:opacity-100">
+            <Arrow className="h-5 w-5" />
+          </span>
+        ) : null}
       </div>
       <div className="mt-6 flex items-start justify-between gap-6">
         <div>
@@ -63,7 +74,19 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
           </li>
         ))}
       </ul>
+    </>
+  );
+  const shared = {
+    "data-pop": true,
+    style: { rotate: offset ? "1.2deg" : "-1.2deg" },
+    className: `group relative block ${offset ? "md:mt-24" : ""}`,
+  };
+  return live ? (
+    <a href={p.url} target="_blank" rel="noreferrer" data-cursor="ลองเล่น ↗" {...shared}>
+      {body}
     </a>
+  ) : (
+    <div {...shared}>{body}</div>
   );
 }
 
