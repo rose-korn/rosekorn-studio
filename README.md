@@ -21,7 +21,8 @@ pnpm build
 
 - `src/content/site.ts` — ข้อความ ราคา แพ็กเกจ FAQ ทั้งหมด (แก้ที่เดียว)
 - `src/lib/api.ts` — จุดต่อ backend; ตั้ง `NEXT_PUBLIC_API_URL` เมื่อ API พร้อม ตอนนี้เป็น stub
-- `src/components/hero/HeroVisual.tsx` — ช่องสำหรับ Three.js (มีคอมเมนต์วิธีเสียบ `@react-three/fiber` ด้วย `dynamic(..., { ssr: false })`)
+- `src/components/hero/HeroScene.tsx` — ฉาก Three.js ดอกกุหลาบ 3D (@react-three/fiber + drei) โหลดแยกฝั่ง client หมุนเองและเอียงตามเมาส์ หยุด render เมื่อเลื่อนพ้นจอ
+- `src/components/hero/HeroVisual.tsx` — เลือกระหว่าง 3D กับภาพ SVG สำรอง (ใช้ SVG เมื่อเครื่องไม่รองรับ WebGL หรือผู้ใช้ปิด animation)
 - `src/app/globals.css` — design tokens (สี/ฟอนต์) ของ Tailwind v4
 
 ## ดีไซน์
