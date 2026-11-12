@@ -4,7 +4,7 @@ Monorepo (pnpm workspaces) สำหรับเว็บขายงานแ�
 
 | path | เว็บ | สถานะ |
 |---|---|---|
-| `apps/site` | work.rosekorn.com — เว็บขายงาน (ผลงาน, แพ็กเกจ, ขั้นตอน, FAQ, ติดต่อ) | ✅ frontend |
+| `apps/site` | work.rosekorn.com (Cloudflare Pages) — เว็บขายงาน (ผลงาน, แพ็กเกจ, ขั้นตอน, FAQ, ติดต่อ) | ✅ frontend |
 | `apps/demo-cafe` | cafe.rosekorn.com | ⏳ phase 2 |
 | `apps/demo-shop` | shop.rosekorn.com | ⏳ phase 3 |
 | `services/api` | Rust API (Axum + SQLx) | ⏸ on hold |
@@ -16,6 +16,23 @@ pnpm install
 pnpm dev        # http://localhost:3000
 pnpm build
 ```
+
+## Deploy บน Cloudflare Pages
+
+`apps/site` ถูกตั้งเป็น static export (`output: "export"`) ได้ไฟล์ใน `apps/site/out`
+
+Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → เลือก `rosekorn-studio` แล้วตั้งค่า:
+
+| ช่อง | ค่า |
+|---|---|
+| Framework preset | None |
+| Build command | `pnpm build` |
+| Build output directory | `apps/site/out` |
+| Root directory | (เว้นว่าง) |
+| Environment variable | `NODE_VERSION` = `22` |
+
+จากนั้น Custom domains → เพิ่ม `work.rosekorn.com`
+cache และ security header อยู่ใน `apps/site/public/_headers`
 
 ## โครงของ apps/site
 
