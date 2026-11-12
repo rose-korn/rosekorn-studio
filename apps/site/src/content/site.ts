@@ -66,7 +66,7 @@ export const projects: Project[] = [
     kind: "Web app · แฟนเมด ไทย/อังกฤษ",
     summary:
       "สมุดจด Valorant ภาษาไทย: เอเจนต์ สกิล แผนที่ callout ปืน สกิน แรงค์ พร้อมตัวดูโมเดล 3D และมินิเกมฝึกเอม ทั้งเว็บเป็น static ดึงข้อมูลจาก API ตอน build",
-    url: "https://valo.rosekorn.com",
+    url: "https://valo-thai.rosekorn.com/th",
     tags: ["Next.js 16", "Three.js", "TH / EN"],
     year: "2026",
     palette: { bg: "#f1e9dc", fg: "#1f1d22", accent: "#ff4655" },
