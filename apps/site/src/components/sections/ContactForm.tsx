@@ -36,10 +36,10 @@ export function ContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="flex min-h-[420px] flex-col items-start justify-center rounded-[1.25rem] border border-paper/15 p-8" role="status">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-rose text-2xl">✓</span>
-        <h3 className="mt-6 font-thai text-3xl font-semibold">ได้รับข้อความแล้ว ขอบคุณครับ</h3>
-        <p className="mt-3 text-paper/70">จะติดต่อกลับภายใน 1–2 วันทำการ ถ้าด่วน ทักทาง LINE ได้เลย</p>
+      <div className="wobbly flex min-h-[420px] flex-col items-start justify-center border-[2.5px] border-paper bg-ink p-8 shadow-[8px_8px_0_var(--color-rose)]" role="status">
+        <span className="flex h-14 w-14 -rotate-6 items-center justify-center rounded-full border-2 border-paper bg-rose text-2xl">🌹</span>
+        <h3 className="mt-6 font-thai text-3xl font-semibold">เย้! ได้รับแล้ว</h3>
+        <p className="mt-3 text-paper/70">เดี๋ยวทักกลับภายใน 1–2 วันทำการนะ ถ้ารีบ ทัก LINE มาได้เลย เร็วกว่า</p>
         <button type="button" onClick={() => setStatus("idle")} className="link-underline mt-8 text-sm text-paper/80">
           ส่งข้อความอีกครั้ง
         </button>
@@ -48,7 +48,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4 rounded-[1.25rem] border border-paper/15 p-6 md:p-8" noValidate={false}>
+    <form onSubmit={onSubmit} className="wobbly grid gap-4 border-[2.5px] border-paper bg-ink p-6 shadow-[8px_8px_0_var(--color-rose)] md:p-8">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-2 text-sm text-paper/70">
           ชื่อของคุณ
@@ -83,13 +83,14 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 inline-flex h-14 items-center justify-center rounded-full bg-rose font-medium text-white transition hover:bg-paper hover:text-ink disabled:opacity-60"
+        data-cursor="ส่งเลย"
+        className="press mt-2 inline-flex h-14 items-center justify-center rounded-full border-[2.5px] border-paper bg-rose font-semibold text-white shadow-[4px_4px_0_var(--color-paper)] disabled:opacity-60"
       >
         {status === "sending" ? "กำลังส่ง…" : "ส่งรายละเอียด"}
       </button>
       {status === "error" ? (
         <p className="text-sm text-rose-soft" role="alert">
-          ส่งไม่สำเร็จ ลองอีกครั้ง หรือทักทาง LINE แทนได้เลย
+          อุ๊ย ส่งไม่ผ่าน ลองอีกทีนะ หรือทัก LINE แทนก็ได้
         </p>
       ) : null}
     </form>

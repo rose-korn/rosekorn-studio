@@ -2,11 +2,24 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float, Lightformer } from "@react-three/drei";
+import { Float, Line } from "@react-three/drei";
 import * as THREE from "three";
 
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5)); // ~137.5°, the spiral real roses grow in
-const PETALS = 44;
+const PETALS = 36;
+const INK = "#151311";
+
+/** 3-step toon ramp (cel shading, from Korn's kit) */
+function useToonRamp() {
+  return useMemo(() => {
+    const tex = new THREE.DataTexture(new Uint8Array([90, 175, 255]), 3, 1, THREE.RedFormat);
+    tex.minFilter = THREE.NearestFilter;
+    tex.magFilter = THREE.NearestFilter;
+    tex.generateMipmaps = false;
+    tex.needsUpdate = true;
+    return tex;
+  }, []);
+}
 
 /** One petal: a plane cupped sideways and curled back at the tip */
 function usePetalGeometry() {
@@ -32,17 +45,33 @@ function usePetalGeometry() {
   }, []);
 }
 
+/** Ink outline along the petal's edge (left side up, across the top, right side down) */
+function usePetalOutline(geometry: THREE.BufferGeometry) {
+  return useMemo(() => {
+    const p = geometry.attributes.position;
+    const n = 25; // PlaneGeometry(…, 24, 24) has 25 vertices per row; row 0 is the top
+    const at = (row: number, col: number) => new THREE.Vector3(p.getX(row * n + col), p.getY(row * n + col), p.getZ(row * n + col));
+    const pts: THREE.Vector3[] = [];
+    for (let r = n - 1; r >= 0; r--) pts.push(at(r, 0));
+    for (let c = 1; c < n; c++) pts.push(at(0, c));
+    for (let r = 1; r < n; r++) pts.push(at(r, n - 1));
+    return pts;
+  }, [geometry]);
+}
+
 function Rose() {
   const group = useRef<THREE.Group>(null);
   const geometry = usePetalGeometry();
+  const ramp = useToonRamp();
+  const outline = usePetalOutline(geometry);
 
   const petals = useMemo(
     () =>
       Array.from({ length: PETALS }, (_, i) => {
         const k = i / (PETALS - 1); // 0 inner -> 1 outer
         const color = new THREE.Color().lerpColors(
-          new THREE.Color("#c4304c"),
-          new THREE.Color("#f7c3ca"),
+          new THREE.Color("#c42f4b"),
+          new THREE.Color("#ff9fb0"),
           Math.pow(k, 0.8),
         );
         return {
@@ -60,7 +89,11 @@ function Rose() {
   useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
-    g.rotation.y += delta * 0.18;
+    // scroll gives the rose an extra spin and a small bloom
+    const scroll = Math.min(1, window.scrollY / window.innerHeight);
+    g.rotation.y += delta * (0.18 + scroll * 1.2);
+    const s = 1 + scroll * 0.12;
+    g.scale.setScalar(THREE.MathUtils.damp(g.scale.x, s, 4, delta));
     // lean toward the pointer, eased
     const tx = state.pointer.y * 0.35 + 0.55;
     const tz = -state.pointer.x * 0.3;
@@ -72,18 +105,12 @@ function Rose() {
     <group ref={group} rotation={[0.55, 0, 0]} position={[0, -0.45, 0]}>
       {petals.map((p, i) => (
         <group key={i} rotation={[0, p.yaw, 0]} position={[0, p.lift, 0]}>
-          <mesh geometry={geometry} rotation={[p.tilt, 0, 0]} position={[0, 0, 0.06]} scale={p.scale} castShadow>
-            <meshPhysicalMaterial
-              color={p.color}
-              side={THREE.DoubleSide}
-              roughness={0.42}
-              clearcoat={0.6}
-              clearcoatRoughness={0.35}
-              sheen={1}
-              sheenColor="#ffd1d8"
-              sheenRoughness={0.5}
-            />
+          <mesh geometry={geometry} rotation={[p.tilt, 0, 0]} position={[0, 0, 0.06]} scale={p.scale}>
+            <meshToonMaterial color={p.color} gradientMap={ramp} side={THREE.DoubleSide} />
           </mesh>
+          <group rotation={[p.tilt, 0, 0]} position={[0, 0, 0.06]} scale={p.scale}>
+            <Line points={outline} color={INK} lineWidth={1.6} />
+          </group>
         </group>
       ))}
     </group>
@@ -111,7 +138,7 @@ function Pollen({ count = 70 }) {
   });
   return (
     <points ref={ref} geometry={geometry}>
-      <pointsMaterial color="#c7a15a" size={0.035} sizeAttenuation transparent opacity={0.85} />
+      <pointsMaterial color="#e0475e" size={0.05} sizeAttenuation transparent opacity={0.85} />
     </points>
   );
 }
@@ -121,24 +148,19 @@ export default function HeroScene({ active = true }: { active?: boolean }) {
     <Canvas
       frameloop={active ? "always" : "never"}
       className="!absolute inset-0"
-      dpr={[1, 1.75]}
+      flat
+      dpr={[1, 2]}
       camera={{ position: [0, 0.4, 5.8], fov: 36 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       aria-hidden="true"
     >
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[3, 5, 4]} intensity={2.2} color="#fff4ea" />
-      <directionalLight position={[-4, -1, -3]} intensity={0.6} color="#ff8fa3" />
+      <hemisphereLight args={["#ffffff", "#f7a8c4", 1.4]} />
+      <directionalLight position={[3, 5, 4]} intensity={2.6} color="#ffe2c8" />
+      <directionalLight position={[-4, -1, -3]} intensity={0.6} color="#5bcefa" />
       <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.6}>
         <Rose />
       </Float>
       <Pollen />
-      {/* Studio lighting built in code: no HDR download needed */}
-      <Environment resolution={128}>
-        <Lightformer form="rect" intensity={2.2} position={[0, 4, 2]} scale={[6, 2, 1]} color="#fff" />
-        <Lightformer form="rect" intensity={1.2} position={[-4, 0, 2]} scale={[2, 4, 1]} color="#ffd9df" />
-        <Lightformer form="ring" intensity={1.5} position={[4, 1, -2]} scale={2} color="#f6c38f" />
-      </Environment>
     </Canvas>
   );
 }

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Anuphan, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { site } from "@/content/site";
 import { RevealScript } from "@/components/RevealScript";
+import { Motion } from "@/components/Motion";
+import { RoseCursor } from "@/components/RoseCursor";
 import "./globals.css";
 
 const interTight = Inter_Tight({
@@ -60,9 +62,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="th"
       className={`${interTight.variable} ${anuphan.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
     >
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <RevealScript />
         {children}
+        <Motion />
+        <RoseCursor />
       </body>
     </html>
   );

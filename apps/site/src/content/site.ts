@@ -50,9 +50,45 @@ export type Project = {
   tags: string[];
   year: string;
   palette: { bg: string; fg: string; accent: string };
+  /** real screenshot in /public/work; without one the card draws a mock browser */
+  image?: string;
+  /** "contain" for wide images that must not be cropped (e.g. an OG banner) */
+  fit?: "cover" | "contain";
+  /** "live" links out; "soon" shows the card without a link */
+  status: "live" | "soon";
+  stamp: string;
 };
 
 export const projects: Project[] = [
+  {
+    slug: "valorant-list",
+    title: "Valorant List",
+    kind: "Web app · แฟนเมด ไทย/อังกฤษ",
+    summary:
+      "สมุดจด Valorant ภาษาไทย: เอเจนต์ สกิล แผนที่ callout ปืน สกิน แรงค์ พร้อมตัวดูโมเดล 3D และมินิเกมฝึกเอม ทั้งเว็บเป็น static ดึงข้อมูลจาก API ตอน build",
+    url: "https://valo.rosekorn.com",
+    tags: ["Next.js 16", "Three.js", "TH / EN"],
+    year: "2026",
+    palette: { bg: "#f1e9dc", fg: "#1f1d22", accent: "#ff4655" },
+    image: "/work/valorant-list.webp",
+    fit: "contain",
+    status: "live",
+    stamp: "Live",
+  },
+  {
+    slug: "workspace3d",
+    title: "WorkSpace3D",
+    kind: "3D web · ห้องทำงานออนไลน์",
+    summary:
+      "ห้องนั่งทำงานกับเพื่อนแบบ 3D หน้าตาเป็นตึกแถวรีโนเวทเป็นคาเฟ่ เดินด้วย WASD ขึ้นชั้น 2 ห้องเงียบ และแต่งตัวละครได้ 12 แบบ",
+    url: "https://workspace3d-roko.pisitkorn-bootchada.workers.dev",
+    tags: ["Three.js", "React", "Cloudflare"],
+    year: "2026",
+    palette: { bg: "#e6d8c6", fg: "#2a2622", accent: "#d4566c" },
+    image: "/work/workspace3d.webp",
+    status: "live",
+    stamp: "In progress",
+  },
   {
     slug: "demo-cafe",
     title: "Baan Kafae",
@@ -63,6 +99,8 @@ export const projects: Project[] = [
     tags: ["Next.js", "SEO", "LINE OA"],
     year: "2026",
     palette: { bg: "#2f3a2c", fg: "#f1e7d3", accent: "#d9a35b" },
+    status: "soon",
+    stamp: "เร็ว ๆ นี้",
   },
   {
     slug: "demo-shop",
@@ -74,6 +112,8 @@ export const projects: Project[] = [
     tags: ["Next.js", "Rust API", "PromptPay"],
     year: "2026",
     palette: { bg: "#7a2534", fg: "#f6e9e3", accent: "#e8b86b" },
+    status: "soon",
+    stamp: "เร็ว ๆ นี้",
   },
 ];
 
