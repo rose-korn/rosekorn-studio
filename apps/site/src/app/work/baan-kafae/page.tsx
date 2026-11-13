@@ -16,7 +16,7 @@ import { TornEdge } from "@/components/cafe/TornEdge";
 import { WordRows } from "@/components/cafe/WordRows";
 
 /**
- * Baan Kafae: a made-up cafe, built as a sample of the "Landing Custom" package.
+ * Baan Kafae: a made-up cafe, built as a sample of the "Landing Signature" package.
  * It lives inside the studio site on purpose (no separate deploy) and says clearly that it is a demo.
  * It keeps the studio's handmade outlines, but swaps to a cafe palette and a Thai display serif.
  */
@@ -235,7 +235,7 @@ function DemoBar() {
             ← กลับไปดูผลงาน
           </a>
           <a href="/#packages" className="link-underline hidden font-semibold sm:inline">
-            อยากได้แบบนี้ เริ่ม 8,900 บาท
+            อยากได้แบบนี้ แพ็กเกจ Signature ฿35,000
           </a>
         </span>
       </div>

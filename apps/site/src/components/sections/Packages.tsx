@@ -17,12 +17,12 @@ export function Packages() {
           lead="ทุกแพ็กเกจมีใบเสนอราคาที่ระบุชัดว่ารวมและไม่รวมอะไร มัดจำ 50% ก่อนเริ่ม อีก 50% ตอนส่งมอบ"
         />
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {packages.map((p, i) => (
             <article
               key={p.id}
               data-pop
-              style={{ rotate: `${[-1, 0.8, -0.6, 1][i % 4]}deg` }}
+              style={{ rotate: `${[-1, 0.8, -0.6, 1, -0.8][i % 5]}deg` }}
               className={`sticker wobbly relative flex flex-col p-7 transition duration-300 hover:-translate-y-2 hover:rotate-0 ${
                 p.featured ? "sticker-rose bg-ink text-paper" : "bg-paper"
               }`}
