@@ -87,6 +87,14 @@
     opacity: .92;
     box-shadow: 0 1px 0 rgba(0,0,0,.08);
   }
+  /* plain see-through scotch tape with torn ends (the cafe demo uses this instead of the striped tape) */
+  .tape-clear {
+    background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(250,244,222,.42));
+    border-inline: 1px dashed rgba(0,0,0,.08);
+    box-shadow: 0 1px 2px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.35);
+    backdrop-filter: saturate(.9) brightness(1.05);
+    clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 2%, 88% 2%, 92% 10%, 96% 0, 100% 8%, 100% 92%, 96% 100%, 92% 90%, 88% 98%, 12% 98%, 8% 90%, 4% 100%, 0 92%);
+  }
   .stamp {
     display: inline-block;
     border: 3px solid currentColor;

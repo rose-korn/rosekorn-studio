@@ -1,4 +1,4 @@
-import { addons, carePlan, packages } from "@/content/site";
+import { addons, carePlan, launchPromo, packages } from "@/content/site";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 
@@ -17,7 +17,9 @@ export function Packages() {
           lead="ทุกแพ็กเกจมีใบเสนอราคาที่ระบุชัดว่ารวมและไม่รวมอะไร มัดจำ 50% ก่อนเริ่ม อีก 50% ตอนส่งมอบ"
         />
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {launchPromo.active ? <PromoBanner /> : null}
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {packages.map((p, i) => (
             <article
               key={p.id}
@@ -34,10 +36,24 @@ export function Packages() {
               ) : null}
               <p className={`eyebrow ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.name}</p>
               <h3 className="mt-3 font-thai text-2xl font-semibold leading-snug">{p.th}</h3>
-              <div className="mt-8 flex items-baseline gap-2">
+              <div className="mt-8 flex flex-wrap items-baseline gap-x-2">
                 {p.priceNote ? <span className={`whitespace-nowrap ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.priceNote}</span> : null}
-                <span className="text-5xl font-semibold tracking-tight">฿{p.price}</span>
+                {launchPromo.active && p.promoPrice ? (
+                  <>
+                    <span className="text-5xl font-semibold tracking-tight">฿{p.promoPrice}</span>
+                    <s className={`text-lg ${p.featured ? "text-paper/50" : "text-muted"}`} aria-label={`ราคาปกติ ${p.price} บาท`}>
+                      ฿{p.price}
+                    </s>
+                  </>
+                ) : (
+                  <span className="text-5xl font-semibold tracking-tight">฿{p.price}</span>
+                )}
               </div>
+              {launchPromo.active && p.promoPrice ? (
+                <p className="mt-2 inline-flex w-fit rounded-full border-2 border-current px-2.5 py-0.5 text-xs font-semibold text-rose">
+                  ราคาโปรเปิดตัว · ถึง {launchPromo.until}
+                </p>
+              ) : null}
               <p className={`mt-2 text-sm ${p.featured ? "text-paper/60" : "text-muted"}`}>ส่งงาน {p.delivery}</p>
               <ul className={`mt-8 flex-1 space-y-3 border-t pt-6 ${p.featured ? "border-paper/15" : "border-ink/10"}`}>
                 {p.features.map((f) => (
@@ -101,5 +117,36 @@ export function Packages() {
         </div>
       </div>
     </section>
+  );
+}
+
+/** "First 10 clients" launch strip with a seat counter (seats are updated by hand in content/site.ts) */
+function PromoBanner() {
+  const left = launchPromo.total - launchPromo.taken;
+  return (
+    <div className="sticker wobbly relative mt-14 grid gap-6 bg-ink p-7 text-paper md:grid-cols-[1fr_auto] md:items-center md:p-9" data-pop style={{ rotate: "-0.6deg" }}>
+      <span className="stamp absolute -top-4 left-6 -rotate-3 bg-rose font-thai text-sm text-white" style={{ borderColor: "var(--color-ink)" }}>
+        LAUNCH ✿
+      </span>
+      <div>
+        <p className="font-thai text-2xl font-semibold md:text-3xl">{launchPromo.headline}</p>
+        <p className="mt-2 text-paper/85">{launchPromo.offer}</p>
+        <p className="mt-1 text-sm text-paper/60">
+          {launchPromo.condition} · หมดเขตเมื่อครบ {launchPromo.total} ท่าน หรือ {launchPromo.until}
+        </p>
+      </div>
+      <div className="md:text-right">
+        <p className="font-mono text-xs tracking-[0.2em] text-paper/60">เหลืออีก</p>
+        <p className="text-5xl font-semibold tabular-nums">
+          {left}
+          <span className="text-2xl text-paper/50"> / {launchPromo.total} ที่</span>
+        </p>
+        <ul className="mt-3 flex gap-1.5 md:justify-end" aria-hidden="true">
+          {Array.from({ length: launchPromo.total }, (_, i) => (
+            <li key={i} className={`h-3 w-3 rounded-full border-2 border-paper ${i < launchPromo.taken ? "bg-transparent" : "bg-rose"}`} />
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }

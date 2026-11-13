@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Chonburi, Sriracha } from "next/font/google";
 import { C } from "@/components/cafe/palette";
+import { launchPromo, packages } from "@/content/site";
 import { CafeHeroVisual, RoastPicker, RoastProvider } from "@/components/cafe/CafeHeroVisual";
 import { CoffeeRiver } from "@/components/cafe/CoffeeRiver";
 import { FinaleCup } from "@/components/cafe/FinaleCup";
@@ -235,7 +236,12 @@ function DemoBar() {
             ← กลับไปดูผลงาน
           </a>
           <a href="/#packages" className="link-underline hidden font-semibold sm:inline">
-            อยากได้แบบนี้ แพ็กเกจ Signature ฿35,000
+            {(() => {
+              const sig = packages.find((p) => p.id === "landing-signature");
+              return launchPromo.active && sig?.promoPrice
+                ? `อยากได้แบบนี้ Signature โปรเปิดตัว ฿${sig.promoPrice}`
+                : `อยากได้แบบนี้ แพ็กเกจ Signature ฿${sig?.price}`;
+            })()}
           </a>
         </span>
       </div>

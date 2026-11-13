@@ -124,7 +124,7 @@ export function Moments() {
             className="relative w-[78vw] shrink-0 snap-center select-none rounded-[1rem] border-[3px] p-3 pb-4 sm:w-[22rem]"
             style={{ background: "#fbf6ea", borderColor: C.ink, boxShadow: `6px 6px 0 ${C.ink}`, rotate: `${[-2, 1.5, -1, 2, -1.5][i]}deg`, color: C.ink }}
           >
-            <span className="tape absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2" style={{ rotate: `${i % 2 ? 4 : -3}deg` }} aria-hidden="true" />
+            <span className="tape-clear absolute -top-3 left-1/2 h-6 w-24 -translate-x-1/2" style={{ rotate: `${i % 2 ? 4 : -3}deg` }} aria-hidden="true" />
             <div className="aspect-[4/3.4] overflow-hidden rounded-[0.6rem] border-[2.5px]" style={{ background: s.bg, borderColor: C.ink }}>
               {s.art}
             </div>
