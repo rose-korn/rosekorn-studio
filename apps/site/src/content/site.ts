@@ -126,6 +126,8 @@ export type Package = {
   priceNote?: string;
   /** launch-promo price, shown next to the struck-through normal price while launchPromo.active */
   promoPrice?: string;
+  /** shown but taped shut ("SOON"): not taking this kind of work yet */
+  soon?: boolean;
   delivery: string;
   features: string[];
   featured?: boolean;
@@ -191,9 +193,9 @@ export const packages: Package[] = [
     id: "shop-custom",
     name: "Shop Custom",
     th: "ร้านค้าเขียนเองทั้งระบบ",
-    price: "65,000",
-    promoPrice: "55,250",
+    price: "80,000",
     priceNote: "เริ่มต้น",
+    soon: true,
     delivery: "คุยก่อนตั้งราคา",
     features: [
       "Next.js + Rust API",
@@ -214,7 +216,7 @@ export const launchPromo = {
   taken: 0,
   until: "31 มี.ค. 2570",
   headline: "โปรเปิดตัว 10 ลูกค้าแรก",
-  offer: "ลด 15% ทุกแพ็กเกจ (ยกเว้น Landing Basic) + Care Plan ฟรี 3 เดือน มูลค่า ฿4,500",
+  offer: "ลด 15% ทุกแพ็กเกจที่เปิดรับ (ยกเว้น Landing Basic) + Care Plan ฟรี 3 เดือน มูลค่า ฿4,500",
   condition: "ขอแค่ให้เรานำงานไปลงหน้าผลงาน และเขียนรีวิวให้ 1 รีวิว",
 } as const;
 

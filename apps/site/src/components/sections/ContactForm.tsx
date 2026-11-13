@@ -66,7 +66,7 @@ export function ContactForm() {
       <label className="grid gap-2 text-sm text-paper/70">
         แพ็กเกจที่สนใจ
         <select name="packageId" value={pkg} onChange={(e) => setPkg(e.target.value)} className={`${field} appearance-none`}>
-          {packages.map((p) => (
+          {packages.filter((p) => !p.soon).map((p) => (
             <option key={p.id} value={p.id} className="text-ink">
               {p.name} — ฿{p.price}
             </option>
