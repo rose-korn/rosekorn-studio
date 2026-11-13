@@ -176,3 +176,9 @@ details > summary::-webkit-details-marker { display: none; }
 /* Baan Kafae demo: glossy dashes running down the coffee river */
 @keyframes coffee-flow { to { stroke-dashoffset: -50; } }
 .coffee-flow { animation: coffee-flow .8s linear infinite; }
+@keyframes coffee-steam {
+  0% { transform: translateY(6px) scaleY(.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-14px) scaleY(1.05); opacity: 0; }
+}
+.coffee-steam { transform-box: fill-box; transform-origin: bottom; animation: coffee-steam 2s ease-out infinite; }

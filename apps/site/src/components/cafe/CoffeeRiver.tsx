@@ -9,7 +9,8 @@ import { C } from "./palette";
  *   [data-river-start]          where the 3D stream leaves the frame
  *   [data-river-via="0..1"]     waypoints; the value is x as a fraction of the width
  *   [data-river-end]            the cup mouth at the bottom of the page
- * The leading tip follows ~72% down the viewport, eased so it moves like liquid,
+ * The leading tip follows ~72% down the viewport, eased so it moves like liquid, never flows back up
+ * when you scroll up, and carries wisps of steam (hot coffee on its way to you),
  * and the end cup ([data-river-cup]) fills through the --fill CSS variable once the coffee arrives.
  * Sits on z-1: over section backgrounds, under the content (which is z-2).
  */
@@ -89,6 +90,8 @@ export function CoffeeRiver() {
     };
 
     let cur = 0;
+    let reached = 0; // furthest the coffee has flowed; scrolling back up never pulls it back
+    let filled = 0;
     let raf = 0;
     let last = performance.now();
     const frame = (now: number) => {
@@ -96,19 +99,25 @@ export function CoffeeRiver() {
       last = now;
       const hostTop = host.getBoundingClientRect().top + window.scrollY;
       const targetY = window.scrollY + window.innerHeight * 0.72 - hostTop;
-      const target = calm ? total : lengthAtY(targetY);
+      reached = Math.max(reached, calm ? total : lengthAtY(targetY));
+      const target = reached;
       cur += (target - cur) * (calm ? 1 : 1 - Math.exp(-dt * 5));
       if (Math.abs(target - cur) < 0.5) cur = target;
       mask.style.strokeDashoffset = `${total - cur}`;
       const p = path.getPointAtLength(cur);
       if (tip.current) {
-        tip.current.setAttribute("transform", `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
-        tip.current.style.opacity = cur > 4 && cur < total - 2 ? "1" : "0";
+        // steam sits just ahead of the front of the flow
+        const q = path.getPointAtLength(Math.max(0, cur - 1));
+        const len = Math.hypot(p.x - q.x, p.y - q.y) || 1;
+        const sx = p.x + ((p.x - q.x) / len) * 12;
+        const sy = p.y + ((p.y - q.y) / len) * 12;
+        tip.current.setAttribute("transform", `translate(${sx.toFixed(1)} ${sy.toFixed(1)})`);
+        tip.current.style.opacity = cur > 4 ? "1" : "0";
       }
       if (cup) {
         const arrived = cur >= total - 20;
-        const fill = arrived ? Math.min(1, Math.max(0, (targetY - geo.endY) / (window.innerHeight * 0.3))) : 0;
-        cup.style.setProperty("--fill", calm ? "1" : fill.toFixed(3));
+        if (arrived) filled = Math.max(filled, Math.min(1, Math.max(0, (targetY - geo.endY) / (window.innerHeight * 0.3))));
+        cup.style.setProperty("--fill", calm ? "1" : filled.toFixed(3));
       }
       raf = requestAnimationFrame(frame);
     };
@@ -127,7 +136,7 @@ export function CoffeeRiver() {
     >
       <defs>
         <mask id="coffee-river-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={geo.w} height={geo.h}>
-          <path ref={reveal} d={geo.d} fill="none" stroke="#fff" strokeWidth="40" />
+          <path ref={reveal} d={geo.d} fill="none" stroke="#fff" strokeWidth="40" strokeLinecap="round" />
         </mask>
       </defs>
       <g mask="url(#coffee-river-mask)" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -142,10 +151,20 @@ export function CoffeeRiver() {
           style={{ stroke: "var(--coffee-hi, #b07a4c)", transition: "stroke .6s" }}
         />
       </g>
-      {/* the drop at the front of the pour */}
-      <g ref={tip} style={{ opacity: 0, transition: "opacity .3s" }}>
-        <path d="M0 -14 C 9 -4 11 3 11 6 A 11 11 0 0 1 -11 6 C -11 3 -9 -4 0 -14 Z" stroke={C.ink} strokeWidth="3" style={{ fill: "var(--coffee, #6b4325)" }} />
-        <circle cx="-4" cy="4" r="2.5" style={{ fill: "var(--coffee-hi, #b07a4c)" }} />
+      {/* steam rising off the front of the pour: hot coffee on its way down to you */}
+      <g ref={tip} style={{ opacity: 0, transition: "opacity .4s" }}>
+        {[
+          { x: -14, s: 0.9, delay: "0s" },
+          { x: 2, s: 1.2, delay: ".6s" },
+          { x: 18, s: 0.8, delay: "1.2s" },
+        ].map((w) => (
+          <g key={w.x} transform={`translate(${w.x} -6) scale(${w.s * 1.5})`}>
+            <g className="coffee-steam" style={{ animationDelay: w.delay }}>
+              <path d="M0 0 c-6 -6 6 -11 0 -17 c-6 -6 6 -11 0 -17" fill="none" stroke={C.ink} strokeWidth="5.5" strokeLinecap="round" />
+              <path d="M0 0 c-6 -6 6 -11 0 -17 c-6 -6 6 -11 0 -17" fill="none" stroke={C.cream} strokeWidth="3" strokeLinecap="round" />
+            </g>
+          </g>
+        ))}
       </g>
     </svg>
   );
