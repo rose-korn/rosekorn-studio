@@ -25,7 +25,8 @@ export function Packages() {
               key={p.id}
               data-pop
               style={{ rotate: `${[-1, 0.8, -0.6, 1, -0.8][i % 5]}deg` }}
-              className={`sticker wobbly relative flex flex-col p-7 transition duration-300 hover:-translate-y-2 hover:rotate-0 ${
+              aria-label={p.soon ? `${p.name} (เร็ว ๆ นี้ ยังไม่เปิดรับ)` : undefined}
+              className={`sticker wobbly relative flex flex-col p-7 transition duration-300 ${p.soon ? "" : "hover:-translate-y-2 hover:rotate-0"} ${
                 p.featured ? "sticker-rose bg-ink text-paper" : "bg-paper"
               }`}
             >
@@ -63,6 +64,11 @@ export function Packages() {
                   </li>
                 ))}
               </ul>
+              {p.soon ? (
+                <span className="mt-8 inline-flex h-12 items-center rounded-full border-2 border-dashed border-ink/40 pl-5 text-sm font-semibold text-muted">
+                  ยังไม่เปิดรับ
+                </span>
+              ) : (
               <a
                 href="#contact"
                 data-package={p.id}
@@ -76,6 +82,8 @@ export function Packages() {
                   <Arrow className="h-3.5 w-3.5 transition group-hover:rotate-45" />
                 </span>
               </a>
+              )}
+              {p.soon ? <SoonTape /> : null}
             </article>
           ))}
         </div>
@@ -147,6 +155,29 @@ function PromoBanner() {
           ))}
         </ul>
       </div>
+    </div>
+  );
+}
+
+/** Red warning tape across a package that is shown but not open yet */
+function SoonTape() {
+  const strip = (rot: string, top: string) => (
+    <div
+      className="absolute -inset-x-6 flex h-11 items-center overflow-hidden border-y-[2.5px] border-ink bg-[#e0475e] shadow-[0_3px_0_rgba(0,0,0,.18)]"
+      style={{ rotate: rot, top }}
+    >
+      <p className="flex w-max gap-5 whitespace-nowrap font-mono text-sm font-bold tracking-[0.2em] text-white">
+        {Array.from({ length: 8 }, (_, i) => (
+          <span key={i}>SOON · เร็ว ๆ นี้ ·</span>
+        ))}
+      </p>
+    </div>
+  );
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]" aria-hidden="true">
+      <div className="absolute inset-0 bg-paper/55 backdrop-blur-[1.5px]" />
+      {strip("-14deg", "38%")}
+      {strip("9deg", "52%")}
     </div>
   );
 }
