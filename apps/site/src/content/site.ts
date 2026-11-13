@@ -104,6 +104,20 @@ export const projects: Project[] = [
     stamp: "Demo",
   },
   {
+    slug: "demo-fashion",
+    title: "Sai Phrae Atelier",
+    kind: "Landing page · แบรนด์แฟชั่น (เว็บตัวอย่าง)",
+    summary:
+      "แบรนด์แฟชั่นสมมติสไตล์ high fashion: ตัวอักษรใหญ่แบบนิตยสาร lookbook ที่เลื่อนข้างทีละลุค เรื่องผ้าทอมือ และนัดลองชุดผ่าน LINE อีกหน้าตาหนึ่งของแพ็กเกจ Landing Signature",
+    url: "/work/sai-phrae/",
+    tags: ["Next.js", "GSAP", "Lookbook", "LINE OA"],
+    year: "2026",
+    palette: { bg: "#efebe4", fg: "#0d0d0d", accent: "#6e1423" },
+    image: "/work/sai-phrae.webp",
+    status: "live",
+    stamp: "Demo",
+  },
+  {
     slug: "demo-shop",
     title: "Pha Thai Goods",
     kind: "Online shop · ร้านผ้าทอ",

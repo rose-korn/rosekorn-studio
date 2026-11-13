@@ -73,7 +73,7 @@ export const ui = {
     work: {
       title: "ผลงานตัวอย่าง",
       titleAccent: "ที่ลองกดเล่นได้จริง",
-      lead: "งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ และเว็บตัวอย่างร้านคาเฟ่ที่กดเข้าไปดูได้ทั้งหน้า ส่วนร้านค้าออนไลน์กำลังตามมา",
+      lead: "งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ และเว็บตัวอย่างร้านคาเฟ่กับแบรนด์แฟชั่นที่กดเข้าไปดูได้ทั้งหน้า ส่วนร้านค้าออนไลน์กำลังตามมา",
       screenshot: "ภาพหน้าจอ",
       openDemo: "ดูเว็บตัวอย่าง →",
       openLive: "ลองเล่น ↗",
@@ -172,7 +172,7 @@ export const ui = {
     work: {
       title: "Selected work",
       titleAccent: "you can actually try",
-      lead: "Projects we built and run ourselves: a game reference site with hundreds of pages, a walkable 3D room, and a full café demo you can click through. An online store is on its way.",
+      lead: "Projects we built and run ourselves: a game reference site with hundreds of pages, a walkable 3D room, and full café and fashion-label demos you can click through. An online store is on its way.",
       screenshot: "Screenshot of",
       openDemo: "View the demo →",
       openLive: "Try it ↗",

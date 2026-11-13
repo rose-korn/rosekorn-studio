@@ -48,6 +48,11 @@ const projectText: Record<string, Pick<Project, "kind" | "summary"> & { stamp?: 
     summary:
       "A fictional café built as a showcase: 3D coffee pours from a kettle and flows down the page into a cup at the bottom, with an orderable chalkboard menu, a sideways story and a map. This is what the Landing Signature package delivers.",
   },
+  "demo-fashion": {
+    kind: "Landing page · Fashion label (demo site)",
+    summary:
+      "A fictional high-fashion label: editorial type, a runway lookbook that slides look by look, the story behind the handwoven fabric, and private fittings booked via LINE. Another face of the Landing Signature package.",
+  },
   "demo-shop": {
     kind: "Online shop · Handwoven textiles",
     summary:
