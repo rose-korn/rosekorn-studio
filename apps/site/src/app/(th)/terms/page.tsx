@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { carePlan, launchPromo, site } from "@/content/site";
 import { Clause, LegalPage } from "@/components/legal/LegalPage";
+import { languageAlternates } from "@/components/RootShell";
 
 export const metadata: Metadata = {
   title: "ข้อกำหนดการให้บริการ",
   description: "เงื่อนไขการจ้างทำเว็บกับ Rosekorn Studio: ขอบเขตงาน การชำระเงิน การแก้ไข การส่งมอบ สิทธิ์ในผลงาน และการยกเลิก",
-  alternates: { canonical: "/terms/" },
+  alternates: languageAlternates("th", "/terms/"),
 };
 
 const toc = [
@@ -52,6 +53,8 @@ const scope = [
 export default function Terms() {
   return (
     <LegalPage
+      locale="th"
+      path="/terms/"
       eyebrow="Terms of service"
       title="ข้อกำหนดการให้บริการ"
       updated="13 พฤศจิกายน 2569"

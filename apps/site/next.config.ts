@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   images: { unoptimized: true },
+  // one shared 404 page, since the Thai and English route groups each have their own root layout
+  experimental: { globalNotFound: true },
 };
 
 export default nextConfig;

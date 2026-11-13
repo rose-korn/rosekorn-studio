@@ -1,24 +1,28 @@
-import { projects, type Project } from "@/content/site";
+import type { Project } from "@/content/site";
+import { getContent, ui, type Locale } from "@/content";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 
-export function Work() {
+export function Work({ locale }: { locale: Locale }) {
+  const { projects } = getContent(locale);
+  const t = ui[locale];
   return (
     <section id="work" className="scroll-mt-20 py-24 md:py-36">
       <div className="container-x">
         <SectionHeading
+          locale={locale}
           index={1}
           en="Selected work"
           title={
             <>
-              ผลงานตัวอย่าง <span className="font-serif font-normal italic">ที่ลองกดเล่นได้จริง</span>
+              {t.work.title} <span className="font-serif font-normal italic">{t.work.titleAccent}</span>
             </>
           }
-          lead="งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ และเว็บตัวอย่างร้านคาเฟ่ที่กดเข้าไปดูได้ทั้งหน้า ส่วนร้านค้าออนไลน์กำลังตามมา"
+          lead={t.work.lead}
         />
         <div className="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2">
           {projects.map((p, i) => (
-            <ProjectCard key={p.slug} p={p} offset={i % 2 === 1} />
+            <ProjectCard key={p.slug} p={p} offset={i % 2 === 1} locale={locale} />
           ))}
         </div>
       </div>
@@ -26,7 +30,8 @@ export function Work() {
   );
 }
 
-function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
+function ProjectCard({ p, offset, locale }: { p: Project; offset: boolean; locale: Locale }) {
+  const t = ui[locale];
   const live = p.status === "live";
   const body = (
     <>
@@ -46,12 +51,12 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
           // eslint-disable-next-line @next/next/no-img-element -- static export, images are pre-sized webp
           <img
             src={p.image}
-            alt={`ภาพหน้าจอ ${p.title}`}
+            alt={`${t.work.screenshot} ${p.title}`}
             loading="lazy"
             className={`absolute inset-0 h-full w-full transition duration-700 group-hover:scale-[1.04] ${p.fit === "contain" ? "object-contain" : "object-cover"}`}
           />
         ) : (
-          <MockSite p={p} />
+          <MockSite p={p} en={locale === "en"} />
         )}
         {live ? (
           <span className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink opacity-0 transition duration-300 group-hover:rotate-45 group-hover:opacity-100">
@@ -86,7 +91,7 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
   return live ? (
     <a
       href={p.url}
-      {...(internal ? { "data-cursor": "ดูเว็บตัวอย่าง →" } : { target: "_blank", rel: "noreferrer", "data-cursor": "ลองเล่น ↗" })}
+      {...(internal ? { "data-cursor": t.work.openDemo } : { target: "_blank", rel: "noreferrer", "data-cursor": t.work.openLive })}
       {...shared}
     >
       {body}
@@ -97,10 +102,11 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
 }
 
 /** Illustrated browser mock so the card looks finished before real screenshots exist */
-function MockSite({ p }: { p: Project }) {
+function MockSite({ p, en }: { p: Project; en: boolean }) {
   const isShop = p.slug.includes("shop");
+  const links = en ? ["Menu", isShop ? "Shop" : "Visit", "Contact"] : ["เมนู", isShop ? "สินค้า" : "ที่ตั้ง", "ติดต่อ"];
   return (
-    <div className="absolute inset-x-[7%] top-[10%] bottom-0 overflow-hidden rounded-t-xl bg-black/15 shadow-2xl transition duration-700 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+    <div aria-hidden="true" className="absolute inset-x-[7%] top-[10%] bottom-0 overflow-hidden rounded-t-xl bg-black/15 shadow-2xl transition duration-700 group-hover:-translate-y-2 group-hover:scale-[1.02]">
       <div className="flex items-center gap-1.5 bg-black/25 px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-white/40" />
         <span className="h-2 w-2 rounded-full bg-white/40" />
@@ -113,9 +119,9 @@ function MockSite({ p }: { p: Project }) {
         <div className="flex items-center justify-between text-[10px] opacity-80">
           <span className="font-semibold tracking-wide">{p.title.toUpperCase()}</span>
           <span className="hidden gap-3 sm:flex">
-            <span>เมนู</span>
-            <span>{isShop ? "สินค้า" : "ที่ตั้ง"}</span>
-            <span>ติดต่อ</span>
+            {links.map((l) => (
+              <span key={l}>{l}</span>
+            ))}
           </span>
         </div>
         {isShop ? (

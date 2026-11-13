@@ -201,3 +201,8 @@ details > summary::-webkit-details-marker { display: none; }
 .legal table { width: 100%; border-collapse: collapse; font-size: .95rem; }
 .legal th, .legal td { border: 1.5px solid color-mix(in srgb, var(--color-ink) 15%, transparent); padding: .6rem .75rem; text-align: left; vertical-align: top; }
 .legal th { background: color-mix(in srgb, var(--color-ink) 5%, transparent); font-weight: 600; }
+
+/* English pages: headings set in .font-thai fall back to the Latin grotesk (unlayered so it beats the utility) */
+html[lang="en"] .font-thai {
+  font-family: var(--font-sans);
+}
