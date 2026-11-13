@@ -124,6 +124,8 @@ export type Package = {
   th: string;
   price: string;
   priceNote?: string;
+  /** launch-promo price, shown next to the struck-through normal price while launchPromo.active */
+  promoPrice?: string;
   delivery: string;
   features: string[];
   featured?: boolean;
@@ -145,6 +147,7 @@ export const packages: Package[] = [
     name: "Landing Custom",
     th: "ออกแบบใหม่ทั้งหน้า",
     price: "8,900",
+    promoPrice: "7,565",
     delivery: "~3 สัปดาห์",
     features: [
       "ออกแบบเองทั้งหมด ไม่ใช้เทมเพลต",
@@ -160,6 +163,7 @@ export const packages: Package[] = [
     name: "Landing Signature",
     th: "จัดเต็ม 3D และลูกเล่น",
     price: "35,000",
+    promoPrice: "29,750",
     delivery: "~6 สัปดาห์",
     features: [
       "ฉาก 3D (Three.js) ออกแบบเฉพาะแบรนด์",
@@ -174,6 +178,7 @@ export const packages: Package[] = [
     name: "Shop Starter",
     th: "เปิดร้านบนแพลตฟอร์ม",
     price: "22,000",
+    promoPrice: "18,700",
     delivery: "~7 สัปดาห์",
     features: [
       "ตั้งค่า Shopify หรือ WooCommerce",
@@ -187,6 +192,7 @@ export const packages: Package[] = [
     name: "Shop Custom",
     th: "ร้านค้าเขียนเองทั้งระบบ",
     price: "65,000",
+    promoPrice: "55,250",
     priceNote: "เริ่มต้น",
     delivery: "คุยก่อนตั้งราคา",
     features: [
@@ -197,6 +203,20 @@ export const packages: Package[] = [
     cta: "นัดคุยขอบเขตงาน",
   },
 ];
+
+/**
+ * Launch promo for the first 10 clients. Update `taken` by hand as deals close
+ * (moves to the backend later); set `active: false` to hide it everywhere.
+ */
+export const launchPromo = {
+  active: true,
+  total: 10,
+  taken: 0,
+  until: "31 มี.ค. 2570",
+  headline: "โปรเปิดตัว 10 ลูกค้าแรก",
+  offer: "ลด 15% ทุกแพ็กเกจ (ยกเว้น Landing Basic) + Care Plan ฟรี 3 เดือน มูลค่า ฿4,500",
+  condition: "ขอแค่ให้เรานำงานไปลงหน้าผลงาน และเขียนรีวิวให้ 1 รีวิว",
+} as const;
 
 export const addons = [
   { name: "ใส่ 3D หรืออนิเมชันตอนเลื่อน 1 จุด (กับ Landing Custom)", price: "6,000–9,000" },

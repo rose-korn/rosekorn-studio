@@ -63,7 +63,7 @@ export function CafeHeroVisual() {
 
   return (
     <div className="relative mx-auto w-full max-w-[440px]" style={{ rotate: "1.5deg" }}>
-      <span className="tape absolute -top-3 left-1/2 z-10 h-6 w-28 -translate-x-1/2 -rotate-2" aria-hidden="true" />
+      <span className="tape-clear absolute -top-3 left-1/2 z-10 h-6 w-28 -translate-x-1/2 -rotate-2" aria-hidden="true" />
       <div
         ref={box}
         className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border-[3px]"
