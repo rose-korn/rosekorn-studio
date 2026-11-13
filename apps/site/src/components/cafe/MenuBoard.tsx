@@ -1,20 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MenuArt, type Art } from "./MenuArt";
 import { C } from "./palette";
 
-type Item = { name: string; note: string; price: number; star?: boolean };
-type Group = { group: string; en: string; items: Item[] };
+export type MenuItem = { name: string; note: string; price: number; star?: boolean; art?: Art };
+export type MenuGroup = { group: string; en: string; items: MenuItem[] };
 
 /**
- * Menu with a featured signature drink, three category cards and an order tray.
- * Tap a row to add it; a − / + stepper appears in a fixed-width slot so rows never change height.
+ * The menu as a sidewalk A-frame chalkboard under a hanging shop sign: chalk drawings for every item,
+ * today's special, and an order tray. Tap a row to add it; a − / + stepper appears in a fixed-width
+ * slot so rows never change height.
  * On a real site the tray's button would open LINE with the order already typed out.
  */
-export function MenuBoard({ menu }: { menu: Group[] }) {
+export function MenuBoard({ menu }: { menu: MenuGroup[] }) {
   const [cart, setCart] = useState<Record<string, number>>({});
   const [bump, setBump] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const stand = useRef<HTMLDivElement>(null);
+
+  // the sign swings in on its strings, the board drops onto its legs, then the chalk "writes" itself in
+  useEffect(() => {
+    const el = stand.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 75%", once: true } });
+      tl.from("[data-board]", { y: -90, rotate: -3, opacity: 0, duration: 1, ease: "bounce.out" })
+        .from("[data-sign]", { rotate: 14, transformOrigin: "50% 0%", duration: 1.6, ease: "elastic.out(1.2, 0.3)" }, 0.2)
+        .from(
+          "[data-chalk]",
+          { clipPath: "inset(0 100% 0 0)", opacity: 0.2, duration: 0.6, ease: "power2.out", stagger: 0.05 },
+          0.5,
+        );
+      // the hanging sign keeps swaying gently, and kicks when you scroll fast
+      gsap.to("[data-sign]", { rotate: 2, transformOrigin: "50% 0%", duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      ScrollTrigger.create({
+        trigger: el,
+        onUpdate: (self) => {
+          const v = gsap.utils.clamp(-8, 8, self.getVelocity() / 300);
+          if (Math.abs(v) > 1) gsap.to("[data-sign] p", { rotate: -v, duration: 0.3, overwrite: true, onComplete: () => void gsap.to("[data-sign] p", { rotate: 0, duration: 1.2, ease: "elastic.out(1, 0.3)" }) });
+        },
+      });
+    }, el);
+    return () => ctx.revert();
+  }, []);
 
   const all = menu.flatMap((g) => g.items);
   const count = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -37,156 +69,187 @@ export function MenuBoard({ menu }: { menu: Group[] }) {
 
   return (
     <>
-      <p className="mt-4 text-sm opacity-60">แตะเมนูเพื่อใส่ในออเดอร์ แล้วส่งทาง LINE ได้ทันที</p>
+      {/* roughens every chalk drawing a little so it reads hand-drawn */}
+      <svg width="0" height="0" className="absolute" aria-hidden="true">
+        <filter id="chalk">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" />
+          <feDisplacementMap in="SourceGraphic" scale="1.8" />
+        </filter>
+      </svg>
 
-      {/* signature drink */}
-      <div
-        data-pop
-        className="relative mt-12 grid items-center gap-8 overflow-hidden rounded-[1.5rem] border-[2.5px] p-6 sm:grid-cols-[auto_1fr] md:p-10"
-        style={{ borderColor: C.ink, background: C.bg, color: C.cream, boxShadow: `6px 6px 0 ${C.ink}`, rotate: "-0.6deg" }}
-      >
-        <span className="tape absolute -top-2 right-16 h-6 w-24 rotate-3" aria-hidden="true" />
-        <div className="relative mx-auto h-44 w-44 md:h-56 md:w-56">
-          <RoseLatte />
-          <svg viewBox="0 0 200 200" className="absolute -right-6 -top-6 h-24 w-24 animate-spin-slow" aria-hidden="true">
-            <defs>
-              <path id="sig-ring" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0" />
-            </defs>
-            <circle cx="100" cy="100" r="92" fill={C.caramel} stroke={C.ink} strokeWidth="5" />
-            <text style={{ fontFamily: "var(--font-mono)", fontSize: 20, letterSpacing: 4, fontWeight: 700 }} fill={C.ink}>
-              <textPath href="#sig-ring">SIGNATURE · ประจำร้าน ·</textPath>
-            </text>
-            <text x="100" y="112" textAnchor="middle" fontSize="40" fill={C.ink}>
-              ✿
-            </text>
-          </svg>
-        </div>
-        <div>
-          <p className="font-mono text-[11px] tracking-[0.25em]" style={{ color: C.caramel }}>
-            HOUSE SIGNATURE
-          </p>
-          <h3 className="mt-2 font-[family-name:var(--font-chonburi)] text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.1]">{signature.name}</h3>
-          <p className="mt-3 max-w-md opacity-85">
-            ลาเต้นมสดกับไซรัปกุหลาบที่เคี่ยวเองจากกลีบกุหลาบมอญ หอมอ่อน ๆ ไม่หวานแหลม ปาดลายกุหลาบให้ทุกแก้ว
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <span className="font-[family-name:var(--font-chonburi)] text-4xl" style={{ color: C.caramel }}>
-              ฿{signature.price}
-            </span>
-            <button
-              type="button"
-              onClick={() => change(signature.name, 1)}
-              data-cursor="+ ใส่ออเดอร์"
-              className="press inline-flex h-12 items-center gap-2 rounded-full border-[2.5px] px-6 font-semibold"
-              style={{ background: C.caramel, color: C.ink, borderColor: C.ink, boxShadow: `3px 3px 0 ${C.ink}` }}
-            >
-              + ใส่ออเดอร์
-              {cart[signature.name] ? (
-                <span className="rounded-full px-2 font-mono text-xs" style={{ background: C.cream }}>
-                  {cart[signature.name]}
-                </span>
-              ) : null}
-            </button>
+      <div ref={stand} className="relative mx-auto max-w-6xl pb-28 md:pb-36">
+        {/* hanging shop sign above the board */}
+        <div className="relative z-10 mx-auto -mb-3 flex w-fit flex-col items-center" data-sign>
+          <div className="flex gap-24 md:gap-40" aria-hidden="true">
+            <span className="h-8 w-[3px]" style={{ background: C.ink }} />
+            <span className="h-8 w-[3px]" style={{ background: C.ink }} />
           </div>
+          <p
+            className="rounded-xl border-[3px] px-6 py-2 font-[family-name:var(--font-chonburi)] text-lg md:text-xl"
+            style={{ background: C.caramel, color: C.ink, borderColor: C.ink, boxShadow: `4px 4px 0 ${C.ink}` }}
+          >
+            ☕︎ บ้านกาแฟ · เปิดแล้ว
+          </p>
         </div>
-      </div>
 
-      {/* category cards */}
-      <div className="mt-12 grid gap-8 md:grid-cols-3">
-        {menu.map((g, i) => (
+        {/* the A-frame chalkboard */}
+        <div
+          data-board
+          className="relative rounded-[22px] border-[3px] p-3 md:p-4"
+          style={{
+            borderColor: C.ink,
+            background: "repeating-linear-gradient(90deg, #9a6a3f 0 18px, #8c5f37 18px 20px, #a5744a 20px 44px)",
+            boxShadow: `8px 8px 0 ${C.ink}`,
+          }}
+        >
           <div
-            key={g.group}
-            data-pop
-            className="group/card rounded-[1.25rem] border-[2.5px] p-6 md:p-7"
+            className="relative overflow-hidden rounded-[14px] border-[3px] px-3 py-8 sm:px-5 md:px-10 md:py-12"
             style={{
               borderColor: C.ink,
-              background: i === 1 ? C.cream2 : "#fbf6ec",
-              boxShadow: `6px 6px 0 ${C.ink}`,
-              rotate: i === 1 ? "1deg" : "-0.8deg",
+              color: "#f3ecdc",
+              background:
+                "radial-gradient(ellipse at 20% 15%, rgba(255,255,255,.07), transparent 45%), radial-gradient(ellipse at 80% 70%, rgba(255,255,255,.05), transparent 50%), #26322b",
+              boxShadow: "inset 0 0 40px rgba(0,0,0,.45)",
             }}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-mono text-[11px] tracking-[0.25em] opacity-60">{g.en.toUpperCase()}</p>
-                <h3 className="mt-1 font-[family-name:var(--font-chonburi)] text-3xl">{g.group}</h3>
-              </div>
-              <span className="transition-transform duration-500 group-hover/card:-rotate-12 group-hover/card:scale-110">
-                <CategoryIcon i={i} />
-              </span>
+            {/* header */}
+            <div className="text-center">
+              <p className="font-mono text-[11px] tracking-[0.4em] opacity-70">BREW · BAKE · REPEAT</p>
+              <h2 data-chalk className="mt-2 font-[family-name:var(--font-chonburi)] text-[clamp(2.6rem,7vw,5rem)] leading-none">
+                เมนูวันนี้
+              </h2>
+              <svg viewBox="0 0 300 16" className="mx-auto mt-2 h-4 w-56" style={{ filter: "url(#chalk)" }} aria-hidden="true">
+                <path d="M4 10 C60 2 120 14 160 8 S260 4 296 9" fill="none" stroke="#d9a35b" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+              <p className="mt-3 font-[family-name:var(--font-chalk)] text-base opacity-80">แตะรูปหรือชื่อเมนูเพื่อใส่ออเดอร์ แล้วส่งทาง LINE ได้ทันที</p>
             </div>
-            <ul className="mt-5 space-y-1">
-              {g.items.map((it) => {
-                const n = cart[it.name] ?? 0;
-                return (
-                  <li key={it.name} className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => change(it.name, 1)}
-                      data-cursor="+ ใส่ออเดอร์"
-                      className="group flex min-w-0 flex-1 items-baseline gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-black/5"
-                    >
-                      <span className="min-w-0">
-                        <span className="font-semibold">
-                          {it.name}
-                          {it.star ? (
-                            <span className="ml-2 rounded-full px-2 py-0.5 align-middle font-mono text-[10px]" style={{ background: C.caramel }}>
-                              แนะนำ
-                            </span>
-                          ) : null}
-                        </span>
-                        <span className="block text-sm opacity-60">{it.note}</span>
-                      </span>
-                      <span className="mb-1.5 flex-1 border-b-2 border-dotted opacity-30" style={{ borderColor: C.ink }} />
-                      <span className="font-mono font-bold">{it.price}</span>
-                    </button>
-                    {/* fixed-size slot: shows + until the item is in the order, then − n + */}
-                    <span className="flex h-9 w-[5.5rem] shrink-0 items-center justify-end">
-                      {n ? (
-                        <span
-                          className="inline-flex h-9 items-center rounded-full border-2"
-                          style={{ borderColor: C.ink, background: C.caramel }}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => change(it.name, -1)}
-                            aria-label={`ลด ${it.name}`}
-                            className="h-full w-7 rounded-l-full font-bold hover:bg-black/10"
-                          >
-                            −
-                          </button>
-                          <span
-                            className="w-6 text-center font-mono text-sm font-bold tabular-nums transition-transform duration-200"
-                            style={{ transform: bump === it.name ? "scale(1.3)" : "none" }}
-                          >
-                            {n}
-                          </span>
+
+            {/* today's special */}
+            <div data-chalk className="relative mx-auto mt-10 grid max-w-3xl items-center gap-6 rounded-2xl border-2 border-dashed p-5 sm:grid-cols-[auto_1fr_auto] md:p-6" style={{ borderColor: "#f3ecdc66" }}>
+              <div className="relative mx-auto h-28 w-28 md:h-32 md:w-32">
+                <RoseLatte />
+              </div>
+              <div className="text-center sm:text-left">
+                <p className="font-[family-name:var(--font-chalk)] text-lg" style={{ color: "#f7a8c4" }}>
+                  ✿ แนะนำวันนี้ ต้องลอง!
+                </p>
+                <p className="font-[family-name:var(--font-chonburi)] text-3xl md:text-4xl">{signature.name}</p>
+                <p className="mt-1 font-[family-name:var(--font-chalk)] opacity-80">ไซรัปกุหลาบมอญเคี่ยวเอง หอมอ่อน ๆ ปาดลายกุหลาบทุกแก้ว</p>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className="font-[family-name:var(--font-chonburi)] text-4xl" style={{ color: C.caramel }}>
+                  ฿{signature.price}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => change(signature.name, 1)}
+                  data-cursor="+ ใส่ออเดอร์"
+                  className="press inline-flex h-11 items-center gap-2 rounded-full border-2 px-5 font-[family-name:var(--font-chalk)] text-lg"
+                  style={{ borderColor: "#f3ecdc", color: "#f3ecdc" }}
+                >
+                  + ใส่ออเดอร์
+                  {cart[signature.name] ? (
+                    <span className="rounded-full px-2 font-mono text-xs" style={{ background: C.caramel, color: C.ink }}>
+                      {cart[signature.name]}
+                    </span>
+                  ) : null}
+                </button>
+              </div>
+              {/* chalk arrow doodle */}
+              <svg viewBox="0 0 80 60" className="pointer-events-none absolute -left-4 -top-10 hidden h-14 w-20 md:block" style={{ filter: "url(#chalk)" }} aria-hidden="true">
+                <path d="M6 8 C30 4 52 18 60 46 M50 38 L60 47 L66 34" fill="none" stroke="#f3ecdc" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            {/* categories */}
+            <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
+              {menu.map((g) => (
+                <div key={g.group}>
+                  <div data-chalk className="flex items-baseline justify-between border-b-2 border-dashed pb-2" style={{ borderColor: "#f3ecdc55" }}>
+                    <h3 className="font-[family-name:var(--font-chonburi)] text-2xl md:text-3xl">{g.group}</h3>
+                    <span className="font-mono text-[10px] tracking-[0.3em] opacity-60">{g.en.toUpperCase()}</span>
+                  </div>
+                  <ul className="mt-3 space-y-1">
+                    {g.items.map((it) => {
+                      const n = cart[it.name] ?? 0;
+                      return (
+                        <li key={it.name} data-chalk className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => change(it.name, 1)}
-                            aria-label={`เพิ่ม ${it.name}`}
-                            className="h-full w-7 rounded-r-full font-bold hover:bg-black/10"
+                            data-cursor="+ ใส่ออเดอร์"
+                            className="group flex min-w-0 flex-1 items-center gap-2 rounded-xl md:gap-3 px-1.5 py-1.5 text-left transition-colors hover:bg-white/5"
                           >
-                            +
+                            <span className="h-12 w-12 shrink-0 transition-transform md:h-14 md:w-14 duration-300 group-hover:-rotate-6 group-hover:scale-110">
+                              {it.art ? <MenuArt art={it.art} /> : null}
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="flex items-baseline gap-2">
+                                <span className="font-[family-name:var(--font-chalk)] text-base leading-tight md:text-lg">{it.name}</span>
+                                <span className="mb-1 flex-1 border-b-2 border-dotted opacity-30" style={{ borderColor: "#f3ecdc" }} />
+                                <span className="font-[family-name:var(--font-chalk)] text-lg" style={{ color: C.caramel }}>
+                                  {it.price}
+                                </span>
+                              </span>
+                              <span className="block text-xs opacity-60">
+                                {it.star ? "★ " : ""}
+                                {it.note}
+                              </span>
+                            </span>
                           </button>
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => change(it.name, 1)}
-                          aria-label={`ใส่ ${it.name} ในออเดอร์`}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-full border-2 font-bold transition-colors hover:bg-black/5"
-                          style={{ borderColor: C.ink }}
-                        >
-                          +
-                        </button>
-                      )}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
+                          {/* fixed-size slot so rows never change height */}
+                          <span className="flex h-9 w-[4.5rem] shrink-0 items-center justify-end">
+                            {n ? (
+                              <span className="inline-flex h-9 items-center rounded-full border-2" style={{ borderColor: "#f3ecdc", background: C.caramel, color: C.ink }}>
+                                <button type="button" onClick={() => change(it.name, -1)} aria-label={`ลด ${it.name}`} className="h-full w-6 rounded-l-full font-bold hover:bg-black/10">
+                                  −
+                                </button>
+                                <span
+                                  className="w-5 text-center font-mono text-sm font-bold tabular-nums transition-transform duration-200"
+                                  style={{ transform: bump === it.name ? "scale(1.3)" : "none" }}
+                                >
+                                  {n}
+                                </span>
+                                <button type="button" onClick={() => change(it.name, 1)} aria-label={`เพิ่ม ${it.name}`} className="h-full w-6 rounded-r-full font-bold hover:bg-black/10">
+                                  +
+                                </button>
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => change(it.name, 1)}
+                                aria-label={`ใส่ ${it.name} ในออเดอร์`}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border-2 font-bold transition-colors hover:bg-white/10"
+                                style={{ borderColor: "#f3ecdc99" }}
+                              >
+                                +
+                              </button>
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <p data-chalk className="mt-10 text-center font-[family-name:var(--font-chalk)] text-base opacity-75">
+              ราคารวม VAT แล้ว · นมโอ๊ต / อัลมอนด์ +15 · พกแก้วมาเองลด 5 บาท ✿
+            </p>
+            {/* chalk tray with a stub of chalk */}
+            <div className="absolute inset-x-6 bottom-2 h-2 rounded-full bg-black/30" aria-hidden="true" />
+            <span className="absolute bottom-3 right-12 h-2 w-8 rounded-sm bg-[#f3ecdc]" aria-hidden="true" />
           </div>
-        ))}
+        </div>
+
+        {/* A-frame legs + pavement */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36" aria-hidden="true">
+          <span className="absolute left-[9%] top-0 h-full w-4 origin-top rotate-[9deg] rounded-b-md border-[3px] md:w-5" style={{ background: "#8c5f37", borderColor: C.ink }} />
+          <span className="absolute right-[9%] top-0 h-full w-4 origin-top -rotate-[9deg] rounded-b-md border-[3px] md:w-5" style={{ background: "#8c5f37", borderColor: C.ink }} />
+          <span className="absolute inset-x-[12%] top-[45%] h-3 rounded-full border-[3px]" style={{ background: "#9a6a3f", borderColor: C.ink }} />
+          <span className="absolute -inset-x-4 bottom-0 h-[3px] rounded-full" style={{ background: C.ink }} />
+        </div>
       </div>
 
       {/* order tray: fades in place (no bounce), clear and send are big tap targets */}
@@ -252,34 +315,6 @@ function RoseLatte() {
       </g>
       <path d="M100 140 q-2 12 6 22" fill="none" stroke="#f6ead6" strokeWidth="4" strokeLinecap="round" />
       <path d="M104 152 q10 -6 16 0 q-8 6 -16 0z" fill="#f6ead6" />
-    </svg>
-  );
-}
-
-function CategoryIcon({ i }: { i: number }) {
-  const common = { fill: "none", stroke: C.ink, strokeWidth: 3, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-  return (
-    <svg viewBox="0 0 48 48" className="h-12 w-12" aria-hidden="true">
-      {i === 0 ? (
-        <>
-          <path d="M10 18h24v10a10 10 0 0 1-10 10h-4a10 10 0 0 1-10-10z" fill={C.caramel} {...{ stroke: C.ink, strokeWidth: 3, strokeLinejoin: "round" }} />
-          <path d="M34 21h3a4 4 0 0 1 0 8h-3" {...common} />
-          <path d="M17 8c-2 3 2 4 0 7M24 6c-2 3 2 4 0 7" {...common} />
-        </>
-      ) : i === 1 ? (
-        <>
-          <path d="M13 12h22l-3 28H16z" fill="#b9d18f" stroke={C.ink} strokeWidth={3} strokeLinejoin="round" />
-          <path d="M14 22h20" {...common} />
-          <path d="M28 12l4-8" {...common} />
-          <circle cx="20" cy="30" r="2.2" fill={C.ink} />
-          <circle cx="27" cy="34" r="2.2" fill={C.ink} />
-        </>
-      ) : (
-        <>
-          <path d="M6 32c4-14 32-14 36 0-6 6-30 6-36 0z" fill={C.caramel} stroke={C.ink} strokeWidth={3} strokeLinejoin="round" />
-          <path d="M16 22l3 12M24 20v14M32 22l-3 12" {...common} />
-        </>
-      )}
     </svg>
   );
 }

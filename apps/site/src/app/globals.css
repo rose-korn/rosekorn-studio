@@ -182,3 +182,6 @@ details > summary::-webkit-details-marker { display: none; }
   100% { transform: translateY(-14px) scaleY(1.05); opacity: 0; }
 }
 .coffee-steam { transform-box: fill-box; transform-origin: bottom; animation: coffee-steam 2s ease-out infinite; }
+/* finale cup: stamp and steam appear once the river has filled it */
+.finale-stamp, .finale-steam { opacity: 0; transition: opacity .4s; }
+[data-full="true"] .finale-stamp, [data-full="true"] .finale-steam { opacity: 1; }

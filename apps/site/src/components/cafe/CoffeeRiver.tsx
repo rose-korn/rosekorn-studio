@@ -92,6 +92,7 @@ export function CoffeeRiver() {
     let cur = 0;
     let reached = 0; // furthest the coffee has flowed; scrolling back up never pulls it back
     let filled = 0;
+    let announced = false;
     let raf = 0;
     let last = performance.now();
     const frame = (now: number) => {
@@ -118,6 +119,10 @@ export function CoffeeRiver() {
         const arrived = cur >= total - 20;
         if (arrived) filled = Math.max(filled, Math.min(1, Math.max(0, (targetY - geo.endY) / (window.innerHeight * 0.3))));
         cup.style.setProperty("--fill", calm ? "1" : filled.toFixed(3));
+        if (!announced && (calm || filled >= 0.999)) {
+          announced = true;
+          window.dispatchEvent(new Event("coffee:full"));
+        }
       }
       raf = requestAnimationFrame(frame);
     };
