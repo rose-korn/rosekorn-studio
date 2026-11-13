@@ -180,8 +180,9 @@ export const packages: Package[] = [
     name: "Shop Starter",
     th: "เปิดร้านบนแพลตฟอร์ม",
     price: "22,000",
-    promoPrice: "18,700",
     delivery: "~7 สัปดาห์",
+    // e-commerce is paused: too heavy alongside korn's day job (Nov 2026)
+    soon: true,
     features: [
       "ตั้งค่า Shopify หรือ WooCommerce",
       "ปรับธีมให้เข้ากับแบรนด์",
@@ -223,7 +224,9 @@ export const launchPromo = {
 export const addons = [
   { name: "ใส่ 3D หรืออนิเมชันตอนเลื่อน 1 จุด (กับ Landing Custom)", price: "6,000–9,000" },
   { name: "เชื่อม Payment / PromptPay", price: "3,500–4,500" },
-  { name: "ติด Facebook Pixel, GA4, LINE OA", price: "1,000–1,500 / รายการ" },
+  { name: "ตั้งค่า LINE OA: ข้อความต้อนรับ ตอบกลับอัตโนมัติ Rich menu", price: "2,500" },
+  { name: "ส่งฟอร์มหรือออเดอร์จากเว็บเข้า LINE ร้านทันที", price: "3,500–5,000" },
+  { name: "ติด Facebook Pixel หรือ GA4", price: "1,000–1,500 / รายการ" },
   { name: "แก้งานนอกขอบเขต", price: "350 / ชม." },
 ] as const;
 

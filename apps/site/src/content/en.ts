@@ -110,7 +110,9 @@ export const launchPromo = {
 export const addons = [
   { name: "One 3D or scroll-animation piece (with Landing Custom)", price: th.addons[0].price },
   { name: "Payment / PromptPay integration", price: th.addons[1].price },
-  { name: "Facebook Pixel, GA4 or LINE OA setup", price: "1,000–1,500 / item" },
+  { name: "LINE OA setup: welcome message, auto-replies and rich menu", price: th.addons[2].price },
+  { name: "Website forms or orders sent straight to your LINE", price: th.addons[3].price },
+  { name: "Facebook Pixel or GA4 setup", price: "1,000–1,500 / item" },
   { name: "Out-of-scope changes", price: "350 / hour" },
 ] as const;
 
