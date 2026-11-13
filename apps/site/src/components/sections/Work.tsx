@@ -1,28 +1,28 @@
 import type { Project } from "@/content/site";
 import { getContent, ui, type Locale } from "@/content";
-import { SectionHeading } from "@/components/SectionHeading";
-import { Arrow } from "@/components/Arrow";
+import { EditorialHeading } from "@/components/EditorialHeading";
 
 export function Work({ locale }: { locale: Locale }) {
   const { projects } = getContent(locale);
   const t = ui[locale];
   return (
-    <section id="work" className="scroll-mt-20 py-24 md:py-36">
+    <section id="work" className="scroll-mt-20 bg-ink py-24 text-paper md:py-40">
       <div className="container-x">
-        <SectionHeading
+        <EditorialHeading
           locale={locale}
           index={1}
+          tone="dark"
           en="Selected work"
           title={
             <>
-              {t.work.title} <span className="font-serif font-normal italic">{t.work.titleAccent}</span>
+              {t.work.title} <span className="font-serif font-normal italic text-rose-soft">{t.work.titleAccent}</span>
             </>
           }
           lead={t.work.lead}
         />
-        <div className="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2">
+        <div className="mt-20 grid gap-x-10 gap-y-24 md:grid-cols-12">
           {projects.map((p, i) => (
-            <ProjectCard key={p.slug} p={p} offset={i % 2 === 1} locale={locale} />
+            <ProjectCard key={p.slug} p={p} i={i} locale={locale} />
           ))}
         </div>
       </div>
@@ -30,62 +30,43 @@ export function Work({ locale }: { locale: Locale }) {
   );
 }
 
-function ProjectCard({ p, offset, locale }: { p: Project; offset: boolean; locale: Locale }) {
+/** Lookbook spread: wide and narrow plates alternate, captions set like a magazine credit */
+const layout = ["md:col-span-7", "md:col-span-5 md:mt-40", "md:col-span-5", "md:col-span-7 md:mt-24", "md:col-span-8 md:col-start-3"];
+
+function ProjectCard({ p, i, locale }: { p: Project; i: number; locale: Locale }) {
   const t = ui[locale];
   const live = p.status === "live";
+  const no = String(i + 1).padStart(2, "0");
   const body = (
     <>
-      <span className="tape absolute -top-3 left-10 z-10 h-6 w-24 -rotate-3" aria-hidden="true" />
-      <span
-        className={`stamp absolute -right-2 -top-4 z-10 rotate-6 bg-paper font-mono text-xs ${live ? "text-rose-deep" : "text-muted"}`}
-      >
-        {p.stamp}
-      </span>
-      <div
-        className={`sticker relative aspect-[16/10] overflow-hidden rounded-[1.25rem] transition duration-300 ${
-          live ? "group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:shadow-[10px_10px_0_var(--color-ink)]" : ""
-        }`}
-        style={{ background: p.palette.bg, color: p.palette.fg }}
-      >
+      <div className="relative aspect-[16/10] overflow-hidden" style={{ background: p.palette.bg, color: p.palette.fg }}>
         {p.image ? (
           // eslint-disable-next-line @next/next/no-img-element -- static export, images are pre-sized webp
           <img
             src={p.image}
             alt={`${t.work.screenshot} ${p.title}`}
             loading="lazy"
-            className={`absolute inset-0 h-full w-full transition duration-700 group-hover:scale-[1.04] ${p.fit === "contain" ? "object-contain" : "object-cover"}`}
+            className={`absolute inset-0 h-full w-full transition duration-[1.2s] ease-out group-hover:scale-[1.05] ${p.fit === "contain" ? "object-contain" : "object-cover"} ${live ? "" : "grayscale-[40%]"}`}
           />
         ) : (
           <MockSite p={p} en={locale === "en"} />
         )}
-        {live ? (
-          <span className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink opacity-0 transition duration-300 group-hover:rotate-45 group-hover:opacity-100">
-            <Arrow className="h-5 w-5" />
-          </span>
-        ) : null}
+        {/* a thin frame that closes in on hover, like a mat around a print */}
+        <span className="pointer-events-none absolute inset-0 border border-paper/0 transition-all duration-700 group-hover:inset-3 group-hover:border-paper/70" aria-hidden="true" />
       </div>
-      <div className="mt-6 flex items-start justify-between gap-6">
-        <div>
-          <p className="eyebrow text-muted">{p.kind}</p>
-          <h3 className="mt-2 text-3xl font-semibold tracking-tight">{p.title}</h3>
-          <p className="mt-3 max-w-md text-muted">{p.summary}</p>
-        </div>
-        <span className="eyebrow shrink-0 text-muted">{p.year}</span>
+      <div className="mt-6 grid grid-cols-[auto_1fr_auto] items-baseline gap-x-5 border-t border-paper/20 pt-5">
+        <span className="font-serif text-3xl italic text-rose-soft">Nº{no}</span>
+        <h3 className="font-serif text-[clamp(1.8rem,3vw,2.6rem)] leading-none">{p.title}</h3>
+        <span className={`caps-th font-mono text-[10px] uppercase tracking-[0.3em] ${live ? "text-rose" : "text-paper/40"}`}>— {p.stamp}</span>
       </div>
-      <ul className="mt-4 flex flex-wrap gap-2">
-        {p.tags.map((t) => (
-          <li key={t} className="rounded-full border-2 border-ink bg-paper px-3 py-0.5 font-mono text-[11px] font-bold">
-            {t}
-          </li>
-        ))}
-      </ul>
+      <p className="caps-th mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-paper/45">
+        {p.kind} · {p.year}
+      </p>
+      <p className="mt-4 max-w-lg text-paper/70">{p.summary}</p>
+      <p className="mt-4 font-mono text-[11px] tracking-[0.15em] text-paper/45">{p.tags.join("  /  ")}</p>
     </>
   );
-  const shared = {
-    "data-pop": true,
-    style: { rotate: offset ? "1.2deg" : "-1.2deg" },
-    className: `group relative block ${offset ? "md:mt-24" : ""}`,
-  };
+  const shared = { "data-reveal": true, className: `group relative block ${layout[i % layout.length]}` };
   // demos that live on this site (url starts with "/") open in the same tab
   const internal = p.url.startsWith("/");
   return live ? (

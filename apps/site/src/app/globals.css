@@ -206,3 +206,11 @@ details > summary::-webkit-details-marker { display: none; }
 html[lang="en"] .font-thai {
   font-family: var(--font-sans);
 }
+
+/* Letter-spaced mono labels that may carry Thai: Thai script breaks apart when tracked, so set it plainly */
+html[lang="th"] .caps-th {
+  font-family: var(--font-thai);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-size: 0.8rem;
+}
