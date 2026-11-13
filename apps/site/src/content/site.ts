@@ -94,7 +94,7 @@ export const projects: Project[] = [
     title: "Baan Kafae",
     kind: "Landing page · คาเฟ่ (เว็บตัวอย่าง)",
     summary:
-      "ร้านสมมติที่ทำขึ้นให้ดูเป็นตัวอย่าง: กาแฟ 3D เทจากกาแล้วไหลลงตามหน้าเว็บจนเต็มแก้วล่างสุด ป้ายเมนูกระดานชอล์กกดสั่งได้ เรื่องราวร้านแบบเลื่อนข้าง และแผนที่ หน้าตาแบบที่แพ็กเกจ Landing Custom จะได้",
+      "ร้านสมมติที่ทำขึ้นให้ดูเป็นตัวอย่าง: กาแฟ 3D เทจากกาแล้วไหลลงตามหน้าเว็บจนเต็มแก้วล่างสุด ป้ายเมนูกระดานชอล์กกดสั่งได้ เรื่องราวร้านแบบเลื่อนข้าง และแผนที่ หน้าตาแบบที่แพ็กเกจ Landing Signature จะได้",
     url: "/work/baan-kafae/",
     tags: ["Next.js", "Three.js", "GSAP", "LINE OA"],
     year: "2026",
@@ -156,6 +156,20 @@ export const packages: Package[] = [
     cta: "เลือกแพ็กเกจยอดนิยม",
   },
   {
+    id: "landing-signature",
+    name: "Landing Signature",
+    th: "จัดเต็ม 3D และลูกเล่น",
+    price: "35,000",
+    delivery: "~6 สัปดาห์",
+    features: [
+      "ฉาก 3D (Three.js) ออกแบบเฉพาะแบรนด์",
+      "เล่าเรื่องด้วยอนิเมชันตอนเลื่อน (GSAP)",
+      "เมนูหรือแคตตาล็อกกดสั่งต่อเข้า LINE",
+      "ภาพวาดประกอบเฉพาะร้าน แก้ได้ 3 รอบ",
+    ],
+    cta: "นัดคุยหน้าแบบนี้",
+  },
+  {
     id: "shop-starter",
     name: "Shop Starter",
     th: "เปิดร้านบนแพลตฟอร์ม",
@@ -185,6 +199,7 @@ export const packages: Package[] = [
 ];
 
 export const addons = [
+  { name: "ใส่ 3D หรืออนิเมชันตอนเลื่อน 1 จุด (กับ Landing Custom)", price: "6,000–9,000" },
   { name: "เชื่อม Payment / PromptPay", price: "3,500–4,500" },
   { name: "ติด Facebook Pixel, GA4, LINE OA", price: "1,000–1,500 / รายการ" },
   { name: "แก้งานนอกขอบเขต", price: "350 / ชม." },
