@@ -10,6 +10,10 @@ import { Journey } from "@/components/cafe/Journey";
 import { Magnetic } from "@/components/cafe/Magnetic";
 import { OpenNow } from "@/components/cafe/OpenNow";
 import { MenuBoard, type MenuGroup } from "@/components/cafe/MenuBoard";
+import { Moments } from "@/components/cafe/Moments";
+import { NamesCup } from "@/components/cafe/NamesCup";
+import { TornEdge } from "@/components/cafe/TornEdge";
+import { WordRows } from "@/components/cafe/WordRows";
 
 /**
  * Baan Kafae: a made-up cafe, built as a sample of the "Landing Custom" package.
@@ -130,7 +134,9 @@ export default function BaanKafae() {
         <CafeMarquee />
 
         {/* menu */}
-        <section id="menu" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.cream, color: C.ink }}>
+        <section id="menu" className="relative scroll-mt-16 py-20 md:py-28" style={{ background: C.cream, color: C.ink }}>
+          <TornEdge side="top" fill={C.caramel} seed={3} />
+          <TornEdge side="bottom" fill={C.bg2} seed={17} />
           <div data-river-via="0.94" className="h-0" aria-hidden="true" />
           <div className="container-x relative z-[2]">
             <MenuBoard menu={menu} />
@@ -141,10 +147,14 @@ export default function BaanKafae() {
         {/* story: pinned horizontal "farm to cup" */}
         <Journey />
 
-        <div data-river-via="0.5" className="h-0" aria-hidden="true" />
+        {/* taste words, "whatever you call it" + 3D cup, swipeable moments */}
+        <WordRows />
+        <NamesCup />
+        <Moments />
 
         {/* visit */}
-        <section id="visit" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.bg2 }}>
+        <section id="visit" className="relative scroll-mt-16 py-20 md:py-28" style={{ background: C.bg2 }}>
+          <TornEdge side="bottom" fill={C.bg} seed={29} />
           <div className="container-x relative z-[2] grid gap-10 md:grid-cols-[1fr_1.2fr]">
             <div>
               <h2 data-split className="font-[family-name:var(--font-chonburi)] text-[clamp(2.2rem,5vw,3.8rem)] leading-none">

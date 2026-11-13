@@ -25,7 +25,7 @@ export function RoastProvider({ children }: { children: React.ReactNode }) {
   return <RoastCtx.Provider value={{ roast, setRoast }}>{children}</RoastCtx.Provider>;
 }
 
-function canUse3D() {
+export function canUse3D() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   try {
     const c = document.createElement("canvas");
@@ -42,6 +42,9 @@ function Fallback() {
     </div>
   );
 }
+
+/** the roast picked in the hero, for other 3D bits on the page */
+export const useRoast = () => useContext(RoastCtx).roast;
 
 export function CafeHeroVisual() {
   const box = useRef<HTMLDivElement>(null);
