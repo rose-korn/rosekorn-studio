@@ -94,9 +94,9 @@ export const projects: Project[] = [
     title: "Baan Kafae",
     kind: "Landing page · คาเฟ่ (เว็บตัวอย่าง)",
     summary:
-      "ร้านสมมติที่ทำขึ้นให้ดูเป็นตัวอย่าง หน้าเดียวจบ: เมนูพร้อมราคา เวลาเปิด แผนที่ และปุ่มสั่งผ่าน LINE หน้าตาแบบที่แพ็กเกจ Landing Custom จะได้",
+      "ร้านสมมติที่ทำขึ้นให้ดูเป็นตัวอย่าง: กาแฟ 3D เทจากกาแล้วไหลลงตามหน้าเว็บจนเต็มแก้วล่างสุด ป้ายเมนูกระดานชอล์กกดสั่งได้ เรื่องราวร้านแบบเลื่อนข้าง และแผนที่ หน้าตาแบบที่แพ็กเกจ Landing Custom จะได้",
     url: "/work/baan-kafae/",
-    tags: ["Next.js", "SEO", "LINE OA"],
+    tags: ["Next.js", "Three.js", "GSAP", "LINE OA"],
     year: "2026",
     palette: { bg: "#2f3a2c", fg: "#f1e7d3", accent: "#d9a35b" },
     image: "/work/baan-kafae.webp",
