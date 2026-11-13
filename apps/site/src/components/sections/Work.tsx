@@ -14,7 +14,7 @@ export function Work() {
               ผลงานตัวอย่าง <span className="font-serif font-normal italic">ที่ลองกดเล่นได้จริง</span>
             </>
           }
-          lead="งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ ส่วนเดโมหน้าร้านคาเฟ่และร้านค้าออนไลน์กำลังตามมา"
+          lead="งานที่ทำขึ้นเองและเปิดให้ใช้จริง ตั้งแต่เว็บข้อมูลเกมหลายร้อยหน้าไปจนถึงห้อง 3D ที่เดินได้ และเว็บตัวอย่างร้านคาเฟ่ที่กดเข้าไปดูได้ทั้งหน้า ส่วนร้านค้าออนไลน์กำลังตามมา"
         />
         <div className="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2">
           {projects.map((p, i) => (
@@ -81,8 +81,14 @@ function ProjectCard({ p, offset }: { p: Project; offset: boolean }) {
     style: { rotate: offset ? "1.2deg" : "-1.2deg" },
     className: `group relative block ${offset ? "md:mt-24" : ""}`,
   };
+  // demos that live on this site (url starts with "/") open in the same tab
+  const internal = p.url.startsWith("/");
   return live ? (
-    <a href={p.url} target="_blank" rel="noreferrer" data-cursor="ลองเล่น ↗" {...shared}>
+    <a
+      href={p.url}
+      {...(internal ? { "data-cursor": "ดูเว็บตัวอย่าง →" } : { target: "_blank", rel: "noreferrer", "data-cursor": "ลองเล่น ↗" })}
+      {...shared}
+    >
       {body}
     </a>
   ) : (
@@ -100,7 +106,7 @@ function MockSite({ p }: { p: Project }) {
         <span className="h-2 w-2 rounded-full bg-white/40" />
         <span className="h-2 w-2 rounded-full bg-white/40" />
         <span className="ml-3 truncate rounded-full bg-white/10 px-3 py-0.5 font-mono text-[10px] opacity-80">
-          {p.url.replace("https://", "")}
+          {p.url.replace("https://", "").replace(/^\//, "work.rosekorn.com/")}
         </span>
       </div>
       <div className="p-[6%]">
