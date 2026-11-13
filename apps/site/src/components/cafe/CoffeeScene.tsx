@@ -6,18 +6,18 @@ import * as THREE from "three";
 import { C, ROASTS, type Roast } from "./palette";
 
 /**
- * Baan Kafae 3D hero: a cel-shaded cup with a stream of coffee pouring into it.
- * - the stream follows the pointer and ripples the surface where it lands
- * - click: an extra "shot" (thicker pour, big splash) and the floating beans burst out and spring back
+ * Baan Kafae 3D hero, shown inside a frame: a gooseneck kettle pours a stream of coffee that
+ * leaves through the bottom of the frame; CoffeeRiver carries it on down the page as you scroll.
+ * - the kettle follows the pointer; the stream's bottom stays centred to meet the river
+ * - click: an extra "shot" (thicker pour) and the floating beans burst out and spring back
  * - the roast picker on the page changes the coffee colour (light / medium / dark)
  * Same handmade look as the studio rose: toon ramp + ink hull outlines.
  */
 
 const INK = C.ink;
-const CUP_Y = -1.3;
-const SURFACE_Y = CUP_Y + 1.02; // coffee level inside the cup
 const STREAM_TOP = 1.7; // the kettle's spout tip
-const STREAM_LEN = STREAM_TOP - SURFACE_Y;
+const STREAM_BOTTOM = -3.4; // below the frame: the page's coffee river carries on from here
+const STREAM_LEN = STREAM_TOP - STREAM_BOTTOM;
 
 type Shared = {
   time: { value: number };
@@ -52,7 +52,8 @@ const streamVertex = /* glsl */ `
     float r = mix(1.0, 0.62, t) * (1.0 + 0.09 * sin(p.y * 13.0 + uTime * 16.0)) * uThick;
     p.xz *= r * (1.0 + uOutline);
     // curve from the pointer-driven spout down to the cup, with a gentle wobble
-    p.x += uBend * (1.0 - 0.82 * sqrt(t)) + sin(p.y * 5.0 + uTime * 7.0) * 0.03 * t;
+    // the bottom stays centred so it lines up with the river drawn on the page below the frame
+    p.x += uBend * (1.0 - sqrt(t)) + sin(p.y * 5.0 + uTime * 7.0) * 0.05 * t * (1.0 - t) * 4.0;
     vN = normalize(normalMatrix * vec3(normal.x, 0.0, normal.z));
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
@@ -96,150 +97,12 @@ function Stream({ u }: { u: Shared }) {
       });
     return [make(0), make(0.32)];
   }, [u]);
-  const y = SURFACE_Y + STREAM_LEN / 2;
+  const y = STREAM_BOTTOM + STREAM_LEN / 2;
   return (
     <group position={[0, y, 0]}>
       <mesh geometry={geometry} material={line} />
       <mesh geometry={geometry} material={fill} />
     </group>
-  );
-}
-
-/* ---------- coffee surface with ripples where the stream lands ---------- */
-
-const surfaceFragment = /* glsl */ `
-  uniform float uTime, uBend;
-  uniform vec3 uCoffee, uHighlight;
-  varying vec2 vUv;
-  void main() {
-    vec2 p = (vUv - 0.5) * 2.0;
-    vec2 hit = vec2(uBend * 0.18 / 0.875, 0.0);
-    float d = length(p - hit);
-    float ring = fract(d * 4.5 - uTime * 1.4);
-    float line = step(0.42, ring) * step(ring, 0.52) * (1.0 - smoothstep(0.2, 1.3, d));
-    vec3 col = mix(uCoffee, uHighlight, line * 0.85);
-    // crema at the rim
-    float rim = smoothstep(0.78, 0.86, length(p));
-    col = mix(col, mix(uHighlight, vec3(0.93, 0.8, 0.6), 0.5), rim);
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-function Surface({ u }: { u: Shared }) {
-  const material = useMemo(
-    () =>
-      new THREE.ShaderMaterial({
-        vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
-        fragmentShader: surfaceFragment,
-        uniforms: { uTime: u.time, uBend: u.bend, uCoffee: u.coffee, uHighlight: u.highlight },
-      }),
-    [u],
-  );
-  return (
-    <mesh position={[0, SURFACE_Y, 0]} rotation={[-Math.PI / 2, 0, 0]} material={material}>
-      <circleGeometry args={[0.875, 64]} />
-    </mesh>
-  );
-}
-
-/* ---------- the cup ---------- */
-
-function Cup({ ramp }: { ramp: THREE.Texture }) {
-  const lathe = useMemo(() => {
-    const pts = [
-      [0, 0], [0.62, 0], [0.7, 0.04], [0.74, 0.12], [0.98, 1.18], [1.02, 1.24],
-      [0.97, 1.27], [0.92, 1.2], [0.7, 0.2], [0, 0.2],
-    ].map(([x, y]) => new THREE.Vector2(x, y));
-    return new THREE.LatheGeometry(pts, 72);
-  }, []);
-  const ink = useMemo(() => new THREE.MeshBasicMaterial({ color: INK, side: THREE.BackSide }), []);
-  return (
-    <group position={[0, CUP_Y, 0]}>
-      {/* saucer */}
-      <mesh position={[0, -0.05, 0]}>
-        <cylinderGeometry args={[1.5, 1.08, 0.1, 64]} />
-        <meshToonMaterial color={C.cream2} gradientMap={ramp} />
-      </mesh>
-      <mesh position={[0, -0.05, 0]} scale={[1.025, 1.5, 1.025]} material={ink}>
-        <cylinderGeometry args={[1.5, 1.08, 0.1, 64]} />
-      </mesh>
-      {/* body */}
-      <mesh geometry={lathe}>
-        <meshToonMaterial color={C.cream} gradientMap={ramp} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh geometry={lathe} scale={[1.04, 1.015, 1.04]} position={[0, -0.01, 0]} material={ink} />
-      {/* caramel band */}
-      <mesh position={[0, 0.65, 0]}>
-        <cylinderGeometry args={[0.893, 0.846, 0.2, 72, 1, true]} />
-        <meshToonMaterial color={C.caramel} gradientMap={ramp} />
-      </mesh>
-      {/* handle */}
-      <group position={[0.86, 0.66, 0]} rotation={[0, 0, -Math.PI / 2]}>
-        <mesh>
-          <torusGeometry args={[0.33, 0.075, 14, 40, Math.PI]} />
-          <meshToonMaterial color={C.cream} gradientMap={ramp} />
-        </mesh>
-        <mesh material={ink}>
-          <torusGeometry args={[0.33, 0.105, 14, 40, Math.PI]} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
-
-/* ---------- splash drops ---------- */
-
-const DROPS = 56;
-
-function Splash({ u, burst, ramp }: { u: Shared; burst: React.MutableRefObject<number>; ramp: THREE.Texture }) {
-  const mesh = useRef<THREE.InstancedMesh>(null);
-  const state = useMemo(
-    () => Array.from({ length: DROPS }, () => ({ p: new THREE.Vector3(), v: new THREE.Vector3(), alive: false, s: 1 })),
-    [],
-  );
-  const m = useMemo(() => new THREE.Matrix4(), []);
-  const q = useMemo(() => new THREE.Quaternion(), []);
-  const sc = useMemo(() => new THREE.Vector3(), []);
-  const material = useMemo(() => new THREE.MeshToonMaterial({ color: u.coffee.value.clone(), gradientMap: ramp }), [u, ramp]);
-  const acc = useRef(0);
-
-  useFrame((_, dt) => {
-    const im = mesh.current;
-    if (!im) return;
-    dt = Math.min(dt, 1 / 30);
-    material.color.copy(u.highlight.value).lerp(u.coffee.value, 0.45);
-    const hitX = u.bend.value * 0.18;
-    // a steady trickle, and a fountain right after a click
-    acc.current += dt * (26 + burst.current * 260);
-    for (const d of state) {
-      if (acc.current < 1) break;
-      if (d.alive) continue;
-      acc.current -= 1;
-      const a = Math.random() * Math.PI * 2;
-      const h = 0.25 + Math.random() * (0.35 + burst.current * 0.5);
-      d.p.set(hitX, SURFACE_Y, 0);
-      d.v.set(Math.cos(a) * h, 1.1 + Math.random() * (1.0 + burst.current * 2.2), Math.sin(a) * h);
-      d.s = 0.6 + Math.random() * 0.8;
-      d.alive = true;
-    }
-    acc.current = Math.min(acc.current, 4);
-    state.forEach((d, i) => {
-      if (d.alive) {
-        d.v.y -= 9 * dt;
-        d.p.addScaledVector(d.v, dt);
-        if (d.p.y < SURFACE_Y && d.v.y < 0) d.alive = false;
-      }
-      sc.setScalar(d.alive ? d.s : 0);
-      m.compose(d.p, q, sc);
-      im.setMatrixAt(i, m);
-    });
-    im.instanceMatrix.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh ref={mesh} args={[undefined, material, DROPS]} frustumCulled={false}>
-      <sphereGeometry args={[0.042, 10, 8]} />
-    </instancedMesh>
   );
 }
 
@@ -394,7 +257,6 @@ function Kettle({ u, ramp }: { u: Shared; ramp: THREE.Texture }) {
 
 function Rig({ roast, burst }: { roast: Roast; burst: React.MutableRefObject<number> }) {
   const ramp = useToonRamp();
-  const group = useRef<THREE.Group>(null);
   const camera = useThree((s) => s.camera);
   useEffect(() => {
     camera.lookAt(0, 0.5, 0);
@@ -423,22 +285,12 @@ function Rig({ roast, burst }: { roast: Roast; burst: React.MutableRefObject<num
     target.highlight.set(ROASTS[roast].highlight);
     u.coffee.value.lerp(target.coffee, 1 - Math.exp(-dt * 4));
     u.highlight.value.lerp(target.highlight, 1 - Math.exp(-dt * 4));
-    const g = group.current;
-    if (g) {
-      g.rotation.y = THREE.MathUtils.damp(g.rotation.y, state.pointer.x * 0.35 - 0.2, 2.5, dt);
-      g.rotation.x = THREE.MathUtils.damp(g.rotation.x, -state.pointer.y * 0.06, 2.5, dt);
-    }
   });
 
   return (
     <>
       <hemisphereLight args={["#fff6e8", "#d9a35b", 1.5]} />
       <directionalLight position={[3, 5, 4]} intensity={2.4} color="#fff0dc" />
-      <group ref={group}>
-        <Cup ramp={ramp} />
-        <Surface u={u} />
-        <Splash u={u} burst={burst} ramp={ramp} />
-      </group>
       <Stream u={u} />
       <Kettle u={u} ramp={ramp} />
       <Beans burst={burst} ramp={ramp} />

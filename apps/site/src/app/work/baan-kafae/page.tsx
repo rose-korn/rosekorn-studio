@@ -2,7 +2,9 @@
 import type { Metadata } from "next";
 import { Chonburi } from "next/font/google";
 import { C } from "@/components/cafe/palette";
-import { CafeHeroVisual } from "@/components/cafe/CafeHeroVisual";
+import { CafeHeroVisual, RoastPicker, RoastProvider } from "@/components/cafe/CafeHeroVisual";
+import { CoffeeRiver } from "@/components/cafe/CoffeeRiver";
+import { FinaleCup } from "@/components/cafe/FinaleCup";
 import { OpenNow } from "@/components/cafe/OpenNow";
 import { MenuBoard } from "@/components/cafe/MenuBoard";
 
@@ -85,9 +87,11 @@ export default function BaanKafae() {
         <OrderButton small />
       </header>
 
-      <main id="top">
+      <main id="top" className="relative">
+        <RoastProvider>
+        <CoffeeRiver />
         {/* hero */}
-        <section className="container-x grid items-center gap-12 pb-20 pt-10 md:grid-cols-[1.1fr_1fr] md:pb-28 md:pt-16">
+        <section className="container-x relative z-[2] grid items-center gap-12 pb-24 pt-10 md:grid-cols-[1.1fr_1fr] md:pb-32 md:pt-16">
           <div>
             <p className="font-mono text-xs tracking-[0.25em]" style={{ color: C.caramel }}>
               SLOW BAR · SINCE 2019
@@ -112,6 +116,7 @@ export default function BaanKafae() {
               </a>
             </div>
             <OpenNow />
+            <RoastPicker />
           </div>
           <CafeHeroVisual />
         </section>
@@ -120,7 +125,8 @@ export default function BaanKafae() {
 
         {/* menu */}
         <section id="menu" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.cream, color: C.ink }}>
-          <div className="container-x">
+          <div data-river-via="0.94" className="h-0" aria-hidden="true" />
+          <div className="container-x relative z-[2]">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <h2 data-split className="font-[family-name:var(--font-chonburi)] text-[clamp(2.4rem,6vw,4.5rem)] leading-none">
                 เมนูวันนี้
@@ -129,10 +135,11 @@ export default function BaanKafae() {
             </div>
             <MenuBoard menu={menu} />
           </div>
+          <div data-river-via="0.05" className="h-0 translate-y-12" aria-hidden="true" />
         </section>
 
         {/* story */}
-        <section id="story" className="container-x grid scroll-mt-16 gap-12 py-20 md:grid-cols-2 md:py-28">
+        <section id="story" className="container-x relative z-[2] grid scroll-mt-16 gap-12 py-20 md:grid-cols-2 md:py-28">
           <div>
             <p className="font-mono text-xs tracking-[0.25em]" style={{ color: C.caramel }}>
               OUR STORY
@@ -163,9 +170,11 @@ export default function BaanKafae() {
           </div>
         </section>
 
+        <div data-river-via="0.5" className="h-0" aria-hidden="true" />
+
         {/* visit */}
         <section id="visit" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.bg2 }}>
-          <div className="container-x grid gap-10 md:grid-cols-[1fr_1.2fr]">
+          <div className="container-x relative z-[2] grid gap-10 md:grid-cols-[1fr_1.2fr]">
             <div>
               <h2 data-split className="font-[family-name:var(--font-chonburi)] text-[clamp(2.2rem,5vw,3.8rem)] leading-none">
                 แวะมานั่ง
@@ -200,7 +209,21 @@ export default function BaanKafae() {
               <p className="mt-4 text-sm opacity-60">ในเว็บจริงตรงนี้จะเป็นแผนที่ Google Maps ของร้าน</p>
             </div>
           </div>
+          <div data-river-via="0.9" className="h-0 translate-y-10" aria-hidden="true" />
         </section>
+
+        {/* finale: the coffee poured in the hero ends up here */}
+        <section className="container-x relative z-[2] flex flex-col items-center pb-24 pt-28 text-center md:pb-32 md:pt-36">
+          <FinaleCup />
+          <h2 data-split className="mt-10 font-[family-name:var(--font-chonburi)] text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.1]">
+            เทมาถึงแก้วคุณแล้ว
+          </h2>
+          <p className="mt-4 max-w-md text-lg opacity-85">แก้วจริงรออยู่ที่ร้าน แวะมานั่ง หรือสั่งผ่าน LINE ให้ไปรับได้เลย</p>
+          <div className="mt-8">
+            <OrderButton />
+          </div>
+        </section>
+        </RoastProvider>
       </main>
 
       <footer className="container-x flex flex-col items-start justify-between gap-6 py-12 text-sm md:flex-row md:items-center">

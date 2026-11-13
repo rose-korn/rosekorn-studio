@@ -35,8 +35,12 @@ export function RoseCursor() {
     let shown = false;
     let hovering: Element | null = null;
 
+    let lastX = 0;
+    let lastY = 0;
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      lastX = e.clientX;
+      lastY = e.clientY;
       if (!shown) {
         shown = true;
         root.classList.add("rose-cursor");
@@ -45,7 +49,12 @@ export function RoseCursor() {
       }
       xTo(e.clientX);
       yTo(e.clientY);
-      const target = (e.target as Element | null)?.closest("a, button, summary, [data-cursor]") ?? null;
+      updateHover(e.target as Element | null);
+    };
+    // scrolling moves the page under a still mouse, so re-check what it is over
+    const onScroll = () => shown && updateHover(document.elementFromPoint(lastX, lastY));
+    const updateHover = (over: Element | null) => {
+      const target = over?.closest("a, button, summary, [data-cursor]") ?? null;
       if (target !== hovering) {
         hovering = target;
         const text = target?.getAttribute("data-cursor") ?? (target ? (target.matches("a[target=_blank]") ? "เปิดดู" : "คลิก") : "");
@@ -59,6 +68,7 @@ export function RoseCursor() {
     const onDown = (e: PointerEvent) => e.pointerType === "mouse" && burst(e.clientX, e.clientY);
 
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pointerdown", onDown);
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
@@ -66,6 +76,7 @@ export function RoseCursor() {
       root.classList.remove("rose-cursor");
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointerdown", onDown);
       document.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("mouseenter", onEnter);
