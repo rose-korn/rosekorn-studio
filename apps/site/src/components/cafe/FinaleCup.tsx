@@ -37,9 +37,19 @@ export function FinaleCup() {
           บ้านกาแฟ
         </text>
       </svg>
+      {/* steam once the cup is full */}
+      <svg viewBox="0 0 120 70" className="finale-steam pointer-events-none absolute left-1/2 top-[-18%] w-[40%] -translate-x-1/2" aria-hidden="true">
+        {[20, 60, 100].map((x, i) => (
+          <g key={x} className="coffee-steam" style={{ animationDelay: `${i * 0.5}s` }}>
+            <path d={`M${x} 66 c-10 -10 10 -18 0 -28 c-10 -10 10 -18 0 -28`} fill="none" stroke={C.ink} strokeWidth="7" strokeLinecap="round" />
+            <path d={`M${x} 66 c-10 -10 10 -18 0 -28 c-10 -10 10 -18 0 -28`} fill="none" stroke={C.cream} strokeWidth="3.5" strokeLinecap="round" />
+          </g>
+        ))}
+      </svg>
       <span
-        className="stamp absolute -right-4 top-0 rotate-12 font-mono text-xs transition-opacity duration-500"
-        style={{ background: C.caramel, color: C.ink, borderColor: C.ink, opacity: "clamp(0, calc(var(--fill) * 5 - 4), 1)" }}
+        data-stamp
+        className="stamp finale-stamp absolute -right-6 top-0 rotate-12 font-mono text-xs"
+        style={{ background: C.caramel, color: C.ink, borderColor: C.ink }}
       >
         เต็มแก้ว!
       </span>

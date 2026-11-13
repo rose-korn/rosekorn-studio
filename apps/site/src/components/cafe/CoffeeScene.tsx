@@ -280,7 +280,10 @@ function Rig({ roast, burst }: { roast: Roast; burst: React.MutableRefObject<num
     u.time.value = state.clock.elapsedTime;
     u.bend.value = THREE.MathUtils.damp(u.bend.value, state.pointer.x * 0.55, 3, dt);
     burst.current = Math.max(0, burst.current - dt * 1.6);
-    u.thick.value = 1 + burst.current * 0.7;
+    // scrolling down the hero pours harder and leans the camera in a little
+    const sc = Math.min(1, window.scrollY / window.innerHeight);
+    u.thick.value = 1 + burst.current * 0.7 + sc * 0.4;
+    state.camera.position.z = THREE.MathUtils.damp(state.camera.position.z, 7 - sc * 0.9, 4, dt);
     target.coffee.set(ROASTS[roast].coffee);
     target.highlight.set(ROASTS[roast].highlight);
     u.coffee.value.lerp(target.coffee, 1 - Math.exp(-dt * 4));

@@ -1,12 +1,15 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- full page loads back to the studio so its GSAP intro runs again */
 import type { Metadata } from "next";
-import { Chonburi } from "next/font/google";
+import { Chonburi, Sriracha } from "next/font/google";
 import { C } from "@/components/cafe/palette";
 import { CafeHeroVisual, RoastPicker, RoastProvider } from "@/components/cafe/CafeHeroVisual";
 import { CoffeeRiver } from "@/components/cafe/CoffeeRiver";
 import { FinaleCup } from "@/components/cafe/FinaleCup";
+import { FinalePop } from "@/components/cafe/FinalePop";
+import { Journey } from "@/components/cafe/Journey";
+import { Magnetic } from "@/components/cafe/Magnetic";
 import { OpenNow } from "@/components/cafe/OpenNow";
-import { MenuBoard } from "@/components/cafe/MenuBoard";
+import { MenuBoard, type MenuGroup } from "@/components/cafe/MenuBoard";
 
 /**
  * Baan Kafae: a made-up cafe, built as a sample of the "Landing Custom" package.
@@ -15,6 +18,8 @@ import { MenuBoard } from "@/components/cafe/MenuBoard";
  */
 
 const chonburi = Chonburi({ variable: "--font-chonburi", subsets: ["thai", "latin"], weight: "400", display: "swap" });
+// hand-lettered look for the chalkboard menu
+const sriracha = Sriracha({ variable: "--font-chalk", subsets: ["thai", "latin"], weight: "400", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Baan Kafae (เว็บตัวอย่าง)",
@@ -25,34 +30,34 @@ export const metadata: Metadata = {
 };
 
 
-const menu = [
+const menu: MenuGroup[] = [
   {
     group: "กาแฟ",
     en: "Coffee",
     items: [
-      { name: "เอสเปรสโซ่", note: "เมล็ดคั่วกลาง ดอยช้าง", price: 55 },
-      { name: "อเมริกาโน่เย็น", note: "หอม เปรี้ยวนิด ๆ", price: 65 },
-      { name: "ลาเต้", note: "ร้อน / เย็น", price: 70 },
-      { name: "ส้มอเมริกาโน่", note: "น้ำส้มสายน้ำผึ้งคั้นสด", price: 80 },
-      { name: "ลาเต้กุหลาบ", note: "เมนูประจำร้าน", price: 85, star: true },
+      { name: "เอสเปรสโซ่", art: "espresso", note: "เมล็ดคั่วกลาง ดอยช้าง", price: 55 },
+      { name: "อเมริกาโน่เย็น", art: "americano", note: "หอม เปรี้ยวนิด ๆ", price: 65 },
+      { name: "ลาเต้", art: "latte", note: "ร้อน / เย็น", price: 70 },
+      { name: "ส้มอเมริกาโน่", art: "orange", note: "น้ำส้มสายน้ำผึ้งคั้นสด", price: 80 },
+      { name: "ลาเต้กุหลาบ", art: "rose", note: "เมนูประจำร้าน", price: 85, star: true },
     ],
   },
   {
     group: "ไม่ใช่กาแฟ",
     en: "Not coffee",
     items: [
-      { name: "ชาไทย", note: "หวานน้อยได้", price: 60 },
-      { name: "มัทฉะลาเต้", note: "มัทฉะอูจิ", price: 80 },
-      { name: "โกโก้เข้ม", note: "โกโก้ชุมพร", price: 65 },
+      { name: "ชาไทย", art: "thaitea", note: "หวานน้อยได้", price: 60 },
+      { name: "มัทฉะลาเต้", art: "matcha", note: "มัทฉะอูจิ", price: 80 },
+      { name: "โกโก้เข้ม", art: "cocoa", note: "โกโก้ชุมพร", price: 65 },
     ],
   },
   {
     group: "ขนมอบ",
     en: "Bakery",
     items: [
-      { name: "ครัวซองต์เนยสด", note: "อบทุกเช้า", price: 75 },
-      { name: "บานาน่าเค้ก", note: "กล้วยหอมทอง", price: 65 },
-      { name: "ขนมปังสังขยาใบเตย", note: "หมดไว มาก่อนบ่าย", price: 89, star: true },
+      { name: "ครัวซองต์เนยสด", art: "croissant", note: "อบทุกเช้า", price: 75 },
+      { name: "บานาน่าเค้ก", art: "banana", note: "กล้วยหอมทอง", price: 65 },
+      { name: "ขนมปังสังขยาใบเตย", art: "pandan", note: "หมดไว มาก่อนบ่าย", price: 89, star: true },
     ],
   },
 ];
@@ -65,7 +70,7 @@ const hours = [
 
 export default function BaanKafae() {
   return (
-    <div className={`${chonburi.variable} min-h-screen`} style={{ background: C.bg, color: C.cream }}>
+    <div className={`${chonburi.variable} ${sriracha.variable} min-h-screen`} style={{ background: C.bg, color: C.cream }}>
       <DemoBar />
 
       {/* cafe header */}
@@ -109,6 +114,7 @@ export default function BaanKafae() {
               <OrderButton />
               <a
                 href="#menu"
+                data-magnetic
                 className="press inline-flex h-12 items-center rounded-full border-[2.5px] px-6 font-semibold"
                 style={{ borderColor: C.cream }}
               >
@@ -127,48 +133,13 @@ export default function BaanKafae() {
         <section id="menu" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.cream, color: C.ink }}>
           <div data-river-via="0.94" className="h-0" aria-hidden="true" />
           <div className="container-x relative z-[2]">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <h2 data-split className="font-[family-name:var(--font-chonburi)] text-[clamp(2.4rem,6vw,4.5rem)] leading-none">
-                เมนูวันนี้
-              </h2>
-              <p className="max-w-sm opacity-70">ราคารวม VAT แล้ว นมโอ๊ต / อัลมอนด์ +15 บาท แก้วตัวเองลด 5 บาท</p>
-            </div>
             <MenuBoard menu={menu} />
           </div>
           <div data-river-via="0.05" className="h-0 translate-y-12" aria-hidden="true" />
         </section>
 
-        {/* story */}
-        <section id="story" className="container-x relative z-[2] grid scroll-mt-16 gap-12 py-20 md:grid-cols-2 md:py-28">
-          <div>
-            <p className="font-mono text-xs tracking-[0.25em]" style={{ color: C.caramel }}>
-              OUR STORY
-            </p>
-            <h2 data-split className="mt-4 font-[family-name:var(--font-chonburi)] text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.1]">
-              เริ่มจากห้องแถวของยาย
-            </h2>
-          </div>
-          <div className="space-y-5 text-lg opacity-85">
-            <p>
-              บ้านกาแฟเปิดในห้องแถวไม้ที่ยายเคยขายของชำ เราเก็บประตูบานเฟี้ยมกับตู้กระจกเดิมไว้ แล้วเติมบาร์กาแฟเข้าไปแทนเคาน์เตอร์
-            </p>
-            <p>เมล็ดมาจากไร่เล็ก ๆ บนดอย คั่วเองหลังร้านทุกวันจันทร์ ใครผ่านมาช่วงเช้าจะได้กลิ่นก่อนเห็นป้าย</p>
-            <dl className="grid grid-cols-3 gap-4 pt-4">
-              {[
-                ["4", "ไร่ที่ซื้อเมล็ดตรง"],
-                ["20", "ที่นั่ง มีปลั๊กทุกโต๊ะ"],
-                ["0", "หลอดพลาสติก"],
-              ].map(([n, l]) => (
-                <div key={l} className="rounded-2xl border-2 p-4" style={{ borderColor: C.cream }}>
-                  <dt className="font-[family-name:var(--font-chonburi)] text-4xl" style={{ color: C.caramel }}>
-                    {n}
-                  </dt>
-                  <dd className="mt-1 text-sm opacity-80">{l}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </section>
+        {/* story: pinned horizontal "farm to cup" */}
+        <Journey />
 
         <div data-river-via="0.5" className="h-0" aria-hidden="true" />
 
@@ -213,17 +184,19 @@ export default function BaanKafae() {
         </section>
 
         {/* finale: the coffee poured in the hero ends up here */}
-        <section className="container-x relative z-[2] flex flex-col items-center pb-24 pt-28 text-center md:pb-32 md:pt-36">
+        <section className="container-x relative z-[2] flex flex-col items-center pb-24 pt-36 text-center md:pb-32 md:pt-44">
           <FinaleCup />
-          <h2 data-split className="mt-10 font-[family-name:var(--font-chonburi)] text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.1]">
-            เทมาถึงแก้วคุณแล้ว
-          </h2>
-          <p className="mt-4 max-w-md text-lg opacity-85">แก้วจริงรออยู่ที่ร้าน แวะมานั่ง หรือสั่งผ่าน LINE ให้ไปรับได้เลย</p>
+          <FinalePop />
+          <div data-finale-title className="mt-14">
+            <h2 className="font-[family-name:var(--font-chonburi)] text-[clamp(2.4rem,6vw,4.6rem)] leading-[1.1]">เทมาถึงแก้วคุณแล้ว</h2>
+            <p className="mx-auto mt-4 max-w-md text-lg opacity-85">แก้วจริงรออยู่ที่ร้าน แวะมานั่ง หรือสั่งผ่าน LINE ให้ไปรับได้เลย</p>
+          </div>
           <div className="mt-8">
             <OrderButton />
           </div>
         </section>
         </RoastProvider>
+        <Magnetic />
       </main>
 
       <footer className="container-x flex flex-col items-start justify-between gap-6 py-12 text-sm md:flex-row md:items-center">
@@ -264,6 +237,7 @@ function OrderButton({ small = false }: { small?: boolean }) {
   return (
     <a
       href="#visit"
+      data-magnetic
       data-cursor="ในเว็บจริงเปิด LINE"
       className={`press inline-flex items-center gap-2 rounded-full border-[2.5px] font-semibold ${
         small ? "h-10 px-4 text-sm" : "h-12 px-6"
