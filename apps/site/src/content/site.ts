@@ -92,15 +92,16 @@ export const projects: Project[] = [
   {
     slug: "demo-cafe",
     title: "Baan Kafae",
-    kind: "Landing page · คาเฟ่",
+    kind: "Landing page · คาเฟ่ (เว็บตัวอย่าง)",
     summary:
-      "หน้าเดียวจบ: เมนู แผนที่ เวลาเปิด และปุ่มสั่งผ่าน LINE โหลดไวบนมือถือ ลูกค้าเจอร้านจาก Google ได้ง่าย",
-    url: "https://cafe.rosekorn.com",
+      "ร้านสมมติที่ทำขึ้นให้ดูเป็นตัวอย่าง หน้าเดียวจบ: เมนูพร้อมราคา เวลาเปิด แผนที่ และปุ่มสั่งผ่าน LINE หน้าตาแบบที่แพ็กเกจ Landing Custom จะได้",
+    url: "/work/baan-kafae/",
     tags: ["Next.js", "SEO", "LINE OA"],
     year: "2026",
     palette: { bg: "#2f3a2c", fg: "#f1e7d3", accent: "#d9a35b" },
-    status: "soon",
-    stamp: "เร็ว ๆ นี้",
+    image: "/work/baan-kafae.webp",
+    status: "live",
+    stamp: "Demo",
   },
   {
     slug: "demo-shop",

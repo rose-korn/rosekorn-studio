@@ -50,7 +50,7 @@ export function RoseCursor() {
         hovering = target;
         const text = target?.getAttribute("data-cursor") ?? (target ? (target.matches("a[target=_blank]") ? "เปิดดู" : "คลิก") : "");
         if (label.current) label.current.textContent = text;
-        gsap.to(glyph.current, { scale: target ? 1.5 : 1, rotate: target ? 90 : 0, duration: 0.4, ease: "back.out(2.2)" });
+        gsap.to(glyph.current, { scale: target ? 1.35 : 1, rotate: target ? -18 : 0, duration: 0.4, ease: "back.out(2.2)" });
         gsap.to(label.current, { autoAlpha: target ? 1 : 0, scale: target ? 1 : 0.6, duration: 0.3, ease: "back.out(2.2)" });
       }
     };
@@ -79,15 +79,26 @@ export function RoseCursor() {
       style={{ visibility: "hidden" }}
       aria-hidden="true"
     >
-      <svg ref={glyph} viewBox="-20 -20 40 40" className="-ml-[14px] -mt-[14px] h-7 w-7" style={{ filter: "drop-shadow(1.5px 1.5px 0 #151311)" }}>
-        {[0, 72, 144, 216, 288].map((r) => (
-          <ellipse key={r} cx="0" cy="-9" rx="7" ry="10" transform={`rotate(${r})`} fill="#e0475e" stroke="#151311" strokeWidth="2.5" />
-        ))}
-        <circle r="5.5" fill="#f7a8c4" stroke="#151311" strokeWidth="2.5" />
+      {/* a little rose: bud spiral, cupped front petal, stem and leaf. Hotspot sits on the bloom. */}
+      <svg
+        ref={glyph}
+        viewBox="-20 -20 40 40"
+        className="-ml-[18px] -mt-[17px] h-9 w-9"
+        style={{ filter: "drop-shadow(1.5px 1.5px 0 #151311)", transformOrigin: "50% 45%" }}
+      >
+        <g stroke="#151311" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round">
+          <path d="M2 9 C3 13 4 16 7 19" fill="none" />
+          <path d="M4.5 14 C9 11 13 12 14 14 C11 17 7 16.5 4.5 14Z" fill="#5fae6e" />
+          <path d="M-10 -2 C-13 -10 -7 -15 -1 -12 C4 -16 12 -12 10 -3 Z" fill="#f7a8c4" />
+          <path d="M-6 -4 C-7 -10 1 -12 3 -8 C6 -10 8 -6 6 -3 Z" fill="#e0475e" />
+          <path d="M-2 -6 C-1 -9 3 -9 3 -6 C3 -4 0 -4 -0.5 -5.5" fill="none" />
+          <path d="M-11 -4 C-12 6 -5 10 1 10 C7 10 12 5 11 -4 C8 0 4 1 0 1 C-4 1 -8 0 -11 -4Z" fill="#e0475e" />
+          <path d="M-5 1 C-4 5 -1 7 2 7" fill="none" />
+        </g>
       </svg>
       <span
         ref={label}
-        className="absolute left-5 top-4 whitespace-nowrap rounded-full border-2 border-ink bg-paper px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink opacity-0"
+        className="absolute left-6 top-5 whitespace-nowrap rounded-full border-2 border-ink bg-paper px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink opacity-0"
       />
     </div>
   );
