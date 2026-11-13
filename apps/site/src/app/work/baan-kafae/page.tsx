@@ -1,6 +1,10 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- full page loads back to the studio so its GSAP intro runs again */
 import type { Metadata } from "next";
 import { Chonburi } from "next/font/google";
+import { C } from "@/components/cafe/palette";
+import { CafeHeroVisual } from "@/components/cafe/CafeHeroVisual";
+import { OpenNow } from "@/components/cafe/OpenNow";
+import { MenuBoard } from "@/components/cafe/MenuBoard";
 
 /**
  * Baan Kafae: a made-up cafe, built as a sample of the "Landing Custom" package.
@@ -18,15 +22,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-const C = {
-  bg: "#2f3a2c",
-  bg2: "#263023",
-  cream: "#f1e7d3",
-  cream2: "#e7d9bf",
-  caramel: "#d9a35b",
-  bean: "#6b4325",
-  ink: "#1b1a17",
-};
 
 const menu = [
   {
@@ -116,20 +111,12 @@ export default function BaanKafae() {
                 ดูเมนู
               </a>
             </div>
-            <p className="mt-8 flex items-center gap-2 text-sm opacity-75">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#7bd389]" /> เปิดอยู่ตอนนี้? ดูเวลาเปิดด้านล่าง
-            </p>
+            <OpenNow />
           </div>
-          <div data-pop className="relative mx-auto w-full max-w-[460px]" style={{ rotate: "2deg" }}>
-            <HeroCup />
-            <span
-              className="stamp absolute -left-3 top-6 -rotate-12 font-mono text-xs"
-              style={{ background: C.caramel, color: C.ink, borderColor: C.ink }}
-            >
-              คั่วสดทุกสัปดาห์
-            </span>
-          </div>
+          <CafeHeroVisual />
         </section>
+
+        <CafeMarquee />
 
         {/* menu */}
         <section id="menu" className="scroll-mt-16 py-20 md:py-28" style={{ background: C.cream, color: C.ink }}>
@@ -140,46 +127,7 @@ export default function BaanKafae() {
               </h2>
               <p className="max-w-sm opacity-70">ราคารวม VAT แล้ว นมโอ๊ต / อัลมอนด์ +15 บาท แก้วตัวเองลด 5 บาท</p>
             </div>
-            <div className="mt-14 grid gap-8 md:grid-cols-3">
-              {menu.map((g, i) => (
-                <div
-                  key={g.group}
-                  data-pop
-                  className="rounded-[1.25rem] border-[2.5px] p-7"
-                  style={{
-                    borderColor: C.ink,
-                    background: i === 1 ? C.cream2 : "#fbf6ec",
-                    boxShadow: `6px 6px 0 ${C.ink}`,
-                    rotate: i === 1 ? "1deg" : "-0.8deg",
-                  }}
-                >
-                  <p className="font-mono text-[11px] tracking-[0.25em] opacity-60">{g.en.toUpperCase()}</p>
-                  <h3 className="mt-1 font-[family-name:var(--font-chonburi)] text-3xl">{g.group}</h3>
-                  <ul className="mt-6 space-y-4">
-                    {g.items.map((it) => (
-                      <li key={it.name} className="flex items-baseline gap-3">
-                        <span className="min-w-0">
-                          <span className="font-semibold">
-                            {it.name}
-                            {it.star ? (
-                              <span
-                                className="ml-2 rounded-full px-2 py-0.5 align-middle font-mono text-[10px]"
-                                style={{ background: C.caramel }}
-                              >
-                                แนะนำ
-                              </span>
-                            ) : null}
-                          </span>
-                          <span className="block text-sm opacity-60">{it.note}</span>
-                        </span>
-                        <span className="mb-1.5 flex-1 border-b-2 border-dotted opacity-30" style={{ borderColor: C.ink }} />
-                        <span className="font-mono font-bold">{it.price}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            <MenuBoard menu={menu} />
           </div>
         </section>
 
@@ -315,33 +263,6 @@ function CupMark({ className }: { className?: string }) {
   );
 }
 
-/** Big flat cup with latte art, ink outlines like the rest of the studio's work */
-function HeroCup() {
-  return (
-    <svg viewBox="0 0 400 400" className="w-full" role="img" aria-label="ภาพวาดแก้วลาเต้ลายใบไม้">
-      <circle cx="200" cy="200" r="185" fill={C.caramel} stroke={C.ink} strokeWidth="5" />
-      <g fill="none" stroke={C.cream} strokeWidth="6" strokeLinecap="round" opacity=".9">
-        <path d="M165 95c-12-18 12-28 0-48" />
-        <path d="M200 88c-12-18 12-28 0-48" />
-        <path d="M235 95c-12-18 12-28 0-48" />
-      </g>
-      <ellipse cx="200" cy="300" rx="150" ry="34" fill={C.cream2} stroke={C.ink} strokeWidth="5" />
-      <path d="M90 175h220l-18 105a40 40 0 0 1-40 34H148a40 40 0 0 1-40-34z" fill={C.cream} stroke={C.ink} strokeWidth="5" strokeLinejoin="round" />
-      <path d="M306 195h22a32 32 0 0 1 0 64h-34" fill="none" stroke={C.ink} strokeWidth="5" />
-      <ellipse cx="200" cy="175" rx="110" ry="26" fill={C.bean} stroke={C.ink} strokeWidth="5" />
-      {/* latte art leaf */}
-      <path d="M150 176c25-22 75-22 100 0c-25 18-75 18-100 0z" fill={C.cream} />
-      <path d="M158 176h86" stroke={C.bean} strokeWidth="3" />
-      {[170, 188, 206, 224].map((x) => (
-        <path key={x} d={`M${x} 166l8 10l-8 10`} fill="none" stroke={C.bean} strokeWidth="3" strokeLinejoin="round" />
-      ))}
-      <text x="200" y="262" textAnchor="middle" fontFamily="var(--font-chonburi)" fontSize="26" fill={C.ink}>
-        บ้านกาแฟ
-      </text>
-    </svg>
-  );
-}
-
 /** Hand-drawn street map with a pin (stands in for the real Google Maps embed) */
 function MapDoodle() {
   return (
@@ -379,5 +300,22 @@ function MapDoodle() {
         <text x="39" y="20" textAnchor="middle" fontSize="13" fontWeight="700" fill={C.ink}>บ้านกาแฟ</text>
       </g>
     </svg>
+  );
+}
+
+/** Cafe-flavoured version of the studio marquee band */
+function CafeMarquee() {
+  const words = ["ESPRESSO", "ลาเต้กุหลาบ", "SLOW BAR", "คั่วสดทุกจันทร์", "ครัวซองต์อบเช้า", "WIFI ฟรี", "ปลั๊กทุกโต๊ะ", "แก้วตัวเองลด 5 บาท"];
+  const row = [...words, ...words];
+  return (
+    <div className="overflow-hidden border-y-[2.5px] py-3" style={{ background: C.caramel, color: C.ink, borderColor: C.ink }} aria-hidden="true">
+      <div className="flex w-max animate-marquee gap-8 whitespace-nowrap font-[family-name:var(--font-chonburi)] text-xl">
+        {row.map((w, i) => (
+          <span key={i} className="flex items-center gap-8">
+            {w} <span className="text-base">☕︎</span>
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
