@@ -193,3 +193,11 @@ details > summary::-webkit-details-marker { display: none; }
 /* finale cup: stamp and steam appear once the river has filled it */
 .finale-stamp, .finale-steam { opacity: 0; transition: opacity .4s; }
 [data-full="true"] .finale-stamp, [data-full="true"] .finale-steam { opacity: 1; }
+
+/* legal pages: plain readable lists inside clauses */
+.legal ul { list-style: disc; padding-left: 1.25rem; display: grid; gap: .4rem; }
+.legal ol { list-style: decimal; padding-left: 1.25rem; display: grid; gap: .4rem; }
+.legal a { text-decoration: underline; text-underline-offset: 3px; }
+.legal table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.legal th, .legal td { border: 1.5px solid color-mix(in srgb, var(--color-ink) 15%, transparent); padding: .6rem .75rem; text-align: left; vertical-align: top; }
+.legal th { background: color-mix(in srgb, var(--color-ink) 5%, transparent); font-weight: 600; }

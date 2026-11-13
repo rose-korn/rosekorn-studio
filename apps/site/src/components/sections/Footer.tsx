@@ -28,7 +28,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               {nav.map((n) => (
                 <li key={n.href}>
-                  <a href={n.href} className="link-underline text-paper/80">
+                  <a href={`/${n.href}`} className="link-underline text-paper/80">
                     {n.label}
                   </a>
                 </li>
@@ -54,7 +54,11 @@ export function Footer() {
           <p>
             © {now.getFullYear()} / พ.ศ. {buddhistYear(now)} {site.name}
           </p>
-          <p>Designed & built in Bangkok</p>
+          <p className="flex flex-wrap gap-x-5 gap-y-1">
+            <a href="/privacy/" className="link-underline">นโยบายความเป็นส่วนตัว</a>
+            <a href="/terms/" className="link-underline">ข้อกำหนดการให้บริการ</a>
+            <span>Designed & built in Bangkok</span>
+          </p>
         </div>
       </div>
     </footer>

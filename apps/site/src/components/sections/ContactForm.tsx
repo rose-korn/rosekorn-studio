@@ -88,6 +88,11 @@ export function ContactForm() {
       >
         {status === "sending" ? "กำลังส่ง…" : "ส่งรายละเอียด"}
       </button>
+      <p className="text-xs text-paper/50">
+        ข้อมูลนี้ใช้เพื่อติดต่อกลับและทำใบเสนอราคาเท่านั้น อ่าน{" "}
+        <a href="/privacy/" className="underline underline-offset-2">นโยบายความเป็นส่วนตัว</a> และ{" "}
+        <a href="/terms/" className="underline underline-offset-2">ข้อกำหนดการให้บริการ</a>
+      </p>
       {status === "error" ? (
         <p className="text-sm text-rose-soft" role="alert">
           อุ๊ย ส่งไม่ผ่าน ลองอีกทีนะ หรือทัก LINE แทนก็ได้
