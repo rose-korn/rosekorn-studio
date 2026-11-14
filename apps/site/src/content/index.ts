@@ -31,6 +31,7 @@ export type Content = {
   launchPromo: { active: boolean; total: number; taken: number; until: string; headline: string; offer: string; condition: string };
   addons: readonly { name: string; price: string }[];
   carePlan: { name: string; th: string; price: string; features: readonly string[] };
+  careLite: { name: string; th: string; price: string; features: readonly string[]; note: string };
   process: readonly { title: string; en: string; body: string }[];
   principles: readonly { title: string; body: string }[];
   faqs: readonly { q: string; a: string }[];
@@ -93,7 +94,8 @@ export const ui = {
       soonTape: "SOON · เร็ว ๆ นี้ ·",
       addons: "Add-ons · งานเสริม",
       perMonth: "เดือน",
-      careNote: "เพิ่มได้กับทุกแพ็กเกจ ไม่ต้องกังวลเรื่องเว็บล่มหรือหาคนแก้",
+      perYear: "ปี",
+      careNote: "แนะนำสำหรับ LINE Order และ Landing Signature ที่ต้องมีคนดูแลประจำ ไม่ต้องกังวลเรื่องเว็บล่มหรือหาคนแก้",
       left: "เหลืออีก",
       seats: "ที่",
       endsWhen: (total: number, until: string) => `หมดเขตเมื่อครบ ${total} ท่าน หรือ ${until}`,
@@ -205,7 +207,8 @@ export const ui = {
       soonTape: "SOON · COMING SOON ·",
       addons: "Add-ons",
       perMonth: "month",
-      careNote: "Add it to any package. No more worrying about downtime or finding someone to fix things.",
+      perYear: "year",
+      careNote: "Recommended for LINE Order and Landing Signature, which need regular looking after. No more worrying about downtime or finding someone to fix things.",
       left: "Spots left",
       seats: "",
       endsWhen: (total: number, until: string) => `Ends after ${total} clients or on ${until}, whichever comes first`,

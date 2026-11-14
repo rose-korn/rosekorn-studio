@@ -93,9 +93,10 @@ const th: Record<string, PackageDetails> = {
     },
   },
   "line-order": {
-    highlight: "ลูกค้าสั่งในแชท ร้านไม่ต้องจดออเดอร์เอง",
+    highlight: "หน้าสั่งอาหารที่เป็นแบรนด์ร้านคุณ ไม่ใช่เทมเพลตเดียวกับทุกร้าน",
     bestFor: "ร้านอาหาร คาเฟ่ หรือเบเกอรี่ ที่รับออเดอร์ทาง LINE อยู่แล้วและเริ่มจดไม่ทัน",
     includes: [
+      "ออกแบบหน้าสั่งอาหารให้เข้ากับร้าน ทั้งสี โลโก้ รูปอาหาร และน้ำเสียง",
       "หน้าเมนูที่เปิดในแอป LINE (LIFF) มีรูป ราคา และตัวเลือก เช่น หวานน้อย",
       "ตะกร้า หมายเหตุถึงร้าน และเลือกรับเองหรือให้ส่ง",
       "ออเดอร์เด้งเข้า LINE กลุ่มของร้านทันที",
@@ -212,9 +213,10 @@ const en: Record<string, PackageDetails> = {
     },
   },
   "line-order": {
-    highlight: "Customers order in the chat, so you stop writing orders down",
+    highlight: "An ordering page in your shop’s own look, not the same template as everyone else",
     bestFor: "Restaurants, cafés and bakeries already taking orders on LINE and struggling to keep up.",
     includes: [
+      "An ordering page designed around your shop: colours, logo, food photos and tone of voice",
       "A menu that opens inside LINE (LIFF) with photos, prices and options such as less sugar",
       "Cart, notes to the shop, and pickup or delivery",
       "Orders land in your shop’s LINE group instantly",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { carePlan, launchPromo, site } from "@/content/site";
+import { careLite, carePlan, launchPromo, site } from "@/content/site";
 import { Clause, LegalPage } from "@/components/legal/LegalPage";
 import { languageAlternates } from "@/components/RootShell";
 
@@ -67,7 +67,7 @@ export default function Terms() {
       path="/terms/"
       eyebrow="Terms of service"
       title="ข้อกำหนดการให้บริการ"
-      updated="13 พฤศจิกายน 2569"
+      updated="14 พฤศจิกายน 2569"
       toc={toc}
       intro={
         <p>
@@ -188,6 +188,10 @@ export default function Terms() {
       <Clause id="care" n={11} title="Care Plan">
         <p>
           Care Plan ราคา {carePlan.price} บาทต่อเดือน จ่ายรายเดือนล่วงหน้า ยกเลิกได้โดยแจ้งล่วงหน้า 30 วัน ชั่วโมงที่ไม่ได้ใช้ในเดือนนั้นไม่ทบไปเดือนถัดไป
+        </p>
+        <p>
+          Care Lite ราคา {careLite.price} บาทต่อปี จ่ายล่วงหน้าครั้งละปี ครอบคลุม hosting ต่ออายุโดเมน .com SSL สำรองข้อมูล และแก้บั๊ก
+          ไม่รวมการแก้เนื้อหา ซึ่งคิดตามชั่วโมงทำงานจริง สตูดิโอจะแจ้งก่อนครบรอบต่ออายุอย่างน้อย 30 วัน
         </p>
       </Clause>
 

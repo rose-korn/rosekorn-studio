@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { carePlan, launchPromo, site } from "@/content/en";
+import { careLite, carePlan, launchPromo, site } from "@/content/en";
 import { Clause, LegalPage } from "@/components/legal/LegalPage";
 import { languageAlternates } from "@/components/RootShell";
 
@@ -68,7 +68,7 @@ export default function Terms() {
       path="/terms/"
       eyebrow="Terms of service"
       title="Terms of service"
-      updated="13 November 2026"
+      updated="14 November 2026"
       toc={toc}
       intro={
         <>
@@ -202,6 +202,10 @@ export default function Terms() {
         <p>
           The Care Plan costs ฿{carePlan.price} per month, billed monthly in advance, and can be cancelled with 30 days’ notice. Unused
           hours do not roll over to the next month.
+        </p>
+        <p>
+          Care Lite costs ฿{careLite.price} per year, paid a year in advance. It covers hosting, .com domain renewal, SSL, backups and
+          bug fixes. Content changes are not included and are billed by the hour. We remind you at least 30 days before each renewal.
         </p>
       </Clause>
 
