@@ -82,6 +82,28 @@ const packageText: Record<string, Pick<Package, "th" | "delivery" | "features" |
     ],
     cta: "Discuss a page like this",
   },
+  "line-order": {
+    th: "Food ordering on LINE",
+    delivery: "~4 weeks",
+    features: [
+      "A tap-to-order menu that opens inside LINE, no extra app",
+      "Orders land in your shop’s LINE instantly",
+      "PromptPay QR payment",
+      "Admin to switch sold-out items on and off",
+    ],
+    cta: "Take orders on LINE",
+  },
+  pos: {
+    th: "Point of sale for your counter",
+    delivery: "~8 weeks",
+    features: [
+      "Runs on a tablet or phone, no special hardware",
+      "Open bills, split by table, take PromptPay QR",
+      "Daily sales summary sent to LINE",
+      "Works with LINE Order so every order is in one place",
+    ],
+    cta: "Discuss a POS setup",
+  },
   "shop-starter": {
     th: "Launch on a platform",
     delivery: "~7 weeks",

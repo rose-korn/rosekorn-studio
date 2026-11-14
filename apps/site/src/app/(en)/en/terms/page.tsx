@@ -45,6 +45,16 @@ const scope = [
     no: "Product photography, 3D models scanned from real objects, an admin back office",
   },
   {
+    name: "LINE Order",
+    yes: "A food-ordering menu that opens inside LINE (LIFF), orders sent to your shop’s LINE, PromptPay QR, admin to switch items on and off, 2 rounds of revisions",
+    no: "Paid LINE OA plans, delivery logistics, integration with third-party delivery apps",
+  },
+  {
+    name: "POS",
+    yes: "A web point of sale for tablet or phone: open bills, tables, PromptPay QR, daily sales summary sent to LINE, 2 rounds of revisions",
+    no: "Hardware such as tablets, receipt printers or cash drawers; accounting and tax systems; full tax invoices",
+  },
+  {
     name: "Shop Starter",
     yes: "Shopify or WooCommerce setup, theme customisation, 20 products uploaded",
     no: "Platform subscription fees, paid plugins, uploading more than 20 products",
