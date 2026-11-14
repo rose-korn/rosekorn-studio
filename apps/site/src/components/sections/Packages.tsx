@@ -1,6 +1,8 @@
 import { getContent, ui, type Content, type Locale, type Ui } from "@/content";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
+import { careDetails, packageDetails } from "@/content/package-details";
+import { DetailsDialog } from "./DetailsDialog";
 
 export function Packages({ locale }: { locale: Locale }) {
   const c = getContent(locale);
@@ -42,6 +44,15 @@ export function Packages({ locale }: { locale: Locale }) {
               ) : null}
               <p className={`eyebrow ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.name}</p>
               <h3 className={`mt-3 ${th}text-2xl font-semibold leading-snug`}>{p.th}</h3>
+              {packageDetails(locale, p.id) ? (
+                <p
+                  className={`mt-3 inline-flex w-fit -rotate-1 items-center gap-1.5 rounded-md px-2 py-0.5 text-sm font-semibold ${
+                    p.featured ? "bg-rose text-white" : "bg-rose-soft text-rose-deep"
+                  }`}
+                >
+                  <span aria-hidden="true">✦</span> {packageDetails(locale, p.id)!.highlight}
+                </p>
+              ) : null}
               <div className="mt-8 flex flex-wrap items-baseline gap-x-2">
                 {p.priceNote ? <span className={`whitespace-nowrap ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.priceNote}</span> : null}
                 {launchPromo.active && p.promoPrice ? (
@@ -69,8 +80,19 @@ export function Packages({ locale }: { locale: Locale }) {
                   </li>
                 ))}
               </ul>
+              {!p.soon && packageDetails(locale, p.id) ? (
+                <DetailsDialog
+                  label={`${t.details} →`}
+                  cursor={t.detailsCursor}
+                  closeLabel={t.close}
+                  buttonClass={`link-underline mt-6 w-fit text-sm font-semibold ${p.featured ? "text-paper" : "text-ink"}`}
+                  title={<DetailsTitle p={p} locale={locale} />}
+                >
+                  <DetailsBody id={p.id} pkgId={p.id} cta={p.cta} locale={locale} />
+                </DetailsDialog>
+              ) : null}
               {p.soon ? (
-                <span className="mt-8 inline-flex h-12 items-center rounded-full border-2 border-dashed border-ink/40 pl-5 text-sm font-semibold text-muted">
+                <span className="mt-4 inline-flex h-12 items-center rounded-full border-2 border-dashed border-ink/40 pl-5 text-sm font-semibold text-muted">
                   {t.notOpen}
                 </span>
               ) : (
@@ -78,7 +100,7 @@ export function Packages({ locale }: { locale: Locale }) {
                 href="#contact"
                 data-package={p.id}
                 data-cursor={t.choose}
-                className={`press group mt-8 inline-flex h-12 items-center justify-between rounded-full border-2 pl-5 pr-1.5 text-sm font-semibold ${
+                className={`press group mt-4 inline-flex h-12 items-center justify-between rounded-full border-2 pl-5 pr-1.5 text-sm font-semibold ${
                   p.featured ? "border-paper bg-rose text-white" : "border-ink bg-paper hover:bg-ink hover:text-paper"
                 }`}
               >
@@ -126,10 +148,136 @@ export function Packages({ locale }: { locale: Locale }) {
               ))}
             </ul>
             <p className="mt-6 text-sm text-white/80">{t.careNote}</p>
+            <DetailsDialog
+              label={t.careOpen}
+              cursor={t.detailsCursor}
+              closeLabel={t.close}
+              buttonClass="press sticker-sm mt-6 inline-flex h-11 items-center rounded-full bg-paper px-5 text-sm font-semibold text-ink"
+              title={
+                <>
+                  <p className="eyebrow text-muted">{carePlan.name}</p>
+                  <p className={`mt-1 ${th}text-2xl font-semibold`}>
+                    {carePlan.th} · ฿{carePlan.price} / {t.perMonth}
+                  </p>
+                </>
+              }
+            >
+              <CareBody locale={locale} />
+            </DetailsDialog>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function DetailsTitle({ p, locale }: { p: Content["packages"][number]; locale: Locale }) {
+  const t = ui[locale].packages;
+  const { launchPromo } = getContent(locale);
+  const promo = launchPromo.active && p.promoPrice;
+  return (
+    <>
+      <p className="eyebrow text-muted">{p.name}</p>
+      <p className={`mt-1 ${locale === "th" ? "font-thai " : ""}text-2xl font-semibold leading-snug`}>{p.th}</p>
+      <p className="mt-2 text-sm text-muted">
+        {t.startsAt}{" "}
+        <strong className="text-lg text-ink">฿{promo ? p.promoPrice : p.price}</strong>
+        {promo ? <s className="ml-2">฿{p.price}</s> : null} · {t.delivery} {p.delivery}
+      </p>
+    </>
+  );
+}
+
+function Block({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="border-t-2 border-dashed border-ink/15 py-5 first:border-0 first:pt-0">
+      <h4 className="text-sm font-semibold text-rose-deep">{title}</h4>
+      <div className="mt-3">{children}</div>
+    </section>
+  );
+}
+
+function Ticks({ items, mark }: { items: readonly string[]; mark: "yes" | "no" | "dot" }) {
+  const icon = { yes: "✓", no: "✕", dot: "•" }[mark];
+  const color = { yes: "text-line-green", no: "text-rose", dot: "text-rose" }[mark];
+  return (
+    <ul className="space-y-2">
+      {items.map((x) => (
+        <li key={x} className="flex gap-3 break-words">
+          <span className={`shrink-0 font-bold ${color}`} aria-hidden="true">
+            {icon}
+          </span>
+          <span className="min-w-0">{x}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function DetailsBody({ id, pkgId, cta, locale }: { id: string; pkgId: string; cta: string; locale: Locale }) {
+  const d = packageDetails(locale, id)!;
+  const t = ui[locale].packages;
+  return (
+    <div className="text-[0.95rem]">
+      <Block title={t.bestFor}>
+        <p className="text-lg">{d.bestFor}</p>
+      </Block>
+      <Block title={t.includes}>
+        <Ticks items={d.includes} mark="yes" />
+      </Block>
+      <Block title={t.extras}>
+        <ul className="divide-y divide-ink/10">
+          {d.extras.map((x) => (
+            <li key={x.name} className="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+              <span className="min-w-0">{x.name}</span>
+              <span className="shrink-0 font-semibold tabular-nums">{/^[\d,–]/.test(x.price) ? `฿${x.price}` : x.price}</span>
+            </li>
+          ))}
+        </ul>
+      </Block>
+      <Block title={t.revisions}>
+        <p>{d.revisions}</p>
+      </Block>
+      <Block title={t.careFor}>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <p className="mb-2 text-sm font-semibold">{t.covered}</p>
+            <Ticks items={d.care.covered} mark="yes" />
+          </div>
+          <div>
+            <p className="mb-2 text-sm font-semibold">{t.notCovered}</p>
+            <Ticks items={d.care.notCovered} mark="no" />
+          </div>
+        </div>
+      </Block>
+      <a
+        href="#contact"
+        data-close
+        data-package={pkgId}
+        className="press sticker-sm mt-2 flex h-12 items-center justify-center rounded-full bg-rose px-6 font-semibold text-white"
+      >
+        {cta}
+      </a>
+    </div>
+  );
+}
+
+function CareBody({ locale }: { locale: Locale }) {
+  const c = careDetails(locale);
+  const t = ui[locale].packages;
+  return (
+    <div className="text-[0.95rem]">
+      <p className="pb-5 text-lg">{c.lead}</p>
+      <Block title={t.covered}>
+        <Ticks items={c.covered} mark="yes" />
+      </Block>
+      <Block title={t.notCovered}>
+        <Ticks items={c.notCovered} mark="no" />
+      </Block>
+      <Block title={t.terms}>
+        <Ticks items={c.terms} mark="dot" />
+      </Block>
+    </div>
   );
 }
 

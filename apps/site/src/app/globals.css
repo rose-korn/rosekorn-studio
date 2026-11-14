@@ -206,3 +206,18 @@ details > summary::-webkit-details-marker { display: none; }
 html[lang="en"] .font-thai {
   font-family: var(--font-sans);
 }
+
+/* package details modal */
+.details-dialog::backdrop {
+  background: rgb(21 19 17 / 0.55);
+  backdrop-filter: blur(2px);
+}
+.details-dialog[open] {
+  animation: details-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes details-pop {
+  from { opacity: 0; transform: translateY(16px) scale(0.96) rotate(-1deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .details-dialog[open] { animation: none; }
+}
