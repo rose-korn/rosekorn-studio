@@ -221,3 +221,9 @@ html[lang="en"] .font-thai {
 @media (prefers-reduced-motion: reduce) {
   .details-dialog[open] { animation: none; }
 }
+
+/* contact form package picker: keyboard focus ring for the hidden radio */
+.pkg-pick:has(input:focus-visible) {
+  outline: 2px dashed var(--color-sky);
+  outline-offset: 3px;
+}
