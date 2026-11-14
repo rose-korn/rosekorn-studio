@@ -6,7 +6,7 @@ import { DetailsDialog } from "./DetailsDialog";
 
 export function Packages({ locale }: { locale: Locale }) {
   const c = getContent(locale);
-  const { addons, carePlan, launchPromo, packages } = c;
+  const { addons, careLite, carePlan, launchPromo, packages } = c;
   const t = ui[locale].packages;
   const th = locale === "th" ? "font-thai " : "";
   return (
@@ -44,7 +44,7 @@ export function Packages({ locale }: { locale: Locale }) {
               ) : null}
               <p className={`eyebrow ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.name}</p>
               <h3 className={`mt-3 ${th}text-2xl font-semibold leading-snug`}>{p.th}</h3>
-              {packageDetails(locale, p.id) ? (
+              {!p.soon && packageDetails(locale, p.id) ? (
                 <p
                   className={`mt-3 inline-flex w-fit -rotate-1 items-center gap-1.5 rounded-md px-2 py-0.5 text-sm font-semibold ${
                     p.featured ? "bg-rose text-white" : "bg-rose-soft text-rose-deep"
@@ -116,7 +116,7 @@ export function Packages({ locale }: { locale: Locale }) {
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-12">
-          <div className="sticker wobbly bg-paper p-7 lg:col-span-7" data-pop>
+          <div className="sticker wobbly bg-paper p-7 lg:col-span-7 lg:self-start" data-pop>
             <p className="eyebrow text-muted">{t.addons}</p>
             <ul className="mt-4 divide-y divide-ink/10">
               {addons.map((a) => (
@@ -127,7 +127,27 @@ export function Packages({ locale }: { locale: Locale }) {
               ))}
             </ul>
           </div>
-          <div className="sticker wobbly relative bg-rose p-7 text-white lg:col-span-5" data-pop style={{ rotate: "1deg" }}>
+          <div className="flex flex-col gap-6 lg:col-span-5">
+          <div className="sticker wobbly relative bg-paper p-7" data-pop style={{ rotate: "-0.8deg" }}>
+            <p className="eyebrow text-muted">{careLite.name}</p>
+            <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 className={`${th}text-2xl font-semibold`}>{careLite.th}</h3>
+              <p className="text-3xl font-semibold tracking-tight">
+                ฿{careLite.price}
+                <span className="text-base font-normal text-muted"> / {t.perYear}</span>
+              </p>
+            </div>
+            <ul className="mt-5 space-y-2">
+              {careLite.features.map((f) => (
+                <li key={f} className="flex gap-3">
+                  <span aria-hidden="true" className="text-rose">✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-sm text-muted">{careLite.note}</p>
+          </div>
+          <div className="sticker wobbly relative bg-rose p-7 text-white" data-pop style={{ rotate: "1deg" }}>
             <span className="tape absolute -top-3 right-12 z-10 h-6 w-20 rotate-3" aria-hidden="true" />
             <div className="wobbly pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
               <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/25" />
@@ -164,6 +184,7 @@ export function Packages({ locale }: { locale: Locale }) {
             >
               <CareBody locale={locale} />
             </DetailsDialog>
+          </div>
           </div>
         </div>
       </div>

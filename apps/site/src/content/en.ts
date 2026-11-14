@@ -86,10 +86,10 @@ const packageText: Record<string, Pick<Package, "th" | "delivery" | "features" |
     th: "Food ordering on LINE",
     delivery: "~4 weeks",
     features: [
-      "A tap-to-order menu that opens inside LINE, no extra app",
-      "Orders land in your shop’s LINE instantly",
-      "PromptPay QR payment",
-      "Admin to switch sold-out items on and off",
+      "An ordering page in your shop’s own look, not a shared template",
+      "Opens inside LINE, so customers install nothing",
+      "Orders land in your shop’s LINE instantly, paid by PromptPay QR",
+      "The system is yours, with no monthly rental",
     ],
     cta: "Take orders on LINE",
   },
@@ -137,6 +137,13 @@ export const addons = [
   { name: "Facebook Pixel or GA4 setup", price: "1,000–1,500 / item" },
   { name: "Out-of-scope changes", price: "350 / hour" },
 ] as const;
+
+export const careLite = {
+  ...th.careLite,
+  th: "Yearly care",
+  features: ["Hosting and .com domain renewal handled", "SSL and backups", "Bug fixes when something breaks"],
+  note: "Content changes billed at ฿350 / hour. A good fit for Landing Basic and Landing Custom.",
+} as const;
 
 export const carePlan = {
   ...th.carePlan,

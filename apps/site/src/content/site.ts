@@ -183,10 +183,10 @@ export const packages: Package[] = [
     promoPrice: "20,400",
     delivery: "~4 สัปดาห์",
     features: [
-      "เมนูกดสั่งเปิดในแอป LINE ไม่ต้องโหลดแอปเพิ่ม",
-      "ออเดอร์เด้งเข้า LINE ร้านทันที",
-      "จ่ายด้วย QR PromptPay",
-      "หลังบ้านเปิด-ปิดเมนูที่ของหมด",
+      "หน้าสั่งอาหารเป็นแบรนด์ร้านเอง ไม่ซ้ำหน้าตากับร้านอื่น",
+      "เปิดในแอป LINE ลูกค้าไม่ต้องโหลดแอปเพิ่ม",
+      "ออเดอร์เด้งเข้า LINE ร้านทันที จ่ายด้วย QR PromptPay",
+      "ระบบเป็นของร้านเอง ไม่ต้องเช่าระบบรายเดือน",
     ],
     cta: "เริ่มรับออเดอร์ผ่าน LINE",
   },
@@ -195,8 +195,9 @@ export const packages: Package[] = [
     name: "POS",
     th: "ระบบขายหน้าร้าน",
     price: "45,000",
-    promoPrice: "38,250",
     delivery: "~8 สัปดาห์",
+    // paused (Nov 2026): ready-made POS apps cost ~129–490 THB/month, and support load clashes with korn's day job
+    soon: true,
     features: [
       "ใช้บนแท็บเล็ตหรือมือถือ ไม่ต้องซื้อเครื่องเฉพาะ",
       "เปิดบิล แยกโต๊ะ รับ QR PromptPay",
@@ -259,6 +260,15 @@ export const addons = [
   { name: "ติด Facebook Pixel หรือ GA4", price: "1,000–1,500 / รายการ" },
   { name: "แก้งานนอกขอบเขต", price: "350 / ชม." },
 ] as const;
+
+/** Light yearly care for simple sites; the monthly Care Plan is for LINE Order and Signature */
+export const careLite = {
+  name: "Care Lite",
+  th: "ดูแลรายปี",
+  price: "3,500",
+  features: ["Hosting และต่ออายุโดเมน .com ให้", "SSL และสำรองข้อมูล", "แก้บั๊กเมื่อเว็บมีปัญหา"],
+  note: "แก้เนื้อหาคิดตามจริง ฿350 / ชม. เหมาะกับ Landing Basic และ Landing Custom",
+} as const;
 
 export const carePlan = {
   name: "Care Plan",
