@@ -11,7 +11,15 @@ const PETAL_COLORS = ["#e0475e", "#f7a8c4", "#5bcefa", "#ffffff", "#f7a8c4", "#e
  * Hovering a link/button shows a small label (data-cursor="..." to customise).
  * Click: petal burst. Type "rose" or "pride" anywhere: petals rain.
  */
+/**
+ * The cursor and petals live in a full-screen popover layer, so they can sit in the browser's
+ * top layer. A modal <dialog> also opens in the top layer and would cover anything with a plain
+ * z-index, so whenever a dialog opens the layer is re-shown to stack it above the dialog.
+ */
+let fxLayer: HTMLElement | null = null;
+
 export function RoseCursor() {
+  const layer = useRef<HTMLDivElement>(null);
   const dot = useRef<HTMLDivElement>(null);
   const label = useRef<HTMLSpanElement>(null);
   const glyph = useRef<SVGSVGElement>(null);
@@ -22,13 +30,33 @@ export function RoseCursor() {
     const el = dot.current!;
     const root = document.documentElement;
     let typed = "";
+    fxLayer = layer.current;
+    const raise = () => {
+      const l = layer.current;
+      if (!l || !("showPopover" in l)) return;
+      try {
+        if (l.matches(":popover-open")) l.hidePopover();
+        l.showPopover();
+      } catch {
+        /* popover unsupported: the plain z-index still works outside dialogs */
+      }
+    };
+    raise();
+    const dialogs = new MutationObserver((records) => {
+      if (records.some((r) => (r.target as Element).matches("dialog[open]"))) raise();
+    });
+    dialogs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["open"] });
 
     const onKey = (e: KeyboardEvent) => {
       typed = (typed + e.key.toLowerCase()).slice(-6);
       if (typed.endsWith("rose") || typed.endsWith("pride")) rainPetals();
     };
     window.addEventListener("keydown", onKey);
-    if (!fine || calm) return () => window.removeEventListener("keydown", onKey);
+    if (!fine || calm)
+      return () => {
+        dialogs.disconnect();
+        window.removeEventListener("keydown", onKey);
+      };
 
     const xTo = gsap.quickTo(el, "x", { duration: 0.08, ease: "power3" });
     const yTo = gsap.quickTo(el, "y", { duration: 0.08, ease: "power3" });
@@ -73,6 +101,8 @@ export function RoseCursor() {
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
     return () => {
+      dialogs.disconnect();
+      fxLayer = null;
       root.classList.remove("rose-cursor");
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("pointermove", onMove);
@@ -85,10 +115,15 @@ export function RoseCursor() {
 
   return (
     <div
+      ref={layer}
+      popover="manual"
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 z-[100] m-0 h-full max-h-none w-full max-w-none overflow-visible border-0 bg-transparent p-0"
+    >
+    <div
       ref={dot}
       className="pointer-events-none fixed left-0 top-0 z-[100] opacity-0"
       style={{ visibility: "hidden" }}
-      aria-hidden="true"
     >
       {/* a little rose: bud spiral, cupped front petal, stem and leaf. Hotspot sits on the bloom. */}
       <svg
@@ -112,6 +147,7 @@ export function RoseCursor() {
         className="absolute left-6 top-5 whitespace-nowrap rounded-full border-2 border-ink bg-paper px-2.5 py-0.5 font-mono text-[11px] font-bold text-ink opacity-0"
       />
     </div>
+    </div>
   );
 }
 
@@ -130,7 +166,7 @@ function petal(color: string) {
     pointerEvents: "none",
     zIndex: "99",
   });
-  document.body.append(p);
+  (fxLayer ?? document.body).append(p);
   return p;
 }
 
@@ -140,7 +176,7 @@ function burst(x: number, y: number) {
     position: "fixed", left: `${x - 14}px`, top: `${y - 14}px`, width: "28px", height: "28px",
     border: "2.5px solid #151311", borderRadius: "999px", pointerEvents: "none", zIndex: "99",
   });
-  document.body.append(ring);
+  (fxLayer ?? document.body).append(ring);
   gsap.fromTo(ring, { scale: 0.3, opacity: 1 }, { scale: 1.8, opacity: 0, duration: 0.5, ease: "expo.out", onComplete: () => ring.remove() });
   PETAL_COLORS.forEach((c, i) => {
     const p = petal(c);
