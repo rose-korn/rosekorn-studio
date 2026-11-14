@@ -66,19 +66,50 @@ export function ContactForm({ locale }: { locale: Locale }) {
         {t.business}
         <input name="business" placeholder={t.businessPh} className={field} />
       </label>
-      <label className="grid gap-2 text-sm text-paper/70">
-        {t.package}
-        <select name="packageId" value={pkg} onChange={(e) => setPkg(e.target.value)} className={`${field} appearance-none`}>
-          {packages.filter((p) => !p.soon).map((p) => (
-            <option key={p.id} value={p.id} className="text-ink">
-              {p.name} — ฿{p.price}
-            </option>
-          ))}
-          <option value="unsure" className="text-ink">
-            {t.unsure}
-          </option>
-        </select>
-      </label>
+      <fieldset className="grid gap-2 text-sm text-paper/70">
+        <legend className="mb-2">{t.package}</legend>
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          {[
+            ...packages.filter((p) => !p.soon).map((p) => ({ id: p.id, name: p.name, price: `฿${p.price}` })),
+            { id: "unsure", name: t.unsure, price: "" },
+          ].map((o, i) => {
+            const on = pkg === o.id;
+            return (
+              <label
+                key={o.id}
+                className={`pkg-pick relative flex min-h-[4.25rem] cursor-pointer flex-col justify-center gap-0.5 border-2 px-3 py-2.5 transition-[transform,background-color,border-color,box-shadow] duration-200 ${
+                  i % 2 ? "rounded-[14px_10px_16px_12px]" : "rounded-[10px_16px_12px_14px]"
+                } ${
+                  on
+                    ? `${i % 2 ? "rotate-[1.2deg]" : "-rotate-[1.2deg]"} border-paper bg-rose text-white shadow-[4px_4px_0_var(--color-paper)]`
+                    : "border-paper/20 bg-paper/5 text-paper/85 hover:-translate-y-0.5 hover:border-paper/60 hover:bg-paper/10"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="packageId"
+                  value={o.id}
+                  checked={on}
+                  onChange={() => setPkg(o.id)}
+                  className="peer sr-only"
+                />
+                <span className="font-thai text-[0.95rem] font-semibold leading-tight">{o.name}</span>
+                {o.price ? (
+                  <span className={`font-mono text-xs ${on ? "text-white/85" : "text-paper/50"}`}>{o.price}</span>
+                ) : null}
+                <span
+                  aria-hidden
+                  className={`absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ink bg-paper text-xs font-bold text-ink transition duration-200 ${
+                    on ? "scale-100 rotate-[8deg] opacity-100" : "scale-50 opacity-0"
+                  }`}
+                >
+                  ✓
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
       <label className="grid gap-2 text-sm text-paper/70">
         {t.message}
         <textarea name="message" rows={4} placeholder={t.messagePh} className={`${field} resize-none`} />
