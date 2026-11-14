@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
 import { Clause, LegalPage } from "@/components/legal/LegalPage";
+import { languageAlternates } from "@/components/RootShell";
 
 export const metadata: Metadata = {
   title: "นโยบายความเป็นส่วนตัว",
   description: "Rosekorn Studio เก็บและใช้ข้อมูลส่วนบุคคลของคุณอย่างไร ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)",
-  alternates: { canonical: "/privacy/" },
+  alternates: languageAlternates("th", "/privacy/"),
 };
 
 const toc = [
@@ -24,6 +25,8 @@ const toc = [
 export default function Privacy() {
   return (
     <LegalPage
+      locale="th"
+      path="/privacy/"
       eyebrow="Privacy policy · PDPA"
       title="นโยบายความเป็นส่วนตัว"
       updated="13 พฤศจิกายน 2569"

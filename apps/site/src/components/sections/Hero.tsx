@@ -1,14 +1,17 @@
-import { site } from "@/content/site";
+import { getContent, ui, type Locale } from "@/content";
 import { HeroVisual } from "@/components/hero/HeroVisual";
 import { Arrow } from "@/components/Arrow";
 
-const stats = [
-  { n: 90, suffix: "+", v: "PageSpeed บนมือถือ", tilt: -2, bg: "bg-paper" },
-  { n: 3, prefix: "2–", suffix: "", v: "สัปดาห์ เว็บหน้าเดียวพร้อมใช้", tilt: 1.5, bg: "bg-rose-soft" },
-  { n: 100, suffix: "%", v: "โค้ดเป็นของคุณ", tilt: -1, bg: "bg-paper" },
+const statShape = [
+  { n: 90, suffix: "+", tilt: -2, bg: "bg-paper" },
+  { n: 3, prefix: "2–", suffix: "", tilt: 1.5, bg: "bg-rose-soft" },
+  { n: 100, suffix: "%", tilt: -1, bg: "bg-paper" },
 ];
 
-export function Hero() {
+export function Hero({ locale }: { locale: Locale }) {
+  const { site } = getContent(locale);
+  const t = ui[locale].hero;
+  const stats = statShape.map((s, i) => ({ ...s, v: t.stats[i] }));
   return (
     <section id="top" className="grain relative overflow-hidden pt-28 md:pt-36">
       <div className="container-x">
@@ -18,7 +21,7 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-rose" />
             </span>
-            {site.openingNote} · รับจำนวนจำกัด
+            {site.openingNote} · {t.limited}
           </span>
           <span className="eyebrow text-muted">Independent web studio — {site.location}</span>
         </div>
@@ -32,47 +35,51 @@ export function Hero() {
               data-split
               className="font-thai text-[clamp(2.9rem,8.4vw,7.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
             >
-              เว็บที่
+              {t.h1a}
               <span className="relative whitespace-nowrap">
-                <span className="relative z-10">ขายของ</span>
+                <span className="relative z-10">{t.h1b}</span>
                 <svg viewBox="0 0 300 24" preserveAspectRatio="none" className="absolute -bottom-1 left-0 z-0 h-[0.28em] w-full text-rose" aria-hidden="true">
                   <path d="M2 18 C 70 4, 160 4, 298 14" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
                 </svg>
               </span>
-              <br />
-              ได้จริง<span className="text-rose">.</span>
+              {t.h1c ? (
+                <>
+                  <br />
+                  {t.h1c}
+                </>
+              ) : null}
+              <span className="text-rose">.</span>
             </h1>
             <p className="mt-6 font-serif text-[clamp(1.6rem,3vw,2.5rem)] italic leading-tight text-ink-2" data-reveal>
-              Websites that actually sell — designed in Bangkok, built to last.
+              {t.tagline}
             </p>
             <p className="mt-6 max-w-xl text-lg text-muted" data-reveal>
-              Rosekorn Studio ออกแบบและพัฒนาเว็บไซต์ด้วย Next.js ให้ร้านค้า คาเฟ่ และแบรนด์ไทย
-              โหลดไว ติด Google รองรับ PromptPay และ LINE OA ตั้งแต่วันแรก
+              {t.lead}
             </p>
             <div className="relative mt-9 flex flex-wrap items-center gap-4" data-reveal>
               <a
                 href="#contact"
-                data-cursor="คุยกัน!"
+                data-cursor={ui[locale].talk}
                 className="press sticker group inline-flex h-14 items-center gap-3 rounded-full bg-rose pl-7 pr-2 font-semibold text-white"
               >
-                เริ่มคุยโปรเจกต์
+                {t.cta}
                 <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-paper text-ink transition group-hover:rotate-45">
                   <Arrow />
                 </span>
               </a>
               <a
                 href="#packages"
-                data-cursor="ดูราคา"
+                data-cursor={t.pricingCursor}
                 className="press sticker-sm inline-flex h-14 items-center rounded-full bg-paper px-7 font-medium"
               >
-                ดูแพ็กเกจและราคา
+                {t.pricing}
               </a>
               <span className="hidden items-center gap-2 font-serif text-xl italic text-rose-deep sm:inline-flex">
                 <svg viewBox="0 0 60 30" className="h-6 w-12 -scale-x-100" aria-hidden="true">
                   <path d="M2 22 C 18 4, 40 4, 56 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                   <path d="M48 10 L56 18 L45 21" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                คุยฟรี 30 นาที
+                {t.free}
               </span>
             </div>
           </div>

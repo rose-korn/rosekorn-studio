@@ -57,7 +57,7 @@ export function RoseCursor() {
       const target = over?.closest("a, button, summary, [data-cursor]") ?? null;
       if (target !== hovering) {
         hovering = target;
-        const text = target?.getAttribute("data-cursor") ?? (target ? (target.matches("a[target=_blank]") ? "เปิดดู" : "คลิก") : "");
+        const text = target?.getAttribute("data-cursor") ?? (target ? (target.matches("a[target=_blank]") ? (document.documentElement.lang === "en" ? "Open" : "เปิดดู") : (document.documentElement.lang === "en" ? "Click" : "คลิก")) : "");
         if (label.current) label.current.textContent = text;
         gsap.to(glyph.current, { scale: target ? 1.35 : 1, rotate: target ? -18 : 0, duration: 0.4, ease: "back.out(2.2)" });
         gsap.to(label.current, { autoAlpha: target ? 1 : 0, scale: target ? 1 : 0.6, duration: 0.3, ease: "back.out(2.2)" });

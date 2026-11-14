@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav, site } from "@/content/site";
+import { getContent, localePath, otherLocale, ui, type Locale } from "@/content";
 import { Logo } from "./Logo";
 import { LineIcon } from "./LineIcon";
 
-export function Header() {
+/** `path` is this page's locale-free path ("/"), used for the language switch */
+export function Header({ locale, path = "/" }: { locale: Locale; path?: string }) {
+  const { nav, site } = getContent(locale);
+  const t = ui[locale];
+  const other = otherLocale(locale);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -27,11 +31,11 @@ export function Header() {
           scrolled || open ? "sticker-sm bg-paper" : "border-2 border-transparent"
         }`}
       >
-        <a href="#top" aria-label={`${site.name} หน้าแรก`} onClick={() => setOpen(false)}>
+        <a href="#top" aria-label={`${site.name} ${t.home}`} onClick={() => setOpen(false)}>
           <Logo />
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="เมนูหลัก">
+        <nav className="hidden items-center gap-8 md:flex" aria-label={t.mainNav}>
           {nav.map((item) => (
             <a key={item.href} href={item.href} className="group relative text-[0.95rem]">
               <span className="link-underline">{item.label}</span>
@@ -40,6 +44,15 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <a
+            href={localePath(other, path)}
+            hrefLang={other}
+            lang={other}
+            aria-label={t.switchLabel}
+            className="press inline-flex h-10 items-center rounded-full border-2 border-ink px-3 font-mono text-xs font-bold tracking-wider hover:bg-ink hover:text-paper"
+          >
+            {locale === "th" ? "EN" : "TH"}
+          </a>
           <a
             href={site.lineUrl}
             target="_blank"
@@ -51,17 +64,27 @@ export function Header() {
           </a>
           <a
             href="#contact"
-            data-cursor="คุยกัน!"
+            data-cursor={t.talk}
             className="press sticker-sm inline-flex h-10 items-center rounded-full bg-rose px-5 text-sm font-semibold text-white"
           >
-            จองคิวคุยงาน
+            {t.book}
           </a>
         </div>
 
+        <div className="flex items-center gap-1 md:hidden">
+        <a
+          href={localePath(other, path)}
+          hrefLang={other}
+          lang={other}
+          aria-label={t.switchLabel}
+          className="inline-flex h-9 items-center rounded-full border-2 border-ink px-2.5 font-mono text-[11px] font-bold tracking-wider"
+        >
+          {locale === "th" ? "EN" : "TH"}
+        </a>
         <button
           type="button"
-          className="relative flex h-10 w-10 items-center justify-center md:hidden"
-          aria-label={open ? "ปิดเมนู" : "เปิดเมนู"}
+          className="relative flex h-10 w-10 items-center justify-center"
+          aria-label={open ? t.closeMenu : t.openMenu}
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((v) => !v)}
@@ -69,13 +92,14 @@ export function Header() {
           <span className={`absolute h-px w-6 bg-ink transition ${open ? "rotate-45" : "-translate-y-1.5"}`} />
           <span className={`absolute h-px w-6 bg-ink transition ${open ? "-rotate-45" : "translate-y-1.5"}`} />
         </button>
+        </div>
       </div>
 
       <div
         id="mobile-menu"
         className={`md:hidden ${open ? "block" : "hidden"} sticker mx-auto mt-2 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl bg-paper pb-6`}
       >
-        <nav className="container-x flex flex-col pt-6" aria-label="เมนูมือถือ">
+        <nav className="container-x flex flex-col pt-6" aria-label={t.mobileNav}>
           {nav.map((item) => (
             <a
               key={item.href}
@@ -83,7 +107,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="flex items-baseline justify-between border-b border-line py-5"
             >
-              <span className="font-thai text-3xl font-semibold">{item.label}</span>
+              <span className={`${locale === "th" ? "font-thai" : ""} text-3xl font-semibold`}>{item.label}</span>
               <span className="eyebrow text-muted">{item.en}</span>
             </a>
           ))}
@@ -93,7 +117,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="sticker-sm flex h-14 items-center justify-center rounded-full bg-rose font-semibold text-white"
             >
-              จองคิวคุยงาน
+              {t.book}
             </a>
             <a
               href={site.lineUrl}
@@ -101,7 +125,7 @@ export function Header() {
               rel="noreferrer"
               className="sticker-sm flex h-14 items-center justify-center gap-2 rounded-full bg-line-green font-semibold text-white"
             >
-              <LineIcon /> แอด LINE {site.lineOaId}
+              <LineIcon /> {t.addLine} {site.lineOaId}
             </a>
           </div>
         </nav>

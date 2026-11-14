@@ -1,3 +1,4 @@
+import type { Locale } from "@/content";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
@@ -8,20 +9,21 @@ import { Faq } from "@/components/sections/Faq";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 
-export default function Home() {
+/** The studio home page, rendered at / (Thai) and /en/ (English) */
+export function HomePage({ locale }: { locale: Locale }) {
   return (
     <>
-      <Header />
+      <Header locale={locale} path="/" />
       <main>
-        <Hero />
-        <Marquee />
-        <Work />
-        <Packages />
-        <Process />
-        <Faq />
-        <Contact />
+        <Hero locale={locale} />
+        <Marquee locale={locale} />
+        <Work locale={locale} />
+        <Packages locale={locale} />
+        <Process locale={locale} />
+        <Faq locale={locale} />
+        <Contact locale={locale} />
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }
