@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 import { careDetails, packageDetails } from "@/content/package-details";
 import { DetailsDialog } from "./DetailsDialog";
+import { Doodle, MarkSticker } from "@/components/Doodle";
 
 export function Packages({ locale }: { locale: Locale }) {
   const c = getContent(locale);
@@ -39,7 +40,7 @@ export function Packages({ locale }: { locale: Locale }) {
             >
               {p.featured ? (
                 <span className={`stamp absolute -right-3 -top-4 rotate-6 bg-paper ${th}text-sm text-rose-deep`}>
-                  {t.popular}
+                  {t.popular} <Doodle kind="star" className="h-4 w-4 text-gold" />
                 </span>
               ) : null}
               <p className={`eyebrow ${p.featured ? "text-paper/60" : "text-muted"}`}>{p.name}</p>
@@ -50,7 +51,7 @@ export function Packages({ locale }: { locale: Locale }) {
                     p.featured ? "bg-rose text-white" : "bg-rose-soft text-rose-deep"
                   }`}
                 >
-                  <span aria-hidden="true">✦</span> {packageDetails(locale, p.id)!.highlight}
+                  <Doodle kind="spark" n={i} className="h-4 w-4 text-gold" /> {packageDetails(locale, p.id)!.highlight}
                 </p>
               ) : null}
               <div className="mt-8 flex flex-wrap items-baseline gap-x-2">
@@ -73,9 +74,9 @@ export function Packages({ locale }: { locale: Locale }) {
               ) : null}
               <p className={`mt-2 text-sm ${p.featured ? "text-paper/60" : "text-muted"}`}>{t.delivery} {p.delivery}</p>
               <ul className={`mt-8 flex-1 space-y-3 border-t pt-6 ${p.featured ? "border-paper/15" : "border-ink/10"}`}>
-                {p.features.map((f) => (
+                {p.features.map((f, j) => (
                   <li key={f} className="flex gap-3 text-[0.95rem]">
-                    <span className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-rose" />
+                    <Doodle kind="dash" n={j} className="mt-[0.2em] h-4 w-4 text-rose" strokeWidth={3} />
                     {f}
                   </li>
                 ))}
@@ -138,9 +139,9 @@ export function Packages({ locale }: { locale: Locale }) {
               </p>
             </div>
             <ul className="mt-5 space-y-2">
-              {careLite.features.map((f) => (
+              {careLite.features.map((f, j) => (
                 <li key={f} className="flex gap-3">
-                  <span aria-hidden="true" className="text-rose">✓</span>
+                  <MarkSticker kind="check" n={j} tone="pink" />
                   {f}
                 </li>
               ))}
@@ -150,8 +151,15 @@ export function Packages({ locale }: { locale: Locale }) {
           <div className="sticker wobbly relative bg-rose p-7 text-white" data-pop style={{ rotate: "1deg" }}>
             <span className="tape absolute -top-3 right-12 z-10 h-6 w-20 rotate-3" aria-hidden="true" />
             <div className="wobbly pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-              <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/25" />
-              <div className="absolute -right-6 -top-6 h-36 w-36 rounded-full border border-white/25" />
+              {/* a big loose rose sketch instead of the old concentric circles */}
+              <svg viewBox="-20 -20 40 40" className="absolute -right-10 -top-8 h-56 w-56 rotate-12 text-white/25" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M-2 -6 C-1 -9 3 -9 3 -6 C3 -4 0 -4 -0.5 -5.5" />
+                <path d="M-6 -4 C-7 -10 1 -12 3 -8 C6 -10 8 -6 6 -3" />
+                <path d="M-10 -2 C-13 -10 -7 -15 -1 -12 C4 -16 12 -12 10 -3" />
+                <path d="M-11 -4 C-12 6 -5 10 1 10 C7 10 12 5 11 -4 C8 0 4 1 0 1 C-4 1 -8 0 -11 -4" />
+                <path d="M2 10 C3 14 4 17 7 20" />
+                <path d="M4.5 14.5 C9 11.5 13 12.5 14 14.5 C11 17.5 7 17 4.5 14.5" />
+              </svg>
             </div>
             <p className="eyebrow text-white/75">{carePlan.name}</p>
             <h3 className={`mt-3 ${th}text-2xl font-semibold`}>{carePlan.th}</h3>
@@ -160,9 +168,9 @@ export function Packages({ locale }: { locale: Locale }) {
               <span className="text-lg font-normal text-white/75"> / {t.perMonth}</span>
             </p>
             <ul className="mt-6 space-y-2">
-              {carePlan.features.map((f) => (
+              {carePlan.features.map((f, j) => (
                 <li key={f} className="flex gap-3">
-                  <span aria-hidden="true">✓</span>
+                  <MarkSticker kind="check" n={j} tone="paper" />
                   {f}
                 </li>
               ))}
@@ -219,15 +227,13 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 }
 
 function Ticks({ items, mark }: { items: readonly string[]; mark: "yes" | "no" | "dot" }) {
-  const icon = { yes: "✓", no: "✕", dot: "•" }[mark];
-  const color = { yes: "text-line-green", no: "text-rose", dot: "text-rose" }[mark];
+  const kind = ({ yes: "check", no: "cross", dot: "dash" } as const)[mark];
+  const tone = ({ yes: "pink", no: "paper", dot: "sky" } as const)[mark];
   return (
     <ul className="space-y-2">
-      {items.map((x) => (
+      {items.map((x, i) => (
         <li key={x} className="flex gap-3 break-words">
-          <span className={`shrink-0 font-bold ${color}`} aria-hidden="true">
-            {icon}
-          </span>
+          <MarkSticker kind={kind} n={i} tone={tone} />
           <span className="min-w-0">{x}</span>
         </li>
       ))}
@@ -308,7 +314,7 @@ function PromoBanner({ promo: launchPromo, t }: { promo: Content["launchPromo"];
   return (
     <div className="sticker wobbly relative mt-14 grid gap-6 bg-ink p-7 text-paper md:grid-cols-[1fr_auto] md:items-center md:p-9" data-pop style={{ rotate: "-0.6deg" }}>
       <span className="stamp absolute -top-4 left-6 -rotate-3 bg-rose text-sm text-white" style={{ borderColor: "var(--color-ink)" }}>
-        LAUNCH ✿
+        LAUNCH <Doodle kind="flower" className="ml-1 h-4 w-4 text-pink" />
       </span>
       <div>
         <p className="font-thai text-2xl font-semibold md:text-3xl">{launchPromo.headline}</p>
@@ -318,7 +324,7 @@ function PromoBanner({ promo: launchPromo, t }: { promo: Content["launchPromo"];
         </p>
       </div>
       <div className="md:text-right">
-        <p className="font-mono text-xs tracking-[0.2em] text-paper/60">{t.left}</p>
+        <p className="text-sm text-paper/60">{t.left}</p>
         <p className="text-5xl font-semibold tabular-nums">
           {left}
           <span className="text-2xl text-paper/50">
@@ -344,7 +350,7 @@ function SoonTape({ label }: { label: string }) {
       className="absolute -inset-x-6 flex h-11 items-center overflow-hidden border-y-[2.5px] border-ink bg-[#e0475e] shadow-[0_3px_0_rgba(0,0,0,.18)]"
       style={{ rotate: rot, top }}
     >
-      <p className="flex w-max gap-5 whitespace-nowrap font-mono text-sm font-bold tracking-[0.2em] text-white">
+      <p className="flex w-max gap-5 whitespace-nowrap font-mono text-sm font-bold text-white">
         {Array.from({ length: 8 }, (_, i) => (
           <span key={i}>{label}</span>
         ))}

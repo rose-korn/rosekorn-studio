@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getContent, localePath, ui, type Locale } from "@/content";
 import { submitInquiry, type Inquiry } from "@/lib/api";
+import { Doodle } from "@/components/Doodle";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -103,7 +104,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
                     on ? "scale-100 rotate-[8deg] opacity-100" : "scale-50 opacity-0"
                   }`}
                 >
-                  ✓
+                  <Doodle kind="check" n={i} className="h-4 w-4 text-line-green" strokeWidth={3.2} />
                 </span>
               </label>
             );
