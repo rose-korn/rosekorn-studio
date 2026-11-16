@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element -- client photos are plain static files on a static export */
-import { Illo } from "./Illo";
-import type { BasicConfig, Picture, Theme } from "./types";
+import { Highlights } from "./Highlights";
+import { Pic } from "./Pic";
+import type { BasicConfig, Theme } from "./types";
 
 /**
  * Landing Basic: one page for a small shop (intro, highlights, photos, hours, map link, contact form).
@@ -18,15 +18,6 @@ export function themeVars(t: Theme): React.CSSProperties {
     "--t-on-accent": t.onAccent,
     "--t-soft": t.soft,
   } as React.CSSProperties;
-}
-
-function Pic({ pic, className = "" }: { pic: Picture; className?: string }) {
-  if (pic.src) return <img src={pic.src} alt={pic.alt} className={`h-full w-full object-cover ${className}`} loading="lazy" />;
-  return (
-    <div role="img" aria-label={pic.alt} className={`flex h-full w-full items-center justify-center bg-[var(--t-soft)] ${className}`}>
-      <Illo kind={pic.illo ?? "storefront"} className="h-3/4 w-3/4" />
-    </div>
-  );
 }
 
 /** a loose hand-drawn underline for headings */
@@ -133,20 +124,7 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
         {/* highlights */}
         <section aria-labelledby="highlights" className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
           <H2 id="highlights">{c.highlights.title}</H2>
-          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {c.highlights.items.map((it) => (
-              <li key={it.name} className={`${card} flex items-center gap-4 p-4`}>
-                <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-2 border-[var(--t-ink)]">
-                  <Pic pic={it.pic} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-lg font-semibold leading-snug">{it.name}</p>
-                  {it.note ? <p className="text-sm text-[var(--t-muted)]">{it.note}</p> : null}
-                </div>
-                {it.price ? <p className="tpl-display shrink-0 text-xl text-[var(--t-accent)]">{it.price}</p> : null}
-              </li>
-            ))}
-          </ul>
+          <Highlights items={c.highlights.items} sheetUrl={c.highlights.sheetUrl} />
         </section>
 
         {/* gallery: photos pinned like prints */}

@@ -28,7 +28,12 @@ export type BasicConfig = {
   tagline: string;
   hero: Picture;
   about: { title: string; body: string; facts: { label: string; value: string }[] };
-  highlights: { title: string; items: { name: string; note?: string; price?: string; pic: Picture }[] };
+  highlights: {
+    title: string;
+    items: { name: string; note?: string; price?: string; pic: Picture }[];
+    /** optional: the shop's Google Sheet published as CSV; when set, the menu is read from it live (see sheet.ts) */
+    sheetUrl?: string;
+  };
   gallery: { title: string; items: (Picture & { caption?: string })[] };
   hours: { day: string; time: string; closed?: boolean }[];
   address: string;
