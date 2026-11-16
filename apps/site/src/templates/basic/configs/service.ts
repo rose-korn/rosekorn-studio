@@ -12,6 +12,7 @@ import type { BasicConfig } from "../types";
  */
 const img = (f: string) => `/templates/service/${f}.webp`;
 export const service: BasicConfig = {
+  look: "calm",
   name: "ใบเตย แฮร์ แอนด์ สปา",
   kicker: "ร้านทำผมและสปาเล็ก ๆ ในซอยอารีย์",
   tagline: "ตัดผม ทำสี ทรีตเมนต์ และนวดผ่อนคลาย ในร้านเงียบ ๆ ที่ช่างดูแลคุณคนเดียวตั้งแต่ต้นจนจบ จองคิวทาง LINE ได้ทุกวัน",
@@ -28,7 +29,7 @@ export const service: BasicConfig = {
   },
   highlights: {
     title: "บริการและราคา",
-    layout: "list",
+    layout: "menu",
     ask: { before: "อยากจองบริการไหน", after: "บอกวันและเวลาที่สะดวกได้เลย" },
     items: [
       { name: "ตัดผม สระ ไดร์", note: "รวมปรึกษาทรงผม ประมาณ 1 ชม.", price: "฿450", badge: "ยอดนิยม", pic: { src: img("cut"), alt: "ช่างกำลังตัดผม" } },

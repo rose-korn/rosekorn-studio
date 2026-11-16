@@ -1,0 +1,7 @@
+ชื่อ (name),รายละเอียด (note),ราคา (price),ลิงก์รูป (image),ป้าย เช่น ขายดี (badge)
+ตัดผม สระ ไดร์,รวมปรึกษาทรงผม ประมาณ 1 ชม.,450,/templates/service/cut.webp,ยอดนิยม
+ทำสีผม,ผมยาวประบ่า เริ่มต้น,"1,500",/templates/service/color.webp,
+สระไดร์ ทำลอน,ก่อนออกงาน หรือวันสำคัญ,350,/templates/service/blowdry.webp,
+ทรีตเมนต์สปาผม,บำรุงหนังศีรษะ ผมนุ่มลื่น,690,/templates/service/hairspa.webp,
+นวดน้ำมันอโรมา,60 นาที เลือกกลิ่นได้,800,/templates/service/massage.webp,ใหม่
+ทำหน้า มาสก์ผิว,45 นาที เหมาะกับผิวแพ้ง่าย,900,/templates/service/facial.webp,

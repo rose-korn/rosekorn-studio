@@ -1,0 +1,7 @@
+ชื่อ (name),รายละเอียด (note),ราคา (price),ลิงก์รูป (image),ป้าย เช่น ขายดี (badge)
+ลาเต้มะลิ,เมนูประจำร้าน หอมดอกมะลิอ่อน ๆ,85,/templates/cafe/latte.webp,
+ดริปดอยช้าง,คั่วกลาง เปรี้ยวผลไม้,90,/templates/cafe/pourover.webp,
+ครัวซองต์เนยสด,อบเช้าทุกวัน,65,/templates/cafe/croissant.webp,
+เค้กกาแฟชั้น,ใช้เอสเปรสโซของร้าน,95,/templates/cafe/cake.webp,
+เฟรนช์โทสต์สตรอว์เบอร์รี,สตรอว์เบอร์รีสะเมิง,120,/templates/cafe/toast.webp,
+เมล็ดคั่วบ้าน 200 ก.,ซื้อกลับไปชงเองที่บ้าน,320,/templates/cafe/beans.webp,

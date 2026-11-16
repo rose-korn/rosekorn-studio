@@ -3,6 +3,14 @@
  * For a new client, copy a config (e.g. configs/cafe.ts), swap the text, photos and theme, and the page follows.
  */
 import type { IlloKind } from "./Illo";
+import type { SheetLinks } from "./sheet";
+
+/**
+ * The template's personality. Same sections, different drawing:
+ * cozy = tilted stickers and tape (cafe), poster = straight blocks with heavy shadows (shop),
+ * calm = thin lines, arches and air (salon, spa, clinic). See ui.tsx.
+ */
+export type Look = "cozy" | "poster" | "calm";
 
 export type Theme = {
   /** shown on the colour switcher in the demo bar */
@@ -24,6 +32,7 @@ export type Picture = { src?: string; illo?: IlloKind; alt: string };
 export type Review = { quote: string; name: string; /** where the review came from, e.g. "สั่งทาง LINE" */ where?: string; stars?: number };
 
 export type BasicConfig = {
+  look: Look;
   name: string;
   /** short line under the name, e.g. the street or the kind of shop */
   kicker: string;
@@ -34,14 +43,14 @@ export type BasicConfig = {
   cta?: string;
   highlights: {
     title: string;
-    /** "list": small rows (a menu). "cards": big photo cards (products). Default "list". */
-    layout?: "list" | "cards";
+    /** "list": small photo rows (a cafe menu). "cards": big photo cards (products). "menu": a price list with dotted leaders (services). Default "list". */
+    layout?: "list" | "cards" | "menu";
     items: { name: string; note?: string; price?: string; /** small sticker, e.g. "ขายดี" */ badge?: string; pic: Picture }[];
     /** line under the list: "{before} ทัก LINE @id {after}"; default "ถูกใจชิ้นไหน" / "บอกชื่อสินค้าได้เลย" */
     ask?: { before: string; after: string };
-    /** optional: the shop's Google Sheet published as CSV; when set, items are read from it live (see sheet.ts) */
-    sheetUrl?: string;
   };
+  /** short selling points shown as a strip under the hero, e.g. "ซื้อครบ ฿800 ส่งฟรี" */
+  perks?: string[];
   gallery?: { title: string; items: (Picture & { caption?: string })[] };
   /** text reviews copied from the shop's Facebook, LINE chats or Google Maps (with the customer's OK) */
   reviews?: { title: string; score?: string; items: Review[] };
@@ -71,4 +80,6 @@ export type BasicConfig = {
   contact: { lineId: string; lineUrl: string; phone: string; email: string; facebook?: string; instagram?: string };
   form: { title: string; lead: string; placeholder?: string };
   themes: Theme[];
+  /** Google Sheet add-on: the shop edits its own text, items, hours, reviews... (see sheet.ts and README) */
+  sheet?: SheetLinks;
 };
