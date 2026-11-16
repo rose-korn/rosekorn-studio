@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Doodle } from "@/components/Doodle";
 
 /**
  * A button that opens a sticker-style modal (native <dialog>: focus trap and Esc for free).
@@ -86,7 +87,7 @@ export function DetailsDialog({
               aria-label={closeLabel}
               className="sticker-sm flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-paper text-lg hover:bg-rose hover:text-white"
             >
-              ✕
+              <Doodle kind="cross" n={1} className="h-5 w-5" strokeWidth={2.8} />
             </button>
           </div>
           <div

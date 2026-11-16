@@ -1,6 +1,7 @@
 import { getContent, ui, type Locale } from "@/content";
 import { HeroVisual } from "@/components/hero/HeroVisual";
 import { Arrow } from "@/components/Arrow";
+import { Doodle } from "@/components/Doodle";
 
 const statShape = [
   { n: 90, suffix: "+", tilt: -2, bg: "bg-paper" },
@@ -87,7 +88,7 @@ export function Hero({ locale }: { locale: Locale }) {
           <div className="relative mx-auto w-full max-w-[520px] lg:col-span-5" data-reveal>
             <HeroVisual />
             <span className="stamp absolute bottom-[6%] left-[2%] -rotate-6 bg-paper/80 font-mono text-xs text-rose-deep md:text-sm">
-              Made in BKK ✿
+              Made in BKK <Doodle kind="flower" className="ml-0.5 h-4 w-4 text-pink" />
             </span>
           </div>
         </div>

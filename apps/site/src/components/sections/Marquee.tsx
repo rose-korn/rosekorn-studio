@@ -1,4 +1,5 @@
 import { getContent, ui, type Locale } from "@/content";
+import { Doodle } from "@/components/Doodle";
 
 /** Two crossing "tape" bands, slightly rotated, like stickers slapped across the page */
 export function Marquee({ locale }: { locale: Locale }) {
@@ -9,9 +10,9 @@ export function Marquee({ locale }: { locale: Locale }) {
       <div className="absolute inset-x-[-5%] top-1/2 h-14 -translate-y-1/2 rotate-[2.2deg] border-y-[2.5px] border-ink bg-ink md:h-16" aria-hidden="true">
         <ul className="flex h-full w-max animate-marquee items-center gap-8 whitespace-nowrap [animation-direction:reverse]">
           {items.map((t, i) => (
-            <li key={i} className="flex items-center gap-8 font-mono text-sm font-bold uppercase tracking-widest text-paper/80">
+            <li key={i} className="flex items-center gap-8 font-mono text-sm font-bold uppercase text-paper/80">
               <span>{t}</span>
-              <span className="text-pink">✿</span>
+              <Doodle kind="flower" n={i} className="h-5 w-5 text-pink" />
             </li>
           ))}
         </ul>
@@ -21,7 +22,7 @@ export function Marquee({ locale }: { locale: Locale }) {
           {items.map((t, i) => (
             <li key={i} className="flex items-center gap-10 font-thai text-2xl font-semibold md:text-3xl" aria-hidden={i >= marquee.length}>
               <span>{t}</span>
-              <span className="text-ink">✦</span>
+              <Doodle kind="spark" n={i} className="h-7 w-7 text-paper" />
             </li>
           ))}
         </ul>
