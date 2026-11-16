@@ -3,15 +3,21 @@ import type { BasicConfig } from "../types";
 /**
  * Demo config: a made-up shop of handmade soap and home scents. Every name, number, review and account here is fictional.
  *
+ * Photos: Unsplash (free under the Unsplash License, commercial use allowed), saved in public/templates/shop/.
+ * Source ids: hero 1601647998384, soap 1781080922537, candle 1603905179139, oil 1671493234254,
+ * mug 1495100497150, tote 1544816155, gift 1607920592831 (images.unsplash.com/photo-<id>).
+ *
  * Kept to what Landing Basic promises: one page, 7 photos (hero + 6 products), no cart or checkout.
  * Customers order in LINE or by phone and pay by PromptPay or bank transfer shown on the page.
  * A shop that needs a cart, stock or online payment is a bigger package, not this template.
  */
+const img = (f: string) => `/templates/shop/${f}.webp`;
+
 export const shop: BasicConfig = {
   name: "ฮอมฮอม",
   kicker: "สบู่และกลิ่นหอมทำมือ จากเชียงใหม่",
   tagline: "สบู่ก้อน เทียนหอม และของใช้ในบ้าน ทำมือทีละล็อตเล็ก ๆ ส่งทั่วประเทศ หรือแวะมาดมกลิ่นที่หน้าร้านก็ได้",
-  hero: { illo: "shelf", alt: "ชั้นวางสินค้าในร้านฮอมฮอม" },
+  hero: { src: img("hero"), illo: "shelf", alt: "ชั้นวางสินค้าในร้านฮอมฮอม" },
   cta: "สั่งซื้อผ่าน LINE",
   about: {
     title: "ของหอม ๆ ที่ทำเองทุกชิ้น",
@@ -26,12 +32,12 @@ export const shop: BasicConfig = {
     title: "สินค้าแนะนำ",
     layout: "cards",
     items: [
-      { name: "สบู่ตะไคร้ใบมะกรูด", note: "ก้อน 100 ก. หอมสดชื่น", price: "฿120", badge: "ขายดี", pic: { illo: "soap", alt: "สบู่ตะไคร้ใบมะกรูด" } },
-      { name: "เทียนหอมดอกมะลิ", note: "ไขถั่วเหลือง จุดได้ 30 ชม.", price: "฿290", pic: { illo: "candle", alt: "เทียนหอมดอกมะลิ" } },
-      { name: "น้ำมันนวดไพล", note: "ขวด 50 มล.", price: "฿220", pic: { illo: "bottle", alt: "น้ำมันนวดไพล" } },
-      { name: "แก้วเซรามิกปั้นมือ", note: "ลายไม่ซ้ำกันสักใบ", price: "฿350", badge: "ใหม่", pic: { illo: "mug", alt: "แก้วเซรามิกปั้นมือ" } },
-      { name: "ถุงผ้าฮอมฮอม", note: "ผ้าฝ้ายทอมือ ใส่ของได้เยอะ", price: "฿190", pic: { illo: "tote", alt: "ถุงผ้า" } },
-      { name: "ชุดของขวัญ 3 ชิ้น", note: "สบู่ + เทียน + การ์ดเขียนมือ", price: "฿590", badge: "ของขวัญ", pic: { illo: "giftbox", alt: "ชุดของขวัญ" } },
+      { name: "สบู่ตะไคร้ใบมะกรูด", note: "ก้อน 100 ก. หอมสดชื่น", price: "฿120", badge: "ขายดี", pic: { src: img("soap"), illo: "soap", alt: "สบู่ตะไคร้ใบมะกรูด" } },
+      { name: "เทียนหอมดอกมะลิ", note: "ไขถั่วเหลือง จุดได้ 30 ชม.", price: "฿290", pic: { src: img("candle"), illo: "candle", alt: "เทียนหอมดอกมะลิ" } },
+      { name: "น้ำมันนวดไพล", note: "ขวด 50 มล.", price: "฿220", pic: { src: img("oil"), illo: "bottle", alt: "น้ำมันนวดไพล" } },
+      { name: "แก้วเซรามิกปั้นมือ", note: "ลายไม่ซ้ำกันสักใบ", price: "฿350", badge: "ใหม่", pic: { src: img("mug"), illo: "mug", alt: "แก้วเซรามิกปั้นมือ" } },
+      { name: "ถุงผ้าฮอมฮอม", note: "ผ้าฝ้ายทอมือ ใส่ของได้เยอะ", price: "฿190", pic: { src: img("tote"), illo: "tote", alt: "ถุงผ้า" } },
+      { name: "ชุดของขวัญ 3 ชิ้น", note: "สบู่ + เทียน + การ์ดเขียนมือ", price: "฿590", badge: "ของขวัญ", pic: { src: img("gift"), illo: "giftbox", alt: "ชุดของขวัญ" } },
     ],
   },
   reviews: {
