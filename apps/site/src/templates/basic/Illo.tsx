@@ -2,7 +2,24 @@
  * Drawn placeholders for photo slots in the template demo. A real client swaps these for their own photos.
  * Colours come from the template's CSS variables, so they follow the colour switcher.
  */
-export type IlloKind = "storefront" | "latte" | "croissant" | "cake" | "plant" | "beans" | "toast" | "window" | "pourover";
+export type IlloKind =
+  | "storefront"
+  | "latte"
+  | "croissant"
+  | "cake"
+  | "plant"
+  | "beans"
+  | "toast"
+  | "window"
+  | "pourover"
+  // shop template
+  | "shelf"
+  | "soap"
+  | "candle"
+  | "mug"
+  | "tote"
+  | "bottle"
+  | "giftbox";
 
 const ink = "var(--t-ink)";
 const acc = "var(--t-accent)";
@@ -94,6 +111,92 @@ function Art({ kind }: { kind: IlloKind }) {
           <path d="M44 90 C52 86 68 94 76 88" fill="none" stroke={acc} strokeWidth="5" />
           <path d="M60 62 L60 74" fill="none" stroke={acc} strokeWidth="3" />
           <path d="M36 34 C36 26 84 26 84 34" fill="none" />
+        </>
+      );
+    case "shelf":
+      return (
+        <>
+          <path d="M18 18 L102 18 L102 106 L18 106 Z" fill={paper} />
+          <path d="M18 48 L102 48 M18 78 L102 78" fill="none" />
+          {/* top shelf: jars */}
+          <path d="M28 30 L40 30 L40 46 L28 46 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M46 26 L58 26 L58 46 L46 46 Z" fill={soft} strokeWidth="2.4" />
+          <path d="M66 34 C66 28 80 28 80 34 L80 46 L66 46 Z" fill={acc} strokeWidth="2.4" />
+          <circle cx="92" cy="40" r="6" fill={soft} strokeWidth="2.4" />
+          {/* middle shelf: soap bars and a bag */}
+          <rect x="26" y="66" width="18" height="10" rx="3" fill={soft} strokeWidth="2.4" />
+          <rect x="30" y="58" width="14" height="8" rx="3" fill={acc} strokeWidth="2.4" />
+          <path d="M56 58 L76 58 L78 76 L54 76 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M60 58 C60 50 72 50 72 58" fill="none" strokeWidth="2.4" />
+          <path d="M86 56 L94 56 L94 76 L86 76 Z" fill={paper} strokeWidth="2.4" />
+          {/* bottom shelf: a basket */}
+          <path d="M30 90 L66 90 L62 104 L34 104 Z" fill={soft} strokeWidth="2.4" />
+          <path d="M36 96 L60 96" fill="none" strokeWidth="2" />
+          <path d="M76 88 L92 88 L92 104 L76 104 Z" fill={acc} strokeWidth="2.4" />
+        </>
+      );
+    case "soap":
+      return (
+        <>
+          <path d="M18 76 L60 92 L102 76 L102 90 L60 106 L18 90 Z" fill={soft} />
+          <path d="M18 76 L60 60 L102 76 L60 92 Z" fill={paper} />
+          <path d="M28 60 L60 48 L92 60 L92 70 L60 82 L28 70 Z" fill={acc} />
+          <path d="M28 60 L60 72 L92 60" fill="none" strokeWidth="2.4" />
+          <path d="M52 62 C56 58 64 58 68 62" fill="none" strokeWidth="2.4" />
+          <circle cx="40" cy="30" r="7" fill={paper} strokeWidth="2.4" />
+          <circle cx="56" cy="22" r="4" fill={paper} strokeWidth="2.4" />
+          <circle cx="78" cy="32" r="5" fill={paper} strokeWidth="2.4" />
+        </>
+      );
+    case "candle":
+      return (
+        <>
+          <path d="M34 50 L86 50 L84 104 L36 104 Z" fill={paper} />
+          <ellipse cx="60" cy="50" rx="26" ry="7" fill={soft} />
+          <rect x="44" y="70" width="32" height="18" rx="3" fill={acc} strokeWidth="2.4" />
+          <path d="M60 50 L60 38" fill="none" strokeWidth="2.4" />
+          <path d="M60 18 C52 28 54 36 60 38 C66 36 68 28 60 18 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M24 104 L96 104" fill="none" />
+        </>
+      );
+    case "mug":
+      return (
+        <>
+          <path d="M28 40 L80 40 L78 96 C78 102 30 102 30 96 Z" fill={acc} />
+          <path d="M80 52 C98 50 100 80 78 82" fill="none" strokeWidth="5" />
+          <ellipse cx="54" cy="40" rx="26" ry="6" fill={paper} />
+          <path d="M30 62 C40 58 48 66 56 62 C64 58 72 66 79 62" fill="none" stroke={paper} strokeWidth="4" />
+          <path d="M16 104 L100 104" fill="none" />
+          <path d="M44 24 C40 30 48 30 44 36 M60 20 C56 26 64 26 60 32" fill="none" strokeWidth="2.4" />
+        </>
+      );
+    case "tote":
+      return (
+        <>
+          <path d="M44 44 C44 20 76 20 76 44" fill="none" strokeWidth="4" />
+          <path d="M26 44 L94 44 L90 106 L30 106 Z" fill={paper} />
+          <path d="M44 66 C44 58 52 56 60 64 C68 56 76 58 76 66 C76 76 60 86 60 86 C60 86 44 76 44 66 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M26 54 L94 54" fill="none" strokeWidth="2" strokeDasharray="3 5" />
+        </>
+      );
+    case "bottle":
+      return (
+        <>
+          <path d="M52 16 L68 16 L68 30 L52 30 Z" fill={acc} />
+          <path d="M54 30 L66 30 L66 38 C80 42 84 52 84 62 L84 100 C84 104 36 104 36 100 L36 62 C36 52 40 42 54 38 Z" fill={soft} />
+          <rect x="44" y="60" width="32" height="26" rx="4" fill={paper} strokeWidth="2.4" />
+          <path d="M60 66 C54 72 56 80 60 80 C64 80 66 72 60 66 Z" fill={acc} strokeWidth="2" />
+          <path d="M20 104 L100 104" fill="none" />
+        </>
+      );
+    case "giftbox":
+      return (
+        <>
+          <path d="M24 54 L96 54 L96 104 L24 104 Z" fill={paper} />
+          <path d="M18 40 L102 40 L102 56 L18 56 Z" fill={soft} />
+          <path d="M54 40 L66 40 L66 104 L54 104 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M60 40 C46 22 30 28 38 38 C42 42 52 42 60 40 Z" fill={acc} strokeWidth="2.4" />
+          <path d="M60 40 C74 22 90 28 82 38 C78 42 68 42 60 40 Z" fill={acc} strokeWidth="2.4" />
         </>
       );
     case "storefront":
