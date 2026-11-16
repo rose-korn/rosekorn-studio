@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { themeVars } from "./BasicLanding";
+import { themeVars } from "./ui";
 import type { Theme } from "./types";
 
 /**

@@ -9,6 +9,7 @@ import type { BasicConfig } from "../types";
  */
 const img = (f: string) => `/templates/cafe/${f}.webp`;
 export const cafe: BasicConfig = {
+  look: "cozy",
   name: "มะลิ สโลว์บาร์",
   kicker: "คาเฟ่เล็ก ๆ ในซอยนิมมาน 7",
   tagline: "กาแฟดริปจากดอยใกล้บ้าน ขนมอบเช้าทุกวัน และโต๊ะริมหน้าต่างที่นั่งได้ทั้งบ่าย",
