@@ -3,7 +3,7 @@
  * For a new client, copy a config (e.g. configs/cafe.ts), swap the text, photos and theme, and the page follows.
  */
 import type { IlloKind } from "./Illo";
-import type { SheetLinks } from "./sheet";
+import type { SheetLinks, SheetPlan } from "./sheet";
 
 /**
  * The template's personality. Same sections, different drawing:
@@ -82,4 +82,6 @@ export type BasicConfig = {
   themes: Theme[];
   /** Google Sheet add-on: the shop edits its own text, items, hours, reviews... (see sheet.ts and README) */
   sheet?: SheetLinks;
+  /** which add-on tier the shop bought; tabs outside it are ignored. Default "full". */
+  sheetPlan?: SheetPlan;
 };

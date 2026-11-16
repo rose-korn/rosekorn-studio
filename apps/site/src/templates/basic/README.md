@@ -36,18 +36,28 @@ To change how a look draws something, change it in `ui.tsx` (cards, headings, ti
 - The contact form in the demo does not send. Connect it to the shop's form service or remove it.
 - Real LINE link (`contact.lineUrl`), phone, map link, and a real PromptPay QR image for shops that take payment.
 
-## Add-on: the shop edits its own content in Google Sheets (฿2,000–3,000)
+## Add-on: the shop edits its own content in Google Sheets
 
-The template stays fixed; the shop edits words, prices, photos, hours, reviews and team in a sheet.
+The template stays fixed; the shop edits what is inside it. Two tiers, set with `sheetPlan` in the config:
+
+| Tier | Price | Tabs the page reads |
+|---|---|---|
+| `menu` | ฿2,000 | items, hours |
+| `full` (default) | ฿3,000 | info, items, hours, reviews, team, gallery, banks |
+
+Row caps (`MAX_ROWS` in `sheet.ts`): items 12, hours 7, reviews 6, team 6, gallery 9, banks 3. Extra rows are ignored.
+Never editable from the sheet: layout, sections, order, colours, fonts, new pages.
 
 1. Make the starter sheet: `node --no-warnings --experimental-strip-types scripts/sheet-kit.mjs` (from `apps/site`) writes `sheet-kit/<template>/` with one CSV per tab.
    Run it again after changing a config so the kit matches.
 2. In the shop's Google account: new Google Sheet, then File > Import each CSV as a new tab (name the tab like the file: info, items, hours...).
 3. For each tab: File > Share > Publish to web > pick the tab > Comma-separated values (.csv) > Publish. Copy the link.
-4. Put the links in the config, only for the tabs they will edit:
+4. Put the links and the tier in the config:
    ```ts
-   sheet: { info: "https://docs.google.com/...output=csv", items: "...", hours: "..." },
+   sheet: { items: "https://docs.google.com/...output=csv", hours: "..." },
+   sheetPlan: "menu",
    ```
+   For the `menu` tier, only the items and hours tabs are needed in their sheet.
 5. Render `<LiveLanding c={shop} ... />` instead of `<BasicLanding>` on their page.
 6. Give the shop `sheet-kit/คู่มือแก้เว็บผ่าน-Google-Sheet.md` (Thai, step by step).
 

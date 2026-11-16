@@ -135,7 +135,8 @@ export const addons = [
   { name: "LINE OA setup: welcome message, auto-replies and rich menu", price: th.addons[2].price },
   { name: "Website forms or orders sent straight to your LINE", price: th.addons[3].price },
   { name: "Facebook Pixel or GA4 setup", price: "1,000–1,500 / item" },
-  { name: "Edit your own site content in Google Sheets (menu, prices, photos, hours, reviews)", price: th.addons[5].price },
+  { name: "Google Sheet, menu: edit your menu, prices and opening hours yourself", price: th.addons[5].price },
+  { name: "Google Sheet, full site: edit every part, including text, photos, reviews and team", price: th.addons[6].price },
   { name: "Out-of-scope changes", price: "350 / hour" },
 ] as const;
 

@@ -24,6 +24,29 @@ export const SHEET_TABS = ["info", "items", "hours", "reviews", "team", "gallery
 export type SheetTab = (typeof SHEET_TABS)[number];
 /** published CSV link for each tab the shop edits */
 export type SheetLinks = Partial<Record<SheetTab, string>>;
+
+/**
+ * What the shop paid for. "menu" (฿2,000): items and hours only. "full" (฿3,000): every tab.
+ * Tabs outside the plan are never read, even if a link is set, so the page can't drift past what was sold.
+ */
+export type SheetPlan = "menu" | "full";
+export const PLAN_TABS: Record<SheetPlan, readonly SheetTab[]> = {
+  menu: ["items", "hours"],
+  full: SHEET_TABS,
+};
+
+/**
+ * Most rows a tab may show; extra rows in the sheet are ignored (the Thai guide tells the shop the same numbers).
+ * Keeps a one-page site from growing into a long list, and gives the add-on a clear scope.
+ */
+export const MAX_ROWS: Record<Exclude<SheetTab, "info">, number> = {
+  items: 12,
+  hours: 7,
+  reviews: 6,
+  team: 6,
+  gallery: 9,
+  banks: 3,
+};
 type Row = Record<string, string>;
 export type SheetData = Partial<Record<SheetTab, Row[]>>;
 
@@ -130,9 +153,9 @@ export function toRecords(rows: string[][]): Row[] {
     .filter((r) => Object.values(r).some(Boolean));
 }
 
-/** fetch every linked tab at once; a tab that fails is left out, so the page falls back to the config for it */
-export async function loadSheet(links: SheetLinks): Promise<SheetData> {
-  const tabs = SHEET_TABS.filter((t) => links[t]);
+/** fetch every linked tab in the plan at once; a tab that fails is left out, so the page falls back to the config for it */
+export async function loadSheet(links: SheetLinks, plan: SheetPlan = "full"): Promise<SheetData> {
+  const tabs = PLAN_TABS[plan].filter((t) => links[t]);
   const results = await Promise.allSettled(
     tabs.map(async (t) => {
       const res = await fetch(links[t]!, { cache: "no-store" });
@@ -179,12 +202,14 @@ export function applySheet(base: BasicConfig, data: SheetData): BasicConfig {
     const old = c.highlights.items;
     c.highlights.items = data.items
       .filter((r) => r.name)
+      .slice(0, MAX_ROWS.items)
       .map((r) => ({ name: r.name, note: opt(r.note), price: r.price ? price(r.price) : undefined, badge: opt(r.badge), pic: picFor(r.image ?? "", r.name, old) }));
   }
 
   if (data.hours?.length)
     c.hours = data.hours
       .filter((r) => r.day)
+      .slice(0, MAX_ROWS.hours)
       .map((r) => {
         const closed = !r.time || r.time === "ปิด";
         return { day: r.day, time: closed ? "" : r.time, closed: closed || undefined };
@@ -193,6 +218,7 @@ export function applySheet(base: BasicConfig, data: SheetData): BasicConfig {
   if (data.reviews?.length && c.reviews)
     c.reviews.items = data.reviews
       .filter((r) => r.quote && r.name)
+      .slice(0, MAX_ROWS.reviews)
       .map((r) => {
         const n = Number.parseInt(r.stars ?? "", 10);
         return { quote: r.quote, name: r.name, where: opt(r.where), stars: n >= 1 && n <= 5 ? n : undefined };
@@ -202,14 +228,21 @@ export function applySheet(base: BasicConfig, data: SheetData): BasicConfig {
     const old = c.team.items;
     c.team.items = data.team
       .filter((r) => r.name)
+      .slice(0, MAX_ROWS.team)
       .map((r) => ({ name: r.name, role: r.role ?? "", note: opt(r.note), pic: picFor(r.image ?? "", r.name, old) }));
   }
 
   if (data.gallery?.length && c.gallery)
-    c.gallery.items = data.gallery.filter((r) => isImage(r.image ?? "")).map((r) => ({ src: r.image, alt: r.caption || c.name, caption: opt(r.caption) }));
+    c.gallery.items = data.gallery
+      .filter((r) => isImage(r.image ?? ""))
+      .slice(0, MAX_ROWS.gallery)
+      .map((r) => ({ src: r.image, alt: r.caption || c.name, caption: opt(r.caption) }));
 
   if (data.banks?.length && c.payment)
-    c.payment.banks = data.banks.filter((r) => r.bank && r.number).map((r) => ({ bank: r.bank, number: r.number, name: r.name ?? "" }));
+    c.payment.banks = data.banks
+      .filter((r) => r.bank && r.number)
+      .slice(0, MAX_ROWS.banks)
+      .map((r) => ({ bank: r.bank, number: r.number, name: r.name ?? "" }));
 
   return c;
 }

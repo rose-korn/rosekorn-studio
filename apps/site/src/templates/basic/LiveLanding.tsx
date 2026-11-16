@@ -14,7 +14,7 @@ export function LiveLanding({ c, displayFont }: { c: BasicConfig; displayFont?: 
   useEffect(() => {
     if (!c.sheet) return;
     let alive = true;
-    loadSheet(c.sheet)
+    loadSheet(c.sheet, c.sheetPlan)
       .then((data) => {
         if (alive) setLive(applySheet(c, data));
       })
