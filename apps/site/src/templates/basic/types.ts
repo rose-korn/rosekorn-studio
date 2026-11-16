@@ -37,6 +37,8 @@ export type BasicConfig = {
     /** "list": small rows (a menu). "cards": big photo cards (products). Default "list". */
     layout?: "list" | "cards";
     items: { name: string; note?: string; price?: string; /** small sticker, e.g. "ขายดี" */ badge?: string; pic: Picture }[];
+    /** optional: the shop's Google Sheet published as CSV; when set, items are read from it live (see sheet.ts) */
+    sheetUrl?: string;
   };
   gallery?: { title: string; items: (Picture & { caption?: string })[] };
   /** text reviews copied from the shop's Facebook, LINE chats or Google Maps (with the customer's OK) */

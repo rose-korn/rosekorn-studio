@@ -258,6 +258,7 @@ export const addons = [
   { name: "ตั้งค่า LINE OA: ข้อความต้อนรับ ตอบกลับอัตโนมัติ Rich menu", price: "2,500" },
   { name: "ส่งฟอร์มหรือออเดอร์จากเว็บเข้า LINE ร้านทันที", price: "3,500–5,000" },
   { name: "ติด Facebook Pixel หรือ GA4", price: "1,000–1,500 / รายการ" },
+  { name: "แก้เมนู สินค้า หรือราคาเองผ่าน Google Sheet", price: "2,000–3,000" },
   { name: "แก้งานนอกขอบเขต", price: "350 / ชม." },
 ] as const;
 
