@@ -7,7 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 /**
  * Page-wide motion, borrowed from Korn's kit and kept light:
  * - [data-split]  headings rise word by word (Intl.Segmenter keeps Thai words whole)
- * - [data-pop]    stickers pop in with a little overshoot and tilt
+ * - [data-pop]    stickers settle in softly
+ * Kept deliberately calm (Nov 2026, korn): no overshoot/bounce, short distances, so nothing
+ * looks like it is still loading or jumping around.
  * - [data-count]  numbers count up
  * Everything is skipped for prefers-reduced-motion; content is visible without JS.
  */
@@ -20,11 +22,11 @@ export function Motion() {
       document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {
         const words = splitWords(el);
         gsap.from(words, {
-          yPercent: 115,
-          rotate: 6,
-          duration: 1.1,
-          ease: "expo.out",
-          stagger: 0.06,
+          yPercent: 60,
+          opacity: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.035,
           scrollTrigger: { trigger: el, start: "top 88%", once: true },
         });
       });
@@ -35,15 +37,14 @@ export function Motion() {
         onEnter: (els) =>
           gsap.fromTo(
             els,
-            { opacity: 0, y: 40, scale: 0.92, rotate: (i) => (i % 2 ? 4 : -4) },
+            { opacity: 0, y: 18, rotate: (i) => (i % 2 ? 1 : -1) },
             {
               opacity: 1,
               y: 0,
-              scale: 1,
               rotate: 0, // resting tilt lives in the CSS `rotate` property
-              duration: 0.9,
-              ease: "back.out(1.9)",
-              stagger: 0.09,
+              duration: 0.8,
+              ease: "power3.out",
+              stagger: 0.06,
               clearProps: "transform",
             },
           ),
