@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { C, ROASTS, type Roast } from "./palette";
+import { C, ROASTS, type Roast, lowPower } from "./palette";
 
 /**
  * Baan Kafae 3D hero, shown inside a frame: a gooseneck kettle pours a stream of coffee that
@@ -108,7 +108,8 @@ function Stream({ u }: { u: Shared }) {
 
 /* ---------- floating beans ---------- */
 
-const BEANS = 12;
+// half the beans on phones (see lowPower); module only ever loads in the browser
+const BEANS = lowPower() ? 6 : 12;
 
 function Beans({ burst, ramp }: { burst: React.MutableRefObject<number>; ramp: THREE.Texture }) {
   const body = useRef<THREE.InstancedMesh>(null);
@@ -303,14 +304,16 @@ function Rig({ roast, burst }: { roast: Roast; burst: React.MutableRefObject<num
 
 export default function CoffeeScene({ roast, active = true }: { roast: Roast; active?: boolean }) {
   const burst = useRef(0);
+  // phones: lower resolution and no MSAA so the page keeps scrolling smoothly
+  const [lite] = useState(lowPower);
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
       className="!absolute inset-0"
       flat
-      dpr={[1, 2]}
+      dpr={lite ? [1, 1.25] : [1, 2]}
       camera={{ position: [0, 2.3, 7], fov: 41 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      gl={{ antialias: !lite, alpha: true, powerPreference: lite ? "low-power" : "high-performance" }}
       onPointerDown={() => (burst.current = 1)}
       aria-hidden="true"
     >

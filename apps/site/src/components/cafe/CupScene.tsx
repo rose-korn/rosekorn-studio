@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, type ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
-import { C, ROASTS, type Roast } from "./palette";
+import { C, ROASTS, type Roast, lowPower } from "./palette";
 
 /**
  * "Move the mouse": a cel-shaded latte cup on a saucer that turns to follow the pointer
@@ -145,15 +145,17 @@ function Cup({ roast, spin }: { roast: Roast; spin: React.MutableRefObject<numbe
 
 export default function CupScene({ roast, active = true }: { roast: Roast; active?: boolean }) {
   const spin = useRef(0);
+  // phones: lower resolution and no MSAA so the page keeps scrolling smoothly
+  const [lite] = useState(lowPower);
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
       className="!absolute inset-0"
       flat
-      dpr={[1, 2]}
+      dpr={lite ? [1, 1.25] : [1, 2]}
       camera={{ position: [0, 2.2, 4.6], fov: 38 }}
       onCreated={({ camera }) => camera.lookAt(0, 0.2, 0)}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: !lite, alpha: true }}
       onPointerDown={() => (spin.current += Math.PI * 2)}
       aria-hidden="true"
     >

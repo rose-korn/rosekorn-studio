@@ -393,10 +393,10 @@ function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["pa
         {items.map((p, i) => (
           <li
             key={p.id}
-            className="flex w-[68%] shrink-0 snap-start flex-col items-start sm:w-[42%] lg:w-[27%]"
+            className="group flex w-[64%] shrink-0 snap-start flex-col items-start sm:w-[42%] lg:w-[34.5%]"
           >
             <article
-              className="sticker wobbly relative w-full flex-1 overflow-hidden bg-paper p-5"
+              className="sticker wobbly relative w-full flex-1 overflow-hidden bg-paper p-5 transition duration-300 group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[8px_8px_0_var(--color-ink)]"
               style={{ rotate: `${[-1, 0.8, -0.6, 1][i % 4]}deg` }}
             >
               <p className="eyebrow text-muted">{p.name}</p>
