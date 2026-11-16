@@ -21,6 +21,8 @@ export type Theme = {
 /** a photo slot: a real image path for a client, or a drawn placeholder in the demo */
 export type Picture = { src?: string; illo?: IlloKind; alt: string };
 
+export type Review = { quote: string; name: string; /** where the review came from, e.g. "สั่งทาง LINE" */ where?: string; stars?: number };
+
 export type BasicConfig = {
   name: string;
   /** short line under the name, e.g. the street or the kind of shop */
@@ -28,12 +30,33 @@ export type BasicConfig = {
   tagline: string;
   hero: Picture;
   about: { title: string; body: string; facts: { label: string; value: string }[] };
-  highlights: { title: string; items: { name: string; note?: string; price?: string; pic: Picture }[] };
-  gallery: { title: string; items: (Picture & { caption?: string })[] };
+  /** main button in the hero, e.g. "สั่ง / จองผ่าน LINE" */
+  cta?: string;
+  highlights: {
+    title: string;
+    /** "list": small rows (a menu). "cards": big photo cards (products). Default "list". */
+    layout?: "list" | "cards";
+    items: { name: string; note?: string; price?: string; /** small sticker, e.g. "ขายดี" */ badge?: string; pic: Picture }[];
+  };
+  gallery?: { title: string; items: (Picture & { caption?: string })[] };
+  /** text reviews copied from the shop's Facebook, LINE chats or Google Maps (with the customer's OK) */
+  reviews?: { title: string; score?: string; items: Review[] };
+  /** plain steps: no cart or checkout, the order happens in LINE or by phone */
+  howToOrder?: { title: string; steps: { title: string; body: string }[]; notes?: string[] };
+  /** static payment details shown on the page; nothing is charged online */
+  payment?: {
+    title: string;
+    lead?: string;
+    promptPay?: { id: string; name: string };
+    banks?: { bank: string; number: string; name: string }[];
+    others?: string[];
+  };
+  /** heading of the hours + map block; default "เวลาเปิด และการเดินทาง" */
+  visitTitle?: string;
   hours: { day: string; time: string; closed?: boolean }[];
   address: string;
   mapUrl: string;
   contact: { lineId: string; lineUrl: string; phone: string; email: string; facebook?: string; instagram?: string };
-  form: { title: string; lead: string };
+  form: { title: string; lead: string; placeholder?: string };
   themes: Theme[];
 };

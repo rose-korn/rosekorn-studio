@@ -15,11 +15,11 @@ const th: TemplateCard[] = [
   },
   {
     slug: "shop",
-    illo: "beans",
-    ready: false,
+    illo: "tote",
+    ready: true,
     name: "ร้านค้า",
     forWho: "ร้านขายของ แบรนด์เล็ก ร้านออนไลน์ที่มีหน้าร้าน",
-    sections: "สินค้าแนะนำ รีวิวลูกค้า วิธีสั่งซื้อ ช่องทางจ่ายเงิน",
+    sections: "สินค้าแนะนำ 6 ชิ้น รีวิวลูกค้า วิธีสั่งซื้อ ช่องทางจ่ายเงิน ปุ่มสั่งผ่าน LINE (ไม่มีตะกร้า ลูกค้าสั่งในแชท)",
   },
   {
     slug: "service",
@@ -42,11 +42,11 @@ const en: TemplateCard[] = [
   },
   {
     slug: "shop",
-    illo: "beans",
-    ready: false,
+    illo: "tote",
+    ready: true,
     name: "Shop",
-    forWho: "Retail shops and small brands with a storefront",
-    sections: "Featured products, customer reviews, how to order, payment options",
+    forWho: "Retail shops and small brands, online or with a storefront",
+    sections: "6 featured products, customer reviews, how to order, payment details, order through LINE (no cart: customers order in chat)",
   },
   {
     slug: "service",
