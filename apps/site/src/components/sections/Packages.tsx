@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 import { careDetails, packageDetails } from "@/content/package-details";
 import { DetailsDialog } from "./DetailsDialog";
+import { DragScroll } from "@/components/DragScroll";
 import { Doodle, MarkSticker } from "@/components/Doodle";
 
 export function Packages({ locale }: { locale: Locale }) {
@@ -389,7 +390,10 @@ function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["pa
         </span>
         <p className={`${th}text-sm text-muted`}>{t.soonStripNote}</p>
       </div>
-      <ul className="-mx-5 mt-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 pt-3 [scrollbar-width:thin] md:-mx-2 md:px-2">
+      <DragScroll
+        cursor={t.dragCursor}
+        className="-mx-5 mt-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 pt-3 [scrollbar-width:none] md:-mx-2 md:px-2 [&::-webkit-scrollbar]:hidden"
+      >
         {items.map((p, i) => (
           <li
             key={p.id}
@@ -420,7 +424,7 @@ function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["pa
             </span>
           </li>
         ))}
-      </ul>
+      </DragScroll>
     </section>
   );
 }
