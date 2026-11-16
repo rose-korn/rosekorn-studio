@@ -1,11 +1,18 @@
 import type { BasicConfig } from "../types";
 
-/** Demo config: a made-up cafe. Every name, number and address here is fictional. */
+/**
+ * Demo config: a made-up cafe. Every name, number and address here is fictional.
+ * Photos: Unsplash (free under the Unsplash License, commercial use allowed), saved in public/templates/cafe/.
+ * Source ids: hero 1667910662650, latte 1541167760496, pourover 1582768772255, croissant 1691480162735,
+ * cake 1571115177098, toast 1631359544940, beans 1562051036, window 1782050419194, bar 1442512595331,
+ * table 1561668131, pastry 1623334044303, sack 1524350876685, latte art 1529892485617 (images.unsplash.com/photo-<id>).
+ */
+const img = (f: string) => `/templates/cafe/${f}.webp`;
 export const cafe: BasicConfig = {
   name: "มะลิ สโลว์บาร์",
   kicker: "คาเฟ่เล็ก ๆ ในซอยนิมมาน 7",
   tagline: "กาแฟดริปจากดอยใกล้บ้าน ขนมอบเช้าทุกวัน และโต๊ะริมหน้าต่างที่นั่งได้ทั้งบ่าย",
-  hero: { illo: "storefront", alt: "หน้าร้านมะลิ สโลว์บาร์" },
+  hero: { src: img("hero"), illo: "storefront", alt: "ในร้านมะลิ สโลว์บาร์" },
   about: {
     title: "ร้านเล็ก ที่ตั้งใจทุกแก้ว",
     body: "เราคั่วเมล็ดเองสัปดาห์ละสองครั้ง ใช้นมจากฟาร์มในแม่ริม และอบขนมทุกเช้าก่อนเปิดร้าน มานั่งทำงาน นั่งอ่านหนังสือ หรือแวะซื้อกลับบ้านก็ได้",
@@ -18,23 +25,23 @@ export const cafe: BasicConfig = {
   highlights: {
     title: "เมนูแนะนำ",
     items: [
-      { name: "ลาเต้มะลิ", note: "เมนูประจำร้าน หอมดอกมะลิอ่อน ๆ", price: "฿85", pic: { illo: "latte", alt: "ลาเต้มะลิ" } },
-      { name: "ดริปดอยช้าง", note: "คั่วกลาง เปรี้ยวผลไม้", price: "฿90", pic: { illo: "pourover", alt: "กาแฟดริป" } },
-      { name: "ครัวซองต์เนยสด", note: "อบเช้าทุกวัน", price: "฿65", pic: { illo: "croissant", alt: "ครัวซองต์" } },
-      { name: "เค้กส้มเขียวหวาน", note: "ส้มฝางทั้งลูก", price: "฿95", pic: { illo: "cake", alt: "เค้กส้ม" } },
-      { name: "โทสต์เนยน้ำผึ้ง", note: "น้ำผึ้งดอกลำไย", price: "฿70", pic: { illo: "toast", alt: "โทสต์เนยน้ำผึ้ง" } },
-      { name: "เมล็ดคั่วบ้าน 200 ก.", note: "ซื้อกลับไปชงเองที่บ้าน", price: "฿320", pic: { illo: "beans", alt: "ถุงเมล็ดกาแฟ" } },
+      { name: "ลาเต้มะลิ", note: "เมนูประจำร้าน หอมดอกมะลิอ่อน ๆ", price: "฿85", pic: { src: img("latte"), illo: "latte", alt: "ลาเต้มะลิ" } },
+      { name: "ดริปดอยช้าง", note: "คั่วกลาง เปรี้ยวผลไม้", price: "฿90", pic: { src: img("pourover"), illo: "pourover", alt: "กาแฟดริป" } },
+      { name: "ครัวซองต์เนยสด", note: "อบเช้าทุกวัน", price: "฿65", pic: { src: img("croissant"), illo: "croissant", alt: "ครัวซองต์" } },
+      { name: "เค้กกาแฟชั้น", note: "ใช้เอสเปรสโซของร้าน", price: "฿95", pic: { src: img("cake"), illo: "cake", alt: "เค้กกาแฟชั้น" } },
+      { name: "เฟรนช์โทสต์สตรอว์เบอร์รี", note: "สตรอว์เบอร์รีสะเมิง", price: "฿120", pic: { src: img("toast"), illo: "toast", alt: "เฟรนช์โทสต์สตรอว์เบอร์รี" } },
+      { name: "เมล็ดคั่วบ้าน 200 ก.", note: "ซื้อกลับไปชงเองที่บ้าน", price: "฿320", pic: { src: img("beans"), illo: "beans", alt: "ถุงเมล็ดกาแฟ" } },
     ],
   },
   gallery: {
     title: "บรรยากาศในร้าน",
     items: [
-      { illo: "window", alt: "โต๊ะริมหน้าต่าง", caption: "โต๊ะริมหน้าต่าง แดดบ่ายกำลังดี" },
-      { illo: "pourover", alt: "บาร์ดริป", caption: "บาร์ดริป นั่งดูชงได้" },
-      { illo: "plant", alt: "มุมต้นไม้", caption: "มุมต้นไม้หลังร้าน" },
-      { illo: "croissant", alt: "ขนมอบเช้า", caption: "ขนมออกจากเตา 8 โมง" },
-      { illo: "beans", alt: "เมล็ดคั่วเอง", caption: "คั่วเองทุกจันทร์กับพฤหัส" },
-      { illo: "latte", alt: "ลาเต้อาร์ต", caption: "ลาเต้มะลิ แก้วขายดี" },
+      { src: img("g-window"), illo: "window", alt: "โต๊ะริมหน้าต่าง", caption: "โต๊ะริมหน้าต่าง แดดบ่ายกำลังดี" },
+      { src: img("g-bar"), illo: "pourover", alt: "บาร์ดริป", caption: "บาร์ดริป นั่งดูชงได้" },
+      { src: img("g-table"), illo: "plant", alt: "โต๊ะมุมต้นไม้", caption: "โต๊ะมุมต้นไม้ นั่งชิลทั้งบ่าย" },
+      { src: img("g-pastry"), illo: "croissant", alt: "ขนมอบเช้า", caption: "ขนมออกจากเตา 8 โมง" },
+      { src: img("g-sack"), illo: "beans", alt: "เมล็ดคั่วเอง", caption: "คั่วเองทุกจันทร์กับพฤหัส" },
+      { src: img("g-latte"), illo: "latte", alt: "ลาเต้อาร์ต", caption: "ลาเต้อาร์ตทุกแก้ว" },
     ],
   },
   hours: [
