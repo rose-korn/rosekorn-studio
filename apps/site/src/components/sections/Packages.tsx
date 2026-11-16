@@ -392,7 +392,7 @@ function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["pa
       </div>
       <DragScroll
         cursor={t.dragCursor}
-        className="-mx-5 mt-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 pt-3 [scrollbar-width:none] md:-mx-2 md:px-2 [&::-webkit-scrollbar]:hidden"
+        className="-mx-5 mt-4 flex snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto px-5 pb-4 pt-3 [scrollbar-width:none] md:-mx-4 md:scroll-px-4 md:px-4 [&::-webkit-scrollbar]:hidden"
       >
         {items.map((p, i) => (
           <li
