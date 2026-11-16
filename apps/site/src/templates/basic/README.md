@@ -4,7 +4,7 @@ One page for a small shop, built from one config file.
 
 ## New client
 
-1. Copy `configs/cafe.ts` to `configs/<shop>.ts` and change the text, hours, contact, photos and `themes` (put the shop's colours first).
+1. Copy the closest config (`cafe.ts` for food and drink, `shop.ts` for products, `service.ts` for salons, spas and clinics with a `team` block and booking steps) to `configs/<shop>.ts` and change the text, hours, contact, photos and `themes` (put the shop's colours first).
 2. Put photos in `public/templates/<shop>/` (webp, about 400 px wide for menu items, 700 px for gallery, 720×900 for the hero).
 3. Add a page that renders `<BasicLanding c={shop} displayFont={...} />` (see `app/(th)/templates/cafe/page.tsx`, without the `DemoBar`).
 4. For the client's own site, copy this folder into their project and deploy to Cloudflare on their domain.

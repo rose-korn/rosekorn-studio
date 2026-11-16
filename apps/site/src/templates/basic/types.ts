@@ -37,14 +37,24 @@ export type BasicConfig = {
     /** "list": small rows (a menu). "cards": big photo cards (products). Default "list". */
     layout?: "list" | "cards";
     items: { name: string; note?: string; price?: string; /** small sticker, e.g. "ขายดี" */ badge?: string; pic: Picture }[];
+    /** line under the list: "{before} ทัก LINE @id {after}"; default "ถูกใจชิ้นไหน" / "บอกชื่อสินค้าได้เลย" */
+    ask?: { before: string; after: string };
     /** optional: the shop's Google Sheet published as CSV; when set, items are read from it live (see sheet.ts) */
     sheetUrl?: string;
   };
   gallery?: { title: string; items: (Picture & { caption?: string })[] };
   /** text reviews copied from the shop's Facebook, LINE chats or Google Maps (with the customer's OK) */
   reviews?: { title: string; score?: string; items: Review[] };
+  /** the people customers will meet, e.g. stylists or therapists (service template) */
+  team?: { title: string; items: { name: string; role: string; note?: string; pic: Picture }[] };
   /** plain steps: no cart or checkout, the order happens in LINE or by phone */
-  howToOrder?: { title: string; steps: { title: string; body: string }[]; notes?: string[] };
+  howToOrder?: {
+    title: string;
+    /** label in the top menu; default "วิธีสั่งซื้อ" (a salon might use "จองคิว") */
+    navLabel?: string;
+    steps: { title: string; body: string }[];
+    notes?: string[];
+  };
   /** static payment details shown on the page; nothing is charged online */
   payment?: {
     title: string;
