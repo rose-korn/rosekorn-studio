@@ -1,4 +1,4 @@
-import { getContent, ui, type Content, type Locale, type Ui } from "@/content";
+import { getContent, localePath, ui, type Content, type Locale, type Ui } from "@/content";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 import { careDetails, packageDetails } from "@/content/package-details";
@@ -105,6 +105,14 @@ export function Packages({ locale }: { locale: Locale }) {
                 >
                   <DetailsBody id={p.id} pkgId={p.id} cta={p.cta} locale={locale} />
                 </DetailsDialog>
+              ) : null}
+              {p.id === "landing-basic" ? (
+                <a
+                  href={localePath(locale, "/templates/")}
+                  className={`link-underline mt-3 w-fit text-sm font-semibold ${p.featured ? "text-paper" : "text-rose-deep"}`}
+                >
+                  {t.seeTemplates}
+                </a>
               ) : null}
               {p.soon ? (
                 <span className="mt-4 inline-flex h-12 items-center rounded-full border-2 border-dashed border-ink/40 pl-5 text-sm font-semibold text-muted">

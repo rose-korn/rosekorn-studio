@@ -227,3 +227,9 @@ html[lang="en"] .font-thai {
   outline: 2px dashed var(--color-sky);
   outline-offset: 3px;
 }
+
+/* Landing Basic templates: heading font comes from the page (--font-tpl-display), falling back to the body font */
+.tpl-display {
+  font-family: var(--font-tpl-display), var(--font-thai);
+  font-weight: 500;
+}
