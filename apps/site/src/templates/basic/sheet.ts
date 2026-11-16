@@ -1,7 +1,7 @@
 /**
  * Read a menu from a Google Sheet the shop edits themselves.
  * The sheet is published as CSV (File > Share > Publish to web > CSV), with a header row:
- *   name | note | price | image
+ *   name | note | price | image | badge   (badge is optional, e.g. "ขายดี")
  * One row per item. Empty rows are skipped. `price` may be "85" or "฿85"; `image` is any public image link.
  */
 import type { BasicConfig } from "./types";
@@ -45,7 +45,7 @@ export function rowsToItems(rows: string[][]): Item[] {
   const [head, ...body] = rows;
   if (!head) return [];
   const col = (name: string) => head.findIndex((h) => h.trim().toLowerCase() === name);
-  const [n, no, p, im] = [col("name"), col("note"), col("price"), col("image")];
+  const [n, no, p, im, bd] = [col("name"), col("note"), col("price"), col("image"), col("badge")];
   if (n < 0) return [];
   return body
     .map((r) => {
@@ -55,6 +55,7 @@ export function rowsToItems(rows: string[][]): Item[] {
       return {
         name,
         note: no >= 0 ? (r[no] ?? "").trim() || undefined : undefined,
+        badge: bd >= 0 ? (r[bd] ?? "").trim() || undefined : undefined,
         price: price ? (/^[0-9.,]+$/.test(price) ? `฿${price}` : price) : undefined,
         pic: { src: /^https?:\/\//.test(src) ? src : undefined, illo: "latte" as const, alt: name },
       };

@@ -1,9 +1,11 @@
 import { Highlights } from "./Highlights";
 import { Pic } from "./Pic";
-import type { BasicConfig, Theme } from "./types";
+import type { BasicConfig, Review, Theme } from "./types";
 
 /**
  * Landing Basic: one page for a small shop (intro, highlights, photos, hours, map link, contact form).
+ * Optional blocks (gallery, reviews, how to order, payment) show only when the config has them,
+ * so the cafe and the shop templates share this one page.
  * All text, photos and colours come from a BasicConfig, so a new client is a new config, not a new page.
  * Colours are CSS variables (--t-*) on the root, which the demo's colour switcher can swap live.
  */
@@ -43,13 +45,90 @@ function H2({ children, id }: { children: React.ReactNode; id?: string }) {
 const card = "rounded-[22px] border-2 border-[var(--t-ink)] bg-[var(--t-surface)]";
 const tilts = ["-1.5deg", "1.2deg", "-0.6deg", "1.8deg", "-1deg", "0.8deg"];
 
+/** a strip of plain clear tape, as if the card were stuck to the page */
+function Tape({ className = "", rotate = "-4deg" }: { className?: string; rotate?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`absolute h-6 w-20 border border-[var(--t-ink)]/15 bg-white/55 ${className}`}
+      style={{ rotate, clipPath: "polygon(0 8%, 4% 0, 96% 6%, 100% 0, 100% 92%, 96% 100%, 4% 94%, 0 100%)" }}
+    />
+  );
+}
+
+function Stars({ n = 5 }: { n?: number }) {
+  return (
+    <span className="flex gap-0.5" role="img" aria-label={`${n} ดาว จาก 5`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <svg key={i} viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" stroke="var(--t-ink)" strokeWidth="2" strokeLinejoin="round">
+          <path d="M12 2.8 L14.8 8.7 L21.2 9.4 L16.4 13.8 L17.8 20.2 L12 17 L6.2 20.2 L7.6 13.8 L2.8 9.4 L9.2 8.7 Z" fill={i < n ? "var(--t-accent)" : "var(--t-surface)"} />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function ReviewCard({ r, i }: { r: Review; i: number }) {
+  return (
+    <li className={`${card} relative p-6 pt-8`} style={{ rotate: tilts[(i + 2) % tilts.length] }}>
+      <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate={i % 2 ? "3deg" : "-3deg"} />
+      <Stars n={r.stars ?? 5} />
+      <blockquote className="mt-4 text-lg leading-relaxed">“{r.quote}”</blockquote>
+      <p className="mt-5 flex items-center gap-3">
+        <span className="tpl-display flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-soft)]">
+          {r.name.slice(0, 1)}
+        </span>
+        <span className="leading-tight">
+          <span className="block font-semibold">{r.name}</span>
+          {r.where ? <span className="text-sm text-[var(--t-muted)]">{r.where}</span> : null}
+        </span>
+      </p>
+    </li>
+  );
+}
+
+/**
+ * A drawn stand-in for the shop's PromptPay QR. It is a pattern, not a working code:
+ * for a client, this becomes the QR image their bank app gives them.
+ */
+function QrPlaceholder() {
+  // a real QR is always dark on white, whatever the theme
+  const dark = "#1b1b1b";
+  const cells: [number, number][] = [];
+  for (let y = 0; y < 21; y++)
+    for (let x = 0; x < 21; x++) {
+      const inFinder = (x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12);
+      if (!inFinder && (x * 7 + y * 13 + x * y) % 5 < 2) cells.push([x, y]);
+    }
+  const finder = (x: number, y: number) => (
+    <g key={`${x}-${y}`}>
+      <rect x={x} y={y} width="7" height="7" fill="none" stroke={dark} strokeWidth="1" transform="translate(.5 .5) scale(.93)" />
+      <rect x={x + 2} y={y + 2} width="3" height="3" fill={dark} />
+    </g>
+  );
+  return (
+    <svg viewBox="-1 -1 23 23" role="img" aria-label="ตัวอย่าง QR พร้อมเพย์ (ใช้จ่ายจริงไม่ได้)" className="h-full w-full">
+      <rect x="-1" y="-1" width="23" height="23" fill="#fff" />
+      {cells.map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={dark} />
+      ))}
+      {finder(0, 0)}
+      {finder(14, 0)}
+      {finder(0, 14)}
+    </svg>
+  );
+}
+
 export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayFont?: string }) {
   const nav = [
     { href: "#highlights", label: c.highlights.title },
-    { href: "#gallery", label: c.gallery.title },
-    { href: "#visit", label: "เวลาเปิด" },
+    c.gallery ? { href: "#gallery", label: c.gallery.title } : null,
+    c.reviews ? { href: "#reviews", label: "รีวิว" } : null,
+    c.howToOrder ? { href: "#order", label: "วิธีสั่งซื้อ" } : null,
+    c.payment ? null : { href: "#visit", label: "เวลาเปิด" },
     { href: "#contact", label: "ติดต่อ" },
-  ];
+  ].filter((n) => n !== null);
+  const tel = `tel:${c.contact.phone.replace(/[^0-9+]/g, "")}`;
   const btn = "inline-flex h-12 items-center justify-center rounded-full border-2 border-[var(--t-ink)] px-6 font-semibold transition hover:-translate-y-0.5";
 
   return (
@@ -83,9 +162,9 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
             <p className="mt-5 max-w-md text-lg leading-relaxed text-[var(--t-muted)]">{c.tagline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={c.contact.lineUrl} className={`${btn} bg-[var(--t-accent)] text-[var(--t-on-accent)] shadow-[4px_4px_0_var(--t-ink)]`}>
-                สั่ง / จองผ่าน LINE
+                {c.cta ?? "สั่ง / จองผ่าน LINE"}
               </a>
-              <a href={`tel:${c.contact.phone.replace(/[^0-9+]/g, "")}`} className={`${btn} bg-[var(--t-surface)]`}>
+              <a href={tel} className={`${btn} bg-[var(--t-surface)]`}>
                 โทร {c.contact.phone}
               </a>
             </div>
@@ -124,10 +203,112 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
         {/* highlights */}
         <section aria-labelledby="highlights" className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
           <H2 id="highlights">{c.highlights.title}</H2>
-          <Highlights items={c.highlights.items} sheetUrl={c.highlights.sheetUrl} />
+          <Highlights items={c.highlights.items} layout={c.highlights.layout} sheetUrl={c.highlights.sheetUrl} />
+          {c.howToOrder || c.payment ? (
+            <p className="mt-8 text-[var(--t-muted)]">
+              ถูกใจชิ้นไหน{" "}
+              <a href={c.contact.lineUrl} className="font-semibold text-[var(--t-ink)] underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">
+                ทัก LINE {c.contact.lineId}
+              </a>{" "}
+              บอกชื่อสินค้าได้เลย
+            </p>
+          ) : null}
         </section>
 
+        {/* reviews: customer words, stuck on like notes */}
+        {c.reviews ? (
+          <section aria-labelledby="reviews" className="border-y-2 border-[var(--t-ink)] bg-[var(--t-soft)] py-16 md:py-24">
+            <div className="mx-auto max-w-6xl px-5 md:px-8">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <H2 id="reviews">{c.reviews.title}</H2>
+                {c.reviews.score ? (
+                  <p className="tpl-display rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-surface)] px-5 py-2 text-lg shadow-[4px_4px_0_var(--t-ink)]" style={{ rotate: "2deg" }}>
+                    ★ {c.reviews.score}
+                  </p>
+                ) : null}
+              </div>
+              <ul className="mt-12 grid gap-8 md:grid-cols-3">
+                {c.reviews.items.map((r, i) => (
+                  <ReviewCard key={r.name} r={r} i={i} />
+                ))}
+              </ul>
+            </div>
+          </section>
+        ) : null}
+
+        {/* how to order: plain steps, the order itself happens in a chat */}
+        {c.howToOrder ? (
+          <section aria-labelledby="order" className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+            <H2 id="order">{c.howToOrder.title}</H2>
+            <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {c.howToOrder.steps.map((s, i) => (
+                <li key={s.title} className={`${card} p-5`} style={{ rotate: tilts[(i + 1) % tilts.length] }}>
+                  <span className="tpl-display flex h-11 w-11 items-center justify-center rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-accent)] text-xl text-[var(--t-on-accent)] shadow-[3px_3px_0_var(--t-ink)]">
+                    {i + 1}
+                  </span>
+                  <p className="mt-4 text-lg font-semibold">{s.title}</p>
+                  <p className="mt-1 leading-relaxed text-[var(--t-muted)]">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+            {c.howToOrder.notes ? (
+              <ul className="mt-8 flex flex-wrap gap-2.5">
+                {c.howToOrder.notes.map((n) => (
+                  <li key={n} className="rounded-full border-2 border-dashed border-[var(--t-ink)]/40 px-4 py-1.5 text-sm">
+                    {n}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
+        ) : null}
+
+        {/* payment: static details only, nothing is charged on the site */}
+        {c.payment ? (
+          <section aria-labelledby="payment" className="bg-[var(--t-surface)] border-y-2 border-[var(--t-ink)]">
+            <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+              <H2 id="payment">{c.payment.title}</H2>
+              {c.payment.lead ? <p className="mt-5 max-w-xl text-lg leading-relaxed text-[var(--t-muted)]">{c.payment.lead}</p> : null}
+              <div className="mt-10 grid gap-6 md:grid-cols-[auto_1fr]">
+                {c.payment.promptPay ? (
+                  <div className={`${card} relative flex flex-col items-center bg-[var(--t-bg)] p-5 shadow-[6px_6px_0_var(--t-ink)] md:w-64`} style={{ rotate: "-1.5deg" }}>
+                    <Tape className="-top-3 left-1/2 -translate-x-1/2" />
+                    <p className="font-semibold">พร้อมเพย์</p>
+                    <div className="mt-3 aspect-square w-40 overflow-hidden rounded-xl border-2 border-[var(--t-ink)] bg-white p-2">
+                      <QrPlaceholder />
+                    </div>
+                    <p className="tpl-display mt-3 text-lg">{c.payment.promptPay.id}</p>
+                    <p className="text-sm text-[var(--t-muted)]">{c.payment.promptPay.name}</p>
+                  </div>
+                ) : null}
+                <div className="grid content-start gap-4">
+                  {c.payment.banks?.map((b) => (
+                    <div key={b.number} className={`${card} flex flex-wrap items-center justify-between gap-x-6 gap-y-1 px-5 py-4`}>
+                      <div>
+                        <p className="font-semibold">{b.bank}</p>
+                        <p className="text-sm text-[var(--t-muted)]">{b.name}</p>
+                      </div>
+                      <p className="tpl-display text-xl tracking-wide">{b.number}</p>
+                    </div>
+                  ))}
+                  {c.payment.others ? (
+                    <ul className="grid gap-2 pt-2">
+                      {c.payment.others.map((o) => (
+                        <li key={o} className="flex items-start gap-3">
+                          <span aria-hidden="true" className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-accent)]" />
+                          {o}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         {/* gallery: photos pinned like prints */}
+        {c.gallery ? (
         <section aria-labelledby="gallery" className="bg-[var(--t-soft)] py-16 md:py-24">
           <div className="mx-auto max-w-6xl px-5 md:px-8">
             <H2 id="gallery">{c.gallery.title}</H2>
@@ -143,11 +324,12 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
             </ul>
           </div>
         </section>
+        ) : null}
 
         {/* hours + map */}
         <section aria-labelledby="visit" className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:grid-cols-2 md:px-8 md:py-24">
           <div>
-            <H2 id="visit">เวลาเปิด และการเดินทาง</H2>
+            <H2 id="visit">{c.visitTitle ?? "เวลาเปิด และการเดินทาง"}</H2>
             <ul className={`${card} mt-8 divide-y-2 divide-dashed divide-[var(--t-ink)]/20 px-5`}>
               {c.hours.map((h) => (
                 <li key={h.day} className="flex items-center justify-between py-3">
@@ -197,7 +379,7 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
                   LINE: <a href={c.contact.lineUrl} className="underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">{c.contact.lineId}</a>
                 </li>
                 <li>
-                  โทร: <a href={`tel:${c.contact.phone.replace(/[^0-9+]/g, "")}`} className="underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">{c.contact.phone}</a>
+                  โทร: <a href={tel} className="underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">{c.contact.phone}</a>
                 </li>
                 <li>
                   อีเมล: <a href={`mailto:${c.contact.email}`} className="underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">{c.contact.email}</a>
@@ -216,7 +398,7 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
               ))}
               <label className="grid gap-2 text-sm opacity-90">
                 ข้อความ
-                <textarea name="message" rows={4} placeholder="อยากจองโต๊ะ สั่งเค้ก หรือสอบถามอะไรก็ได้" className="rounded-xl border-2 border-transparent bg-[var(--t-bg)]/10 px-4 py-3 text-base text-[var(--t-bg)] outline-none placeholder:text-[var(--t-bg)]/40 focus:border-[var(--t-accent)]" />
+                <textarea name="message" rows={4} placeholder={c.form.placeholder ?? "อยากจองโต๊ะ สั่งเค้ก หรือสอบถามอะไรก็ได้"} className="rounded-xl border-2 border-transparent bg-[var(--t-bg)]/10 px-4 py-3 text-base text-[var(--t-bg)] outline-none placeholder:text-[var(--t-bg)]/40 focus:border-[var(--t-accent)]" />
               </label>
               <button type="button" className="mt-2 h-12 rounded-full border-2 border-[var(--t-bg)] bg-[var(--t-accent)] font-semibold text-[var(--t-on-accent)]">
                 ส่งข้อความ

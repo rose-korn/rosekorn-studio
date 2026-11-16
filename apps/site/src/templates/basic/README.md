@@ -11,7 +11,7 @@ One page for a small shop, built from one config file.
 
 ## Add-on: the shop edits its menu in Google Sheets (฿2,000–3,000)
 
-1. Make a Google Sheet in the shop's account with this header row: `name | note | price | image`
+1. Make a Google Sheet in the shop's account with this header row: `name | note | price | image` (shops can add a `badge` column, e.g. ขายดี)
    - `price`: `85` shows as ฿85; text such as `ถามร้าน` shows as written
    - `image`: a public image link, or leave empty for the drawn placeholder
 2. File > Share > Publish to web > choose the sheet > Comma-separated values (.csv) > Publish. Copy the link.
