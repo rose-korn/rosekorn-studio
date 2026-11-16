@@ -11,7 +11,7 @@ const field =
   "w-full rounded-xl border border-paper/15 bg-paper/5 px-4 py-3.5 text-paper placeholder:text-paper/40 outline-none transition focus:border-rose focus:bg-paper/10";
 
 export function ContactForm({ locale }: { locale: Locale }) {
-  const { packages } = getContent(locale);
+  const { packages, launchPromo } = getContent(locale);
   const t = ui[locale].form;
   const u = ui[locale];
   const [status, setStatus] = useState<Status>("idle");
@@ -71,8 +71,12 @@ export function ContactForm({ locale }: { locale: Locale }) {
         <legend className="mb-2">{t.package}</legend>
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           {[
-            ...packages.filter((p) => !p.soon).map((p) => ({ id: p.id, name: p.name, price: `฿${p.price}` })),
-            { id: "unsure", name: t.unsure, price: "" },
+            ...packages.filter((p) => !p.soon).map((p) => {
+              // show the launch price while the promo runs, so the form matches the package cards
+              const promo = launchPromo.active && p.promoPrice;
+              return { id: p.id, name: p.name, price: `฿${promo ? p.promoPrice : p.price}`, was: promo ? `฿${p.price}` : "" };
+            }),
+            { id: "unsure", name: t.unsure, price: "", was: "" },
           ].map((o, i) => {
             const on = pkg === o.id;
             return (
@@ -96,7 +100,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
                 />
                 <span className="font-thai text-[0.95rem] font-semibold leading-tight">{o.name}</span>
                 {o.price ? (
-                  <span className={`font-mono text-xs ${on ? "text-white/85" : "text-paper/50"}`}>{o.price}</span>
+                  <span className={`font-mono text-xs ${on ? "text-white/85" : "text-paper/50"}`}>
+                    {o.price}
+                    {o.was ? <s className="ml-1.5 opacity-60">{o.was}</s> : null}
+                  </span>
                 ) : null}
                 <span
                   aria-hidden

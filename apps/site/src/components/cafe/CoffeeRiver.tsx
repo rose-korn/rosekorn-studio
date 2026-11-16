@@ -95,9 +95,20 @@ export function CoffeeRiver() {
     let announced = false;
     let raf = 0;
     let last = performance.now();
+    // once the flow has caught up and the page is not scrolling, skip the per-frame layout reads and
+    // DOM writes (they made phones stutter); a scroll or resize wakes it again
+    let lastY = -1;
+    let settled = false;
+    const wake = () => (settled = false);
+    window.addEventListener("resize", wake);
     const frame = (now: number) => {
       const dt = Math.min(0.1, (now - last) / 1000);
       last = now;
+      if (settled && window.scrollY === lastY) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      lastY = window.scrollY;
       const hostTop = host.getBoundingClientRect().top + window.scrollY;
       const targetY = window.scrollY + window.innerHeight * 0.72 - hostTop;
       reached = Math.max(reached, calm ? total : lengthAtY(targetY));
@@ -124,10 +135,14 @@ export function CoffeeRiver() {
           window.dispatchEvent(new Event("coffee:full"));
         }
       }
+      settled = cur === target;
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", wake);
+    };
   }, [geo]);
 
   return (

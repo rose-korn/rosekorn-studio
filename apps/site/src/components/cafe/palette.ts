@@ -17,3 +17,18 @@ export const ROASTS: Record<Roast, { label: string; coffee: string; highlight: s
   medium: { label: "คั่วกลาง", coffee: "#6b4325", highlight: "#b07a4c", note: "หวานคาราเมล บาลานซ์ดี ทำลาเต้อร่อยสุด" },
   dark: { label: "คั่วเข้ม", coffee: "#3a2316", highlight: "#7a5034", note: "ขมเข้ม ช็อกโกแลต ถูกใจคอเอสเปรสโซ่" },
 };
+
+/**
+ * Phones and low-end machines get a lighter cafe demo: lower canvas resolution, no MSAA,
+ * fewer floating beans, so scrolling stays smooth. Client-only (3D scenes load with ssr: false).
+ */
+export function lowPower() {
+  if (typeof window === "undefined") return false;
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  return (
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.innerWidth < 768 ||
+    (nav.hardwareConcurrency ?? 8) <= 4 ||
+    (nav.deviceMemory ?? 8) <= 4
+  );
+}

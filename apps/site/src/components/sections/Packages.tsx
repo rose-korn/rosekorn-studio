@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Arrow } from "@/components/Arrow";
 import { careDetails, packageDetails } from "@/content/package-details";
 import { DetailsDialog } from "./DetailsDialog";
+import { DragScroll } from "@/components/DragScroll";
 import { Doodle, MarkSticker } from "@/components/Doodle";
 
 export function Packages({ locale }: { locale: Locale }) {
@@ -374,28 +375,57 @@ function PromoBanner({ promo: launchPromo, t }: { promo: Content["launchPromo"];
   );
 }
 
-/** Packages that are not open yet, shown as one small taped strip instead of full cards */
+/**
+ * Packages that are not open yet: small taped cards in a sideways-scrolling row (about 3.5 visible
+ * on desktop, so it is obvious there is more to swipe), each with the old "not open yet" pill below.
+ */
 function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["packages"]; locale: Locale }) {
   if (!items.length) return null;
   const th = locale === "th" ? "font-thai " : "";
   return (
-    <div
-      className="relative mt-8 flex flex-col gap-4 rounded-2xl border-2 border-dashed border-ink/40 bg-paper/60 p-5 md:flex-row md:items-center md:gap-6"
-      data-pop
-      aria-label={t.soonLabel}
-    >
-      <span className="stamp w-fit -rotate-3 bg-rose text-sm text-white" style={{ borderColor: "var(--color-ink)" }}>
-        {t.soonStrip}
-      </span>
-      <ul className="flex flex-1 flex-wrap gap-x-6 gap-y-2">
-        {items.map((p) => (
-          <li key={p.id} className={`${th}text-muted`}>
-            <span className="font-semibold text-ink">{p.name}</span> · {p.th}
+    <section className="mt-12" aria-label={t.soonLabel}>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span className="stamp w-fit -rotate-3 bg-rose text-sm text-white" style={{ borderColor: "var(--color-ink)" }}>
+          {t.soonStrip}
+        </span>
+        <p className={`${th}text-sm text-muted`}>{t.soonStripNote}</p>
+      </div>
+      <DragScroll
+        cursor={t.dragCursor}
+        className="-mx-5 mt-4 flex snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto px-5 pb-4 pt-3 [scrollbar-width:none] md:-mx-4 md:scroll-px-4 md:px-4 [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((p, i) => (
+          <li
+            key={p.id}
+            className="group flex w-[64%] shrink-0 snap-start flex-col items-start sm:w-[42%] lg:w-[34.5%]"
+          >
+            <article
+              className="sticker wobbly relative w-full flex-1 overflow-hidden bg-paper p-5 transition duration-300 group-hover:-translate-y-2 group-hover:rotate-0 group-hover:shadow-[8px_8px_0_var(--color-ink)]"
+              style={{ rotate: `${[-1, 0.8, -0.6, 1][i % 4]}deg` }}
+            >
+              <p className="eyebrow text-muted">{p.name}</p>
+              <h3 className={`mt-2 ${th}text-lg font-semibold leading-snug`}>{p.th}</h3>
+              <p className="mt-4 flex flex-wrap items-baseline gap-x-2">
+                {p.priceNote ? <span className="text-sm text-muted">{p.priceNote}</span> : null}
+                <span className="text-3xl font-semibold tracking-tight">฿{p.price}</span>
+              </p>
+              <ul className="mt-4 space-y-1.5 text-sm">
+                {p.features.map((f, j) => (
+                  <li key={f} className="flex gap-2">
+                    <Doodle kind="dash" n={j} className="mt-[0.15em] h-3.5 w-3.5 text-rose" strokeWidth={3} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <SoonTape label={t.soonTape} />
+            </article>
+            <span className={`mt-4 inline-flex h-9 items-center rounded-full border-2 border-dashed border-ink/40 px-4 text-sm font-semibold text-muted ${th}`}>
+              {t.notOpen}
+            </span>
           </li>
         ))}
-      </ul>
-      <p className={`${th}text-sm text-muted md:text-right`}>{t.soonStripNote}</p>
-    </div>
+      </DragScroll>
+    </section>
   );
 }
 
