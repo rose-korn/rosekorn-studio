@@ -56,13 +56,20 @@ function Tape({ className = "", rotate = "-4deg" }: { className?: string; rotate
   );
 }
 
+/** one drawn star with an ink outline (no font glyphs) */
+function StarShape({ filled }: { filled: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 shrink-0" stroke="var(--t-ink)" strokeWidth="2" strokeLinejoin="round">
+      <path d="M12 2.8 L14.8 8.7 L21.2 9.4 L16.4 13.8 L17.8 20.2 L12 17 L6.2 20.2 L7.6 13.8 L2.8 9.4 L9.2 8.7 Z" fill={filled ? "var(--t-accent)" : "var(--t-surface)"} />
+    </svg>
+  );
+}
+
 function Stars({ n = 5 }: { n?: number }) {
   return (
     <span className="flex gap-0.5" role="img" aria-label={`${n} ดาว จาก 5`}>
       {Array.from({ length: 5 }, (_, i) => (
-        <svg key={i} viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" stroke="var(--t-ink)" strokeWidth="2" strokeLinejoin="round">
-          <path d="M12 2.8 L14.8 8.7 L21.2 9.4 L16.4 13.8 L17.8 20.2 L12 17 L6.2 20.2 L7.6 13.8 L2.8 9.4 L9.2 8.7 Z" fill={i < n ? "var(--t-accent)" : "var(--t-surface)"} />
-        </svg>
+        <StarShape key={i} filled={i < n} />
       ))}
     </span>
   );
@@ -123,8 +130,9 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
   const nav = [
     { href: "#highlights", label: c.highlights.title },
     c.gallery ? { href: "#gallery", label: c.gallery.title } : null,
+    c.team ? { href: "#team", label: c.team.title } : null,
     c.reviews ? { href: "#reviews", label: "รีวิว" } : null,
-    c.howToOrder ? { href: "#order", label: "วิธีสั่งซื้อ" } : null,
+    c.howToOrder ? { href: "#order", label: c.howToOrder.navLabel ?? "วิธีสั่งซื้อ" } : null,
     c.payment ? null : { href: "#visit", label: "เวลาเปิด" },
     { href: "#contact", label: "ติดต่อ" },
   ].filter((n) => n !== null);
@@ -148,7 +156,7 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
             </a>
           ))}
         </nav>
-        <a href={c.contact.lineUrl} className={`${btn} h-10 bg-[var(--t-ink)] px-4 text-sm text-[var(--t-bg)]`}>
+        <a href={c.contact.lineUrl} className={`${btn} h-10 shrink-0 whitespace-nowrap bg-[var(--t-ink)] px-4 text-sm text-[var(--t-bg)]`}>
           แอด LINE
         </a>
       </header>
@@ -206,14 +214,34 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
           <Highlights items={c.highlights.items} layout={c.highlights.layout} sheetUrl={c.highlights.sheetUrl} />
           {c.howToOrder || c.payment ? (
             <p className="mt-8 text-[var(--t-muted)]">
-              ถูกใจชิ้นไหน{" "}
+              {c.highlights.ask?.before ?? "ถูกใจชิ้นไหน"}{" "}
               <a href={c.contact.lineUrl} className="font-semibold text-[var(--t-ink)] underline decoration-[var(--t-accent)] decoration-2 underline-offset-4">
                 ทัก LINE {c.contact.lineId}
               </a>{" "}
-              บอกชื่อสินค้าได้เลย
+              {c.highlights.ask?.after ?? "บอกชื่อสินค้าได้เลย"}
             </p>
           ) : null}
         </section>
+
+        {/* team: the people customers will meet, as taped-on photo cards */}
+        {c.team ? (
+          <section aria-labelledby="team" className="mx-auto max-w-6xl px-5 pb-16 md:px-8 md:pb-24">
+            <H2 id="team">{c.team.title}</H2>
+            <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {c.team.items.map((m, i) => (
+                <li key={m.name} className={`${card} relative p-3 pb-5`} style={{ rotate: tilts[(i + 1) % tilts.length] }}>
+                  <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate={i % 2 ? "4deg" : "-4deg"} />
+                  <div className="aspect-[4/5] overflow-hidden rounded-[14px] border-2 border-[var(--t-ink)]">
+                    <Pic pic={m.pic} />
+                  </div>
+                  <p className="tpl-display mt-4 px-2 text-2xl">{m.name}</p>
+                  <p className="px-2 font-medium text-[var(--t-accent)]">{m.role}</p>
+                  {m.note ? <p className="mt-2 px-2 leading-relaxed text-[var(--t-muted)]">{m.note}</p> : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         {/* reviews: customer words, stuck on like notes */}
         {c.reviews ? (
@@ -222,8 +250,9 @@ export function BasicLanding({ c, displayFont = "" }: { c: BasicConfig; displayF
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <H2 id="reviews">{c.reviews.title}</H2>
                 {c.reviews.score ? (
-                  <p className="tpl-display rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-surface)] px-5 py-2 text-lg shadow-[4px_4px_0_var(--t-ink)]" style={{ rotate: "2deg" }}>
-                    ★ {c.reviews.score}
+                  <p className="tpl-display flex items-center gap-2 rounded-full border-2 border-[var(--t-ink)] bg-[var(--t-surface)] px-5 py-2 text-lg shadow-[4px_4px_0_var(--t-ink)]" style={{ rotate: "2deg" }}>
+                    <StarShape filled />
+                    {c.reviews.score}
                   </p>
                 ) : null}
               </div>

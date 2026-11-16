@@ -24,10 +24,10 @@ const th: TemplateCard[] = [
   {
     slug: "service",
     illo: "plant",
-    ready: false,
+    ready: true,
     name: "งานบริการ",
-    forWho: "คลินิก ร้านทำผม สปา สตูดิโอ",
-    sections: "บริการและราคา ทีมงาน รีวิว ปุ่มจองคิว",
+    forWho: "ร้านทำผม สปา คลินิก สตูดิโอ",
+    sections: "บริการพร้อมราคา ทีมงาน รีวิวลูกค้า ขั้นตอนจองคิว เวลาเปิด แผนที่ ปุ่มจองผ่าน LINE",
   },
 ];
 
@@ -51,10 +51,10 @@ const en: TemplateCard[] = [
   {
     slug: "service",
     illo: "plant",
-    ready: false,
+    ready: true,
     name: "Services",
-    forWho: "Clinics, hair salons, spas and studios",
-    sections: "Services and prices, team, reviews, booking button",
+    forWho: "Hair salons, spas, clinics and studios",
+    sections: "Services with prices, team, customer reviews, booking steps, opening hours, map and a LINE booking button",
   },
 ];
 
