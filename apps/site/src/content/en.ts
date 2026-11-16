@@ -178,7 +178,11 @@ export const principles = [
 export const faqs = [
   {
     q: "Are the domain and hosting included?",
-    a: "The domain, product photos and copywriting are not included, and every quote says so clearly. On the Care Plan, we host the site and handle renewals for you.",
+    a: "Yes for the first year: a .com domain and hosting are included. From the second year, renew with Care Lite at ฿3,500 a year or the monthly Care Plan. Product photos and copywriting are not included, and every quote says so clearly.",
+  },
+  {
+    q: "Do I pay VAT on top?",
+    a: "No. Prices on this site are net, with no VAT added. Companies can withhold 3% tax at source as usual.",
   },
   {
     q: "How do payments work?",

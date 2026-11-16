@@ -68,7 +68,7 @@ export default function Terms() {
       path="/terms/"
       eyebrow="Terms of service"
       title="Terms of service"
-      updated="14 November 2026"
+      updated="16 November 2026"
       toc={toc}
       intro={
         <>
@@ -119,7 +119,7 @@ export default function Terms() {
           </table>
         </div>
         <p>
-          Unless the quote says otherwise, no package includes domain fees, hosting after the first year, third-party service fees, paid
+          Every package includes a .com domain and hosting for the first year. Unless the quote says otherwise, no package includes other domain endings, hosting or domain renewal after the first year, third-party service fees, paid
           images or fonts, or copywriting and product descriptions.
         </p>
       </Clause>
@@ -128,7 +128,7 @@ export default function Terms() {
         <ul>
           <li>50% deposit before work begins, and the remaining 50% before we hand over the domain, code and admin access.</li>
           <li>Payment by bank transfer or PromptPay, as stated on the invoice.</li>
-          <li>Prices on this website exclude VAT, where applicable.</li>
+          <li>Prices on this website are net, with no VAT added. Company clients may withhold 3% tax at source as the law allows.</li>
           {launchPromo.active ? (
             <li>
               Launch pricing applies to our first {launchPromo.total} clients until {launchPromo.until}, on the condition that the client

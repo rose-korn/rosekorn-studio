@@ -274,7 +274,7 @@ const careTh: CareDetails = {
   notCovered: [
     "ฟีเจอร์ใหม่ หน้าใหม่ หรือการออกแบบใหม่ (ออกใบเสนอราคาแยก)",
     "การเขียนคอนเทนต์และถ่ายรูป",
-    "ค่าบริการภายนอก เช่น ค่าโดเมนรายปี LINE OA แบบเสียเงิน และปลั๊กอิน",
+    "ค่าบริการภายนอก เช่น โดเมนนามสกุลอื่นที่ไม่ใช่ .com, LINE OA แบบเสียเงิน และปลั๊กอิน",
     "ปัญหาที่เกิดจากคนอื่นเข้าไปแก้โค้ด",
   ],
   terms: [
@@ -297,7 +297,7 @@ const careEn: CareDetails = {
   notCovered: [
     "New features, new pages or redesigns (quoted separately)",
     "Copywriting and photography",
-    "Third-party fees such as the yearly domain fee, paid LINE OA plans and plugins",
+    "Third-party fees such as non-.com domains, paid LINE OA plans and plugins",
     "Problems caused by someone else editing the code",
   ],
   terms: [

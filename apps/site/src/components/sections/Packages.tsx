@@ -25,10 +25,23 @@ export function Packages({ locale }: { locale: Locale }) {
           lead={t.lead}
         />
 
+        <ul className="mt-8 flex flex-wrap gap-3">
+          {t.facts.map((f, i) => (
+            <li
+              key={f}
+              className={`inline-flex items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-1.5 text-sm font-semibold shadow-[2px_2px_0_var(--color-ink)] ${th}`}
+              style={{ rotate: `${[-1.2, 0.8, -0.4][i % 3]}deg` }}
+            >
+              <Doodle kind="check" n={i} className="h-4 w-4 text-rose" strokeWidth={3} />
+              {f}
+            </li>
+          ))}
+        </ul>
+
         {launchPromo.active ? <PromoBanner promo={launchPromo} t={t} /> : null}
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {packages.map((p, i) => (
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {packages.filter((p) => !p.soon).map((p, i) => (
             <article
               key={p.id}
               data-pop
@@ -116,6 +129,8 @@ export function Packages({ locale }: { locale: Locale }) {
           ))}
         </div>
 
+        <SoonStrip items={packages.filter((p) => p.soon)} t={t} locale={locale} />
+
         <div className="mt-10 grid gap-6 lg:grid-cols-12">
           <div className="sticker wobbly bg-paper p-7 lg:col-span-7 lg:self-start" data-pop>
             <p className="eyebrow text-muted">{t.addons}</p>
@@ -127,8 +142,24 @@ export function Packages({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
+            <p className={`mt-4 flex gap-2.5 rounded-xl bg-paper-2 p-4 text-sm text-muted ${th}`}>
+              <Doodle kind="spark" n={2} className="mt-0.5 h-4 w-4 text-gold" />
+              <span>{t.addonsNote}</span>
+            </p>
           </div>
           <div className="flex flex-col gap-6 lg:col-span-5">
+          <div className={`relative px-1 ${th}`}>
+            <p className="font-semibold">{t.careGuideTitle}</p>
+            <ul className="mt-2 space-y-1.5 text-sm">
+              {t.careGuide.map(([who, pick], i) => (
+                <li key={pick} className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="text-muted">{who}</span>
+                  <Doodle kind="dash" n={i} className="h-3.5 w-5 text-rose" strokeWidth={3} />
+                  <span className="font-semibold">{pick}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="sticker wobbly relative bg-paper p-7" data-pop style={{ rotate: "-0.8deg" }}>
             <p className="eyebrow text-muted">{careLite.name}</p>
             <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -339,6 +370,31 @@ function PromoBanner({ promo: launchPromo, t }: { promo: Content["launchPromo"];
           ))}
         </ul>
       </div>
+    </div>
+  );
+}
+
+/** Packages that are not open yet, shown as one small taped strip instead of full cards */
+function SoonStrip({ items, t, locale }: { items: Content["packages"]; t: Ui["packages"]; locale: Locale }) {
+  if (!items.length) return null;
+  const th = locale === "th" ? "font-thai " : "";
+  return (
+    <div
+      className="relative mt-8 flex flex-col gap-4 rounded-2xl border-2 border-dashed border-ink/40 bg-paper/60 p-5 md:flex-row md:items-center md:gap-6"
+      data-pop
+      aria-label={t.soonLabel}
+    >
+      <span className="stamp w-fit -rotate-3 bg-rose text-sm text-white" style={{ borderColor: "var(--color-ink)" }}>
+        {t.soonStrip}
+      </span>
+      <ul className="flex flex-1 flex-wrap gap-x-6 gap-y-2">
+        {items.map((p) => (
+          <li key={p.id} className={`${th}text-muted`}>
+            <span className="font-semibold text-ink">{p.name}</span> · {p.th}
+          </li>
+        ))}
+      </ul>
+      <p className={`${th}text-sm text-muted md:text-right`}>{t.soonStripNote}</p>
     </div>
   );
 }
