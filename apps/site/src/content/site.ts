@@ -161,21 +161,6 @@ export const packages: Package[] = [
     cta: "เลือกแพ็กเกจยอดนิยม",
   },
   {
-    id: "landing-signature",
-    name: "Landing Signature",
-    th: "จัดเต็ม 3D และลูกเล่น",
-    price: "35,000",
-    promoPrice: "29,750",
-    delivery: "~6 สัปดาห์",
-    features: [
-      "ฉาก 3D (Three.js) ออกแบบเฉพาะแบรนด์",
-      "เล่าเรื่องด้วยอนิเมชันตอนเลื่อน (GSAP)",
-      "เมนูหรือแคตตาล็อกกดสั่งต่อเข้า LINE",
-      "ภาพวาดประกอบเฉพาะร้าน แก้ได้ 3 รอบ",
-    ],
-    cta: "นัดคุยหน้าแบบนี้",
-  },
-  {
     id: "line-order",
     name: "LINE Order",
     th: "ร้านสั่งอาหารผ่าน LINE",
@@ -189,6 +174,21 @@ export const packages: Package[] = [
       "ระบบเป็นของร้านเอง ไม่ต้องเช่าระบบรายเดือน",
     ],
     cta: "เริ่มรับออเดอร์ผ่าน LINE",
+  },
+  {
+    id: "landing-signature",
+    name: "Landing Signature",
+    th: "จัดเต็ม 3D และลูกเล่น",
+    price: "35,000",
+    promoPrice: "29,750",
+    delivery: "~6 สัปดาห์",
+    features: [
+      "ฉาก 3D (Three.js) ออกแบบเฉพาะแบรนด์",
+      "เล่าเรื่องด้วยอนิเมชันตอนเลื่อน (GSAP)",
+      "เมนูหรือแคตตาล็อกกดสั่งต่อเข้า LINE",
+      "ภาพวาดประกอบเฉพาะร้าน แก้ได้ 3 รอบ",
+    ],
+    cta: "นัดคุยหน้าแบบนี้",
   },
   {
     id: "pos",
