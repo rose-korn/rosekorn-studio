@@ -95,24 +95,35 @@ export function Packages({ locale }: { locale: Locale }) {
                   </li>
                 ))}
               </ul>
-              {!p.soon && packageDetails(locale, p.id) ? (
-                <DetailsDialog
-                  label={`${t.details} →`}
-                  cursor={t.detailsCursor}
-                  closeLabel={t.close}
-                  buttonClass={`link-underline mt-6 w-fit text-sm font-semibold ${p.featured ? "text-paper" : "text-ink"}`}
-                  title={<DetailsTitle p={p} locale={locale} />}
-                >
-                  <DetailsBody id={p.id} pkgId={p.id} cta={p.cta} locale={locale} />
-                </DetailsDialog>
-              ) : null}
-              {p.id === "landing-basic" ? (
-                <a
-                  href={localePath(locale, "/templates/")}
-                  className={`link-underline mt-3 w-fit text-sm font-semibold ${p.featured ? "text-paper" : "text-rose-deep"}`}
-                >
-                  {t.seeTemplates}
-                </a>
+              {/* secondary actions: two clear pills, so "details" and "templates" read as buttons, not small print */}
+              {!p.soon && (packageDetails(locale, p.id) || p.id === "landing-basic") ? (
+                <div className="mt-7 flex flex-wrap gap-2.5">
+                  {packageDetails(locale, p.id) ? (
+                    <DetailsDialog
+                      label={t.details}
+                      cursor={t.detailsCursor}
+                      closeLabel={t.close}
+                      buttonClass={`inline-flex h-10 items-center gap-2 rounded-full border-2 px-4 text-sm font-semibold transition hover:-translate-y-0.5 ${
+                        p.featured
+                          ? "border-paper/70 text-paper hover:border-paper hover:bg-paper/10"
+                          : "border-ink bg-paper text-ink shadow-[2px_2px_0_var(--color-ink)] hover:shadow-[3px_3px_0_var(--color-ink)]"
+                      }`}
+                      title={<DetailsTitle p={p} locale={locale} />}
+                    >
+                      <DetailsBody id={p.id} pkgId={p.id} cta={p.cta} locale={locale} />
+                    </DetailsDialog>
+                  ) : null}
+                  {p.id === "landing-basic" ? (
+                    <a
+                      href={localePath(locale, "/templates/")}
+                      data-cursor={t.seeTemplatesCursor}
+                      className="group/tpl inline-flex h-10 items-center gap-2 rounded-full border-2 border-rose-deep bg-rose-soft px-4 text-sm font-semibold text-rose-deep shadow-[2px_2px_0_var(--color-rose-deep)] transition hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-rose-deep)]"
+                    >
+                      {t.seeTemplates}
+                      <Arrow className="h-3 w-3 transition group-hover/tpl:rotate-45" />
+                    </a>
+                  ) : null}
+                </div>
               ) : null}
               {p.soon ? (
                 <span className="mt-4 inline-flex h-12 items-center rounded-full border-2 border-dashed border-ink/40 pl-5 text-sm font-semibold text-muted">
