@@ -53,7 +53,7 @@ function ProjectCard({ p, offset, locale }: { p: Project; offset: boolean; local
             src={p.image}
             alt={`${t.work.screenshot} ${p.title}`}
             loading="lazy"
-            className={`absolute inset-0 h-full w-full transition duration-700 group-hover:scale-[1.04] ${p.fit === "contain" ? "object-contain" : "object-cover"}`}
+            className={`absolute inset-0 h-full w-full ${p.fit === "contain" ? "object-contain" : "object-cover"}`}
           />
         ) : (
           <MockSite p={p} en={locale === "en"} />
@@ -106,7 +106,7 @@ function MockSite({ p, en }: { p: Project; en: boolean }) {
   const isShop = p.slug.includes("shop");
   const links = en ? ["Menu", isShop ? "Shop" : "Visit", "Contact"] : ["เมนู", isShop ? "สินค้า" : "ที่ตั้ง", "ติดต่อ"];
   return (
-    <div aria-hidden="true" className="absolute inset-x-[7%] top-[10%] bottom-0 overflow-hidden rounded-t-xl bg-black/15 shadow-2xl transition duration-700 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+    <div aria-hidden="true" className="absolute inset-x-[7%] top-[10%] bottom-0 overflow-hidden rounded-t-xl bg-black/15 shadow-2xl transition duration-500 group-hover:-translate-y-2">
       <div className="flex items-center gap-1.5 bg-black/25 px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-white/40" />
         <span className="h-2 w-2 rounded-full bg-white/40" />

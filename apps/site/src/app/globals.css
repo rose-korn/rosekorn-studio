@@ -78,7 +78,8 @@
   .press {
     transition: transform .3s cubic-bezier(.25,.8,.3,1), box-shadow .3s ease;
   }
-  .press:hover { transform: translate(-2px, -2px) rotate(-1.5deg); }
+  /* lift only: a rotated or scaled button re-rasterises its text and looks soft (Nov 2026) */
+  .press:hover { transform: translate(-3px, -3px); }
   .press:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--color-ink); }
 
   /* washi tape in the signature pink / sky */
@@ -176,7 +177,7 @@ html.rose-cursor, html.rose-cursor * { cursor: none !important; }
 /* split-word headings: each word slides up from its own mask */
 /* padding keeps Thai tone marks and descenders inside the mask */
 .split-w { display: inline-block; overflow: hidden; vertical-align: top; padding: .5em .22em .15em; margin: -.5em -.22em -.15em; }
-.split-w > span { display: inline-block; will-change: transform; }
+.split-w > span { display: inline-block; }
 
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }

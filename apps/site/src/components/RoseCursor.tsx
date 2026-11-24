@@ -58,8 +58,10 @@ export function RoseCursor() {
         window.removeEventListener("keydown", onKey);
       };
 
-    const xTo = gsap.quickTo(el, "x", { duration: 0.08, ease: "power3" });
-    const yTo = gsap.quickTo(el, "y", { duration: 0.08, ease: "power3" });
+    // whole pixels only: the eased follow lands on fractions like 412.37px, which blurs the label text
+    const px = (v: string | number) => `${Math.round(parseFloat(String(v)))}px`;
+    const xTo = gsap.quickTo(el, "x", { duration: 0.08, ease: "power3", modifiers: { x: px } });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.08, ease: "power3", modifiers: { y: px } });
     let shown = false;
     let hovering: Element | null = null;
 
