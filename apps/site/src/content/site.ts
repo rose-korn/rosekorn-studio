@@ -149,7 +149,7 @@ export const packages: Package[] = [
     name: "Landing Custom",
     th: "ออกแบบใหม่ทั้งหน้า",
     price: "8,900",
-    promoPrice: "7,565",
+    promoPrice: "8,010",
     delivery: "~3 สัปดาห์",
     features: [
       "ออกแบบเองทั้งหมด ไม่ใช้เทมเพลต",
@@ -165,7 +165,7 @@ export const packages: Package[] = [
     name: "LINE Order",
     th: "ร้านสั่งอาหารผ่าน LINE",
     price: "24,000",
-    promoPrice: "20,400",
+    promoPrice: "21,600",
     delivery: "~4 สัปดาห์",
     features: [
       "หน้าสั่งอาหารเป็นแบรนด์ร้านเอง ไม่ซ้ำหน้าตากับร้านอื่น",
@@ -180,7 +180,7 @@ export const packages: Package[] = [
     name: "Landing Signature",
     th: "จัดเต็ม 3D และลูกเล่น",
     price: "35,000",
-    promoPrice: "29,750",
+    promoPrice: "31,500",
     delivery: "~6 สัปดาห์",
     features: [
       "ฉาก 3D (Three.js) ออกแบบเฉพาะแบรนด์",
@@ -248,7 +248,7 @@ export const launchPromo = {
   taken: 0,
   until: "31 มี.ค. 2570",
   headline: "โปรเปิดตัว 10 ลูกค้าแรก",
-  offer: "ลด 15% ทุกแพ็กเกจที่เปิดรับ (ยกเว้น Landing Basic) + Care Plan ฟรี 3 เดือน มูลค่า ฿4,500",
+  offer: "ลด 10% ทุกแพ็กเกจที่เปิดรับ (ยกเว้น Landing Basic) + Care Plan ฟรี 3 เดือน มูลค่า ฿4,500",
   condition: "ขอแค่ให้เรานำงานไปลงหน้าผลงาน และเขียนรีวิวให้ 1 รีวิว",
 } as const;
 

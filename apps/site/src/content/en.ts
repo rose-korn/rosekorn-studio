@@ -125,7 +125,7 @@ export const launchPromo = {
   ...th.launchPromo,
   until: "31 March 2027",
   headline: "Launch offer for our first 10 clients",
-  offer: "15% off every open package (except Landing Basic) + 3 months of Care Plan free, worth ฿4,500",
+  offer: "10% off every open package (except Landing Basic) + 3 months of Care Plan free, worth ฿4,500",
   condition: "In return, we feature your project in our portfolio and you write us one review",
 } as const;
 
